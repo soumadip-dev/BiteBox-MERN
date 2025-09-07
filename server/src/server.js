@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { ENV } from './config/env.config.js';
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.get('/', (req, res) => {
   res.send('Hello from BiteBox backend!');
 });
 
-const PORT = 8080;
+const PORT = ENV.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
