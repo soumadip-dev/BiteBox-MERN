@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import { ENV } from './config/env.config.js';
+import { connectDB } from './config/db.config.js';
 
 const app = express();
 
@@ -12,8 +14,19 @@ app.get('/', (req, res) => {
   res.send('Hello from BiteBox backend!');
 });
 
-const PORT = 8080;
+const PORT = ENV.PORT || 8080;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+//* Function to connect the DB and start the server
+const startServer = async () => {
+  try {
+    await connectDB(); // Ensure DB is connected before starting the server
+    app.listen(PORT, () => {
+      console.info(`✔️ Server is up and running on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
