@@ -1,0 +1,33 @@
+{
+  "name": "bitebox-server",
+  "version": "1.0.0",
+  "description": "Backend for BiteBox food delivery application",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "food-delivery",
+    "mern",
+    "realtime-tracking",
+    "google-auth",
+    "razorpay"
+  ],
+  "author": "Soumadip Majila",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "packageManager": "pnpm@10.15.0"
+}
