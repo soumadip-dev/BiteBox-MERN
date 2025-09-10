@@ -1,4 +1,4 @@
-import { registerService } from '../services/user.service.js';
+import { registerService, loginService } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
 
 //* Controller for registering a user
@@ -30,4 +30,33 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { registerUser };
+//* Controller for logging in a user
+const loginUser = async (req, res) => {
+  // Get fields from request body
+  const { email, password } = req.body;
+
+  try {
+    // Get the user and token from loginService
+    const { user, token } = await loginService(email, password);
+
+    // Store JWT token in cookie
+    const cookieOptions = {
+      httpOnly: true,
+      sameSite: ENV.NODE_ENV === 'production' ? 'none' : 'strict',
+      secure: ENV.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+    res.cookie('authToken', token, cookieOptions);
+
+    // Send success response
+    return res.status(200).json({
+      user: user,
+      message: 'User logged in successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+export { registerUser, loginUser };

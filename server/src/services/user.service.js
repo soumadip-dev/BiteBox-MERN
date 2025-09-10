@@ -1,6 +1,7 @@
 import User from '../model/user.model.js';
 import { isStrongPassword, isValidEmail, isValidMobile } from '../utils/validation.utils.js';
 import { generateToken } from '../utils/jwt.utils.js';
+import bcrypt from 'bcryptjs';
 
 //* Service for registering a user
 const registerService = async (fullName, email, password, mobile, role) => {
@@ -42,9 +43,41 @@ const registerService = async (fullName, email, password, mobile, role) => {
   // Generate JWT token
   const token = generateToken({ id: newUser._id });
 
+  // Get user without password
   const user = await User.findById(newUser._id).select('-password');
 
   return { user, token };
 };
 
-export { registerService };
+//* Service for logging in a user
+export const loginService = async (email, password) => {
+  // Check if email and password are provided
+  if (!email || !password) {
+    throw new Error('Email and password are required');
+  }
+
+  // Find the user based on email
+  const loggedInuser = await User.findOne({ email });
+
+  // Chelck if user exists or not
+  if (!loggedInuser) {
+    throw new Error('Invalid Credentials');
+  }
+
+  // Check if password is correct
+  const isPassewordCorrect = await bcrypt.compare(password, loggedInuser.password);
+  if (!isPassewordCorrect) {
+    throw new Error('Invalid Credentials');
+  }
+
+  // Generate JWT token
+  const token = generateToken({ id: loggedInuser._id });
+
+  // Get user without password
+  const user = await User.findById(loggedInuser._id).select('-password');
+
+  // Return user and token
+  return { user, token };
+};
+
+export { registerService, loginService };
