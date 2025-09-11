@@ -7,6 +7,7 @@ export const ENV = {
   MONGO_URI: process.env.MONGO_URI,
   BACKEND_URL: process.env.BACKEND_URL,
   JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
   NODE_ENV: process.env.NODE_ENV,
   FRONTEND_URL: process.env.FRONTEND_URL,
 };

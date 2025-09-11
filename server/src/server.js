@@ -2,19 +2,29 @@ import express from 'express';
 import cors from 'cors';
 import { ENV } from './config/env.config.js';
 import { connectDB } from './config/db.config.js';
+import cookieParser from 'cookie-parser';
+import auth_routes from './routes/user.routes.js';
 
 const app = express();
+const PORT = ENV.PORT || 8080;
 
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: ENV.FRONTEND_URL,
+    credentials: true, // If true, allows cookies
+  })
+);
+app.use(express.json()); // If we don't use this, we won't be able to access req.body
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // If we don't use this, we won't be able to access req.cookies
 
 //* Root Route
 app.get('/', (req, res) => {
   res.send('Hello from BiteBox backend!');
 });
 
-const PORT = ENV.PORT || 8080;
+//* Routes
+app.use('/api/v1/auth', auth_routes);
 
 //* Function to connect the DB and start the server
 const startServer = async () => {
