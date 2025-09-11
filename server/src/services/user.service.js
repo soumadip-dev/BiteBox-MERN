@@ -50,7 +50,7 @@ const registerService = async (fullName, email, password, mobile, role) => {
 };
 
 //* Service for logging in a user
-export const loginService = async (email, password) => {
+const loginService = async (email, password) => {
   // Check if email and password are provided
   if (!email || !password) {
     throw new Error('Email and password are required');
