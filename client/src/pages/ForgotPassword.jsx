@@ -3,7 +3,7 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { sendPasswordResetEmail } from '../api/authApi';
+import { sendPasswordResetEmail, verifyPasswordResetOtp } from '../api/authApi';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1); // Step controller: 1 = Email, 2 = OTP, 3 = Reset Password
@@ -66,6 +66,21 @@ const ForgotPassword = () => {
       console.error(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  //* Handle Verify OTP
+  const handleVerifyOtp = function ({ email, otp }) {
+    if (!email) return toast.error('Please enter your email.');
+    if (otp.length !== 6) return toast.error('Please enter a valid OTP.');
+    setIsLoading(true);
+    try {
+      const response = verifyPasswordResetOtp({ email, otp });
+      if (response.success) toast.success(response.message);
+      setStep(3);
+    } catch (error) {
+      toast.error('Network error occurred. Please try again.');
+      console.error(error);
     }
   };
 
@@ -149,9 +164,9 @@ const ForgotPassword = () => {
               onClick={() => {
                 // Collect OTP from all inputs and move to reset password step
                 const otpArray = inputRefs.current.map(input => input?.value || '');
-                setOtp(otpArray.join(''));
-                setStep(3);
+                handleVerifyOtp({ email, otp: otpArray.join('') });
               }}
+              disabled={isLoading}
             >
               Verify OTP
             </button>

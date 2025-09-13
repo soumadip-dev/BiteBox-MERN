@@ -38,3 +38,16 @@ export const sendPasswordResetEmail = async function (email) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Verify OTP
+export const verifyPasswordResetOtp = async function (userData) {
+  try {
+    const response = await axiosInstance.post('/api/v1/auth/verify-otp', userData);
+    return response.data; // { success: true/false, message: "..." }
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
