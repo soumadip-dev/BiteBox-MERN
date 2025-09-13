@@ -1,11 +1,16 @@
 import { useState, useRef } from 'react';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(3);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   // Add refs for OTP inputs
@@ -52,8 +57,8 @@ const ForgotPassword = () => {
         <div className="flex items-center gap-4 mb-4">
           <IoIosArrowRoundBack
             size={30}
-            className="text-[#ff4d2d] "
             onClick={() => navigate('/')}
+            className="cursor-pointer text-[#ff4d2d] "
           />
           <h1 className="text-[#ff4d2d] text-2xl font-bold text-center">Forgot Password</h1>
         </div>
@@ -127,7 +132,56 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-        {step === 3 && <div className="">Step 3</div>}
+        {step === 3 && (
+          <div>
+            <div className="mb-6 relative">
+              <label htmlFor="newPassword" className="block text-gray-700 font-medium mb-1">
+                New Password
+              </label>
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                className="w-full rounded-lg px-3 py-2 focus:outline-none border-[1px] border-[#ddd] pr-10"
+                placeholder="Enter your new password"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+              />
+              <span
+                className="absolute right-3 top-9 cursor-pointer text-gray-600"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              </span>
+            </div>
+
+            <div className="mb-6 relative">
+              <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-1">
+                Confirm Password
+              </label>
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                className="w-full rounded-lg px-3 py-2 focus:outline-none border-[1px] border-[#ddd] pr-10"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+              />
+              <span
+                className="absolute right-3 top-9 cursor-pointer text-gray-600"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+              </span>
+            </div>
+
+            <button
+              className="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-50"
+              style={{ backgroundColor: '#ff4d2d' }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e64323')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff4d2d')}
+            >
+              Reset Password
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
