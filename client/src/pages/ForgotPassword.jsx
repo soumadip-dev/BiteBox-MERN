@@ -59,8 +59,12 @@ const ForgotPassword = () => {
 
     try {
       const response = await sendPasswordResetEmail(email);
-      if (response.success) toast.success(response.message);
-      setStep(2);
+      if (response.success) {
+        toast.success(response.message);
+        setStep(2);
+      } else {
+        toast.error(response.message || 'Failed to send OTP');
+      }
     } catch (error) {
       toast.error('Network error occurred. Please try again.');
       console.error(error);
@@ -70,14 +74,18 @@ const ForgotPassword = () => {
   };
 
   //* Handle Verify OTP
-  const handleVerifyOtp = function ({ email, otp }) {
+  const handleVerifyOtp = async function ({ email, otp }) {
     if (!email) return toast.error('Please enter your email.');
     if (otp.length !== 6) return toast.error('Please enter a valid OTP.');
     setIsLoading(true);
     try {
-      const response = verifyPasswordResetOtp({ email, otp });
-      if (response.success) toast.success(response.message);
-      setStep(3);
+      const response = await verifyPasswordResetOtp({ email, otp });
+      if (response.success) {
+        toast.success(response.message);
+        setStep(3);
+      } else {
+        toast.error(response.message || 'Invalid OTP');
+      }
     } catch (error) {
       toast.error('Network error occurred. Please try again.');
       console.error(error);
@@ -86,17 +94,25 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleResetPassword = function ({ email, newPassword }) {
+  //* Handle Reset Password
+  const handleResetPassword = async function ({ email, newPassword }) {
     if (!email) return toast.error('Please enter your email.');
     if (!newPassword) return toast.error('Please enter a new password.');
+
     setIsLoading(true);
     try {
-      const response = resetPassword({ email, newPassword });
-      if (response.success) toast.success(response.message);
-      navigate('/');
+      const response = await resetPassword({ email, newPassword });
+      if (response.success) {
+        toast.success(response.message);
+        navigate('/');
+      } else {
+        toast.error(response.message || 'Failed to reset password');
+      }
     } catch (error) {
       toast.error('Network error occurred. Please try again.');
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -247,21 +263,7 @@ const ForgotPassword = () => {
                   return toast.error('Passwords do not match.');
                 }
 
-                setIsLoading(true);
-                try {
-                  const response = await resetPassword({ email, newPassword });
-                  if (response.success) {
-                    toast.success(response.message);
-                    navigate('/signin');
-                  } else {
-                    toast.error(response.message || 'Failed to reset password.');
-                  }
-                } catch (error) {
-                  toast.error('Network error occurred. Please try again.');
-                  console.error(error);
-                } finally {
-                  setIsLoading(false);
-                }
+                handleResetPassword({ email, newPassword });
               }}
               disabled={isLoading}
             >
