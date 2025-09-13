@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState('');
   const [role, setRole] = useState('user');
 
   const themeColors = {
@@ -38,6 +42,8 @@ const SignUp = () => {
             id="fullName"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
             placeholder="Enter your full name"
+            value={fullName}
+            onChange={e => setFullName(e.target.value)}
             style={{ border: `1px solid ${themeColors.border}` }}
           />
         </div>
@@ -52,6 +58,8 @@ const SignUp = () => {
             id="email"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
             placeholder="Enter your email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             style={{ border: `1px solid ${themeColors.border}` }}
           />
         </div>
@@ -66,6 +74,8 @@ const SignUp = () => {
             id="mobile"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
             placeholder="Enter your mobile number"
+            value={mobile}
+            onChange={e => setMobile(e.target.value)}
             style={{ border: `1px solid ${themeColors.border}` }}
           />
         </div>
@@ -80,6 +90,8 @@ const SignUp = () => {
             id="password"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
             placeholder="Enter your password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             style={{ border: `1px solid ${themeColors.border}` }}
           />
           <button
