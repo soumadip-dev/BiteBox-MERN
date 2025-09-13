@@ -1,11 +1,50 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
   const navigate = useNavigate();
+
+  // Add refs for OTP inputs
+  const inputRefs = useRef([]);
+
+  // Function to handle OTP input
+  const handleOtpInput = function (e, index) {
+    const value = e.target.value; // Get the entered value
+    // Check if value exists and index is less then 5 (OTP length) -> Not the last box
+    if (value && index < 5) {
+      // If both true focus to next input
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Function to handle Backspace navigation
+  const handleOtpKeyDown = function (e, index) {
+    // Check if Backspace key is pressed and index is greater then 0 -> Not the first box
+    if (e.key == 'Backspace' && !e.target.value && index > 0) {
+      // If both true focus to previous input
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // Function to handle Paste OTP
+  const handleOtpPaste = function (e) {
+    e.preventDefault(); //Prevents default paste behavior
+    const pasteData = e.clipboardData.getData('text').trim(); // Get the pasted data
+    const pasteDataArray = pasteData.split(''); // Converts string to array of characters
+
+    // Loop through each character and fills corrosponding input box
+    pasteDataArray.forEach((char, i) => {
+      if (inputRefs.current[i]) inputRefs.current[i].value = char; // set the value of input box
+    });
+
+    // Focus on last input box
+    const lastIndex = Math.min(pasteDataArray.length, inputRefs.current.length) - 1;
+    if (lastIndex >= 0) inputRefs.current[lastIndex]?.focus();
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#FFF9F6]">
@@ -42,7 +81,52 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-        {step === 2 && <div className="">Step 2</div>}
+        {step === 2 && (
+          <div>
+            <div className="mb-6">
+              <label htmlFor="otp" className="block text-gray-700 font-medium mb-3">
+                Enter OTP
+              </label>
+              <p className="text-sm text-gray-600 mb-4">
+                Enter the 6-digit code sent to your email
+              </p>
+
+              <div className="flex justify-between gap-2" onPaste={handleOtpPaste}>
+                {Array(6)
+                  .fill(0)
+                  .map((_, index) => (
+                    <input
+                      type="text"
+                      maxLength={1} // Only allows 1 character per box
+                      key={index} // Unique identifier for React (0, 1, 2, 3, 4, 5)
+                      required // Makes all inputs mandatory
+                      className="w-12 h-12 bg-gray-50 text-gray-800 text-xl text-center rounded-lg border border-gray-300 focus:border-[#ff4d2d] focus:ring-2 focus:ring-orange-100 outline-none transition-colors"
+                      ref={el => {
+                        if (el) inputRefs.current[index] = el;
+                      }}
+                      onInput={e => handleOtpInput(e, index)} // Function to handle input
+                      onKeyDown={e => handleOtpKeyDown(e, index)} // Function to handle keydown
+                    />
+                  ))}
+              </div>
+            </div>
+
+            <button
+              className="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-50"
+              style={{ backgroundColor: '#ff4d2d' }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e64323')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff4d2d')}
+              onClick={() => {
+                // Collect OTP from all inputs
+                const otpArray = inputRefs.current.map(input => input?.value || '');
+                setOtp(otpArray.join(''));
+                setStep(3);
+              }}
+            >
+              Verify OTP
+            </button>
+          </div>
+        )}
         {step === 3 && <div className="">Step 3</div>}
       </div>
     </div>
