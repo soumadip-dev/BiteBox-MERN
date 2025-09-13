@@ -27,6 +27,19 @@ const registerUser = async (req, res) => {
     };
     res.cookie('token', token, cookieOptions);
 
+    // Send welcome email to user
+    const mailOptions = generateMailOptions({
+      user,
+      type: 'welcome',
+      companyName: ENV.COMPANY_NAME,
+    });
+
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      return res.status(500).json({ message: 'Email sending failed', success: false });
+    }
+
     // Send success response
     res.status(201).json({
       user: user,
