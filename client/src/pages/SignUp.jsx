@@ -1,6 +1,8 @@
-import React from 'react';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const SignUp = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const themeColors = {
     primary: '#ff4d2d',
     hover: '#e64323',
@@ -65,17 +67,24 @@ const SignUp = () => {
         </div>
 
         {/* Password */}
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
             Password
           </label>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
             placeholder="Enter your password"
             style={{ border: `1px solid ${themeColors.border}` }}
           />
+          {/* Toggle icon */}
+          <div
+            className="absolute right-3 top-[38px] cursor-pointer"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </div>
         </div>
 
         {/* Submit Button */}
