@@ -4,7 +4,7 @@ import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(3); // Step controller: 1 = Email, 2 = OTP, 3 = Reset Password
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -13,40 +13,38 @@ const ForgotPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Add refs for OTP inputs
+  // References for OTP input fields
   const inputRefs = useRef([]);
 
-  // Function to handle OTP input
+  // Handle OTP input navigation
   const handleOtpInput = function (e, index) {
     const value = e.target.value; // Get the entered value
-    // Check if value exists and index is less then 5 (OTP length) -> Not the last box
+    // If a value is entered and this is not the last box, move focus to the next input
     if (value && index < 5) {
-      // If both true focus to next input
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // Function to handle Backspace navigation
+  // Handle Backspace navigation in OTP fields
   const handleOtpKeyDown = function (e, index) {
-    // Check if Backspace key is pressed and index is greater then 0 -> Not the first box
+    // If Backspace is pressed on an empty field and not the first box, move focus back
     if (e.key == 'Backspace' && !e.target.value && index > 0) {
-      // If both true focus to previous input
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  // Function to handle Paste OTP
+  // Handle pasting of OTP into the boxes
   const handleOtpPaste = function (e) {
-    e.preventDefault(); //Prevents default paste behavior
-    const pasteData = e.clipboardData.getData('text').trim(); // Get the pasted data
-    const pasteDataArray = pasteData.split(''); // Converts string to array of characters
+    e.preventDefault(); // Prevent default paste behavior
+    const pasteData = e.clipboardData.getData('text').trim(); // Get the pasted string
+    const pasteDataArray = pasteData.split(''); // Convert string into an array of characters
 
-    // Loop through each character and fills corrosponding input box
+    // Loop through each character and fill the corresponding input box
     pasteDataArray.forEach((char, i) => {
-      if (inputRefs.current[i]) inputRefs.current[i].value = char; // set the value of input box
+      if (inputRefs.current[i]) inputRefs.current[i].value = char;
     });
 
-    // Focus on last input box
+    // Focus on the last filled input box
     const lastIndex = Math.min(pasteDataArray.length, inputRefs.current.length) - 1;
     if (lastIndex >= 0) inputRefs.current[lastIndex]?.focus();
   };
@@ -54,6 +52,7 @@ const ForgotPassword = () => {
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#FFF9F6]">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8">
+        {/* Header with Back Button */}
         <div className="flex items-center gap-4 mb-4">
           <IoIosArrowRoundBack
             size={30}
@@ -62,6 +61,8 @@ const ForgotPassword = () => {
           />
           <h1 className="text-[#ff4d2d] text-2xl font-bold text-center">Forgot Password</h1>
         </div>
+
+        {/* Step 1: Enter Email */}
         {step === 1 && (
           <div>
             <div className="mb-4">
@@ -70,7 +71,7 @@ const ForgotPassword = () => {
               </label>
               <input
                 type="email"
-                className="w-full  rounded-lg px-3 py-2 focus:outline-none border-[1px] border-[#ddd]"
+                className="w-full rounded-lg px-3 py-2 focus:outline-none border-[1px] border-[#ddd]"
                 placeholder="Enter your email"
                 onChange={e => setEmail(e.target.value)}
                 value={email}
@@ -86,6 +87,8 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
+
+        {/* Step 2: Verify OTP */}
         {step === 2 && (
           <div>
             <div className="mb-6">
@@ -102,15 +105,15 @@ const ForgotPassword = () => {
                   .map((_, index) => (
                     <input
                       type="text"
-                      maxLength={1} // Only allows 1 character per box
-                      key={index} // Unique identifier for React (0, 1, 2, 3, 4, 5)
-                      required // Makes all inputs mandatory
+                      maxLength={1} // Only allow 1 character per box
+                      key={index} // Unique key for each box
+                      required // Make each input mandatory
                       className="w-12 h-12 bg-gray-50 text-gray-800 text-xl text-center rounded-lg border border-gray-300 focus:border-[#ff4d2d] focus:ring-2 focus:ring-orange-100 outline-none transition-colors"
                       ref={el => {
                         if (el) inputRefs.current[index] = el;
                       }}
-                      onInput={e => handleOtpInput(e, index)} // Function to handle input
-                      onKeyDown={e => handleOtpKeyDown(e, index)} // Function to handle keydown
+                      onInput={e => handleOtpInput(e, index)}
+                      onKeyDown={e => handleOtpKeyDown(e, index)}
                     />
                   ))}
               </div>
@@ -122,7 +125,7 @@ const ForgotPassword = () => {
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e64323')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff4d2d')}
               onClick={() => {
-                // Collect OTP from all inputs
+                // Collect OTP from all inputs and move to reset password step
                 const otpArray = inputRefs.current.map(input => input?.value || '');
                 setOtp(otpArray.join(''));
                 setStep(3);
@@ -132,8 +135,11 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
+
+        {/* Step 3: Reset Password */}
         {step === 3 && (
           <div>
+            {/* New Password Input */}
             <div className="mb-6 relative">
               <label htmlFor="newPassword" className="block text-gray-700 font-medium mb-1">
                 New Password
@@ -153,6 +159,7 @@ const ForgotPassword = () => {
               </span>
             </div>
 
+            {/* Confirm Password Input */}
             <div className="mb-6 relative">
               <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-1">
                 Confirm Password
