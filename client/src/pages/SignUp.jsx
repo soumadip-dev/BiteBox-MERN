@@ -7,7 +7,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
-import MobileModal from '../components/MobileModal'; // Import the MobileModal component
+import MobileModal from '../components/MobileModal';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice.js';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +21,8 @@ const SignUp = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false); // State for modal visibility
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const themeColors = {
     primary: '#ff4d2d',
@@ -40,16 +43,14 @@ const SignUp = () => {
   //* Function for manually signing up
   const handleSignUp = async () => {
     const { fullName, email, password, mobile, role } = formData;
-
     if (!fullName || !email || !password || !mobile) {
       toast.error('Please fill all required fields.');
       return;
     }
-
     setIsLoading(true);
-
     try {
       const response = await registerUser({ fullName, email, password, mobile, role });
+      dispatch(setUserData(response.user)); // Dispatch the setUserData action
       toast.success(response.message);
       setFormData({ fullName: '', email: '', password: '', mobile: '', role: 'user' });
     } catch (error) {
@@ -64,10 +65,8 @@ const SignUp = () => {
   const handleModalSubmit = (mobileNumber, role) => {
     // Store the mobile number and role in formData
     setFormData({ ...formData, mobile: mobileNumber, role });
-
     // Close the modal
     setIsMobileModalOpen(false);
-
     // Proceed with Google authentication
     handleGoogleAuthentication(mobileNumber, role);
   };
@@ -83,6 +82,10 @@ const SignUp = () => {
         mobile: mobileNumber,
         role: role,
       });
+
+      // Dispatch user data to Redux store
+      dispatch(setUserData(response.user));
+
       toast.success(response.message);
       setFormData({ fullName: '', email: '', password: '', mobile: '', role: 'user' });
     } catch (error) {
