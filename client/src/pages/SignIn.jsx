@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice.js';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ const SignIn = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const themeColors = {
     primary: '#ff4d2d',
@@ -40,6 +43,7 @@ const SignIn = () => {
 
     try {
       const response = await loginUser({ email, password });
+      dispatch(setUserData(response.user)); // Dispatch the setUserData action
       toast.success(response.message);
       setFormData({ email: '', password: '' });
     } catch (error) {
@@ -60,6 +64,7 @@ const SignIn = () => {
       });
       if (response.success) {
         toast.success(response.message);
+        dispatch(setUserData(response.user)); // Dispatch user data to Redux store
         setFormData({ email: '', password: '' });
       } else {
         toast.error("You don't have an account. Please sign up first.");
