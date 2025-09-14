@@ -60,20 +60,20 @@ const SignUp = () => {
     }
   };
 
-  //* Function to handle mobile submission from modal
-  const handleMobileSubmit = mobileNumber => {
-    // Store the mobile number in formData
-    setFormData({ ...formData, mobile: mobileNumber });
+  //* Function to handle mobile and role submission from modal
+  const handleModalSubmit = (mobileNumber, role) => {
+    // Store the mobile number and role in formData
+    setFormData({ ...formData, mobile: mobileNumber, role });
 
     // Close the modal
     setIsMobileModalOpen(false);
 
     // Proceed with Google authentication
-    handleGoogleAuthentication(mobileNumber);
+    handleGoogleAuthentication(mobileNumber, role);
   };
 
   //* Function for Google authentication (separated from UI interaction)
-  const handleGoogleAuthentication = async mobileNumber => {
+  const handleGoogleAuthentication = async (mobileNumber, role) => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
@@ -81,6 +81,7 @@ const SignUp = () => {
         fullName: result.user?.displayName,
         email: result.user?.email,
         mobile: mobileNumber,
+        role: role,
       });
       toast.success(response.message);
       setFormData({ fullName: '', email: '', password: '', mobile: '', role: 'user' });
@@ -206,7 +207,8 @@ const SignUp = () => {
       <MobileModal
         isOpen={isMobileModalOpen}
         onClose={() => setIsMobileModalOpen(false)}
-        onSubmit={handleMobileSubmit}
+        onSubmit={handleModalSubmit}
+        initialRole={formData.role}
       />
     </div>
   );
