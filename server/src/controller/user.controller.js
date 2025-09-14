@@ -4,6 +4,7 @@ import {
   sendPasswordResetEmailService,
   verifyPasswordResetOtpService,
   resetPasswordService,
+  googleAuthService,
 } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
 import transporter from '../config/nodemailer.config.js';
@@ -171,6 +172,38 @@ const resetPassword = async function (req, res) {
   }
 };
 
+//* Controller for google auth
+const googleAuth = async function (req, res) {
+  // Get fields from request body
+  const { fullName, email, mobile } = req.body;
+
+  try {
+    // Get the user and token from googleAuthService
+    const { user, token } = await googleAuthService(fullName, email, mobile);
+
+    // Store JWT token in cookie
+    const cookieOptions = {
+      httpOnly: true,
+      sameSite: ENV.NODE_ENV === 'production' ? 'none' : 'strict',
+      secure: ENV.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+    res.cookie('token', token, cookieOptions);
+
+    // Send success response
+    return res.status(200).json({
+      user,
+      message: 'User logged in successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || 'Google auth failed',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
 export {
   registerUser,
@@ -179,4 +212,5 @@ export {
   sendPasswordResetEmail,
   verifyPasswordResetOtp,
   resetPassword,
+  googleAuth,
 };
