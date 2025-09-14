@@ -186,7 +186,7 @@ const resetPasswordService = async function (email, newPassword) {
 };
 
 //* Service for Google authentication
-const googleAuthService = async function (fullName, email, mobile) {
+const googleAuthService = async function (fullName, email, mobile, role) {
   // Check if email is provided
   if (!email) {
     throw new Error('Email is required');
@@ -204,7 +204,7 @@ const googleAuthService = async function (fullName, email, mobile) {
       fullName,
       email,
       mobile,
-      role: 'user',
+      role,
       password: randomPassword,
     });
   }

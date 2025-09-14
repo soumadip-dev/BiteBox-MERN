@@ -175,11 +175,11 @@ const resetPassword = async function (req, res) {
 //* Controller for google auth
 const googleAuth = async function (req, res) {
   // Get fields from request body
-  const { fullName, email, mobile } = req.body;
+  const { fullName, email, mobile, role } = req.body;
 
   try {
     // Get the user and token from googleAuthService
-    const { user, token } = await googleAuthService(fullName, email, mobile);
+    const { user, token } = await googleAuthService(fullName, email, mobile, role);
 
     // Store JWT token in cookie
     const cookieOptions = {
