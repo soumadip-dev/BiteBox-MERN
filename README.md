@@ -1,12 +1,8 @@
 <h1 align="center">
   <br>
-  BiteBox (MERN) 🍔
+  BiteBox 🍔
   <br>
 </h1>
-
-<div align="center">
-  <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,tailwind,redux,github" alt="Tech Stack" width="320">
-</div>
 
 <p align="center">
   A full-stack MERN food delivery application with real-time order tracking, Razorpay payments, Google OAuth, and a modern UI for customers and admins.
