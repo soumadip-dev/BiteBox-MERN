@@ -5,6 +5,7 @@ import {
   verifyPasswordResetOtpService,
   resetPasswordService,
   googleAuthService,
+  getCurrentUserDetailsService,
 } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
 import transporter from '../config/nodemailer.config.js';
@@ -204,6 +205,30 @@ const googleAuth = async function (req, res) {
   }
 };
 
+//* Controller to fetch current user
+const getCurrentUser = async (req, res) => {
+  try {
+    // Get userId from request (set by auth middleware)
+    const userId = req.userId;
+
+    // Fetch user details from service
+    const user = await getCurrentUserDetailsService(userId);
+
+    // Send success response
+    return res.status(200).json({
+      success: true,
+      message: 'User fetched successfully',
+      user,
+    });
+  } catch (error) {
+    // Send error response
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+    });
+  }
+};
+
 //* Export controllers
 export {
   registerUser,
@@ -213,4 +238,5 @@ export {
   verifyPasswordResetOtp,
   resetPassword,
   googleAuth,
+  getCurrentUser,
 };
