@@ -3,7 +3,8 @@ import cors from 'cors';
 import { ENV } from './config/env.config.js';
 import { connectDB } from './config/db.config.js';
 import cookieParser from 'cookie-parser';
-import auth_routes from './routes/user.routes.js';
+import auth_routes from './routes/auth.routes.js';
+import user_routes from './routes/user.routes.js';
 
 const app = express();
 const PORT = ENV.PORT || 8080;
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 //* Routes
 app.use('/api/v1/auth', auth_routes);
+app.use('/api/v1/user', user_routes);
 
 //* Function to connect the DB and start the server
 const startServer = async () => {
