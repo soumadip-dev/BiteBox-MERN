@@ -1,9 +1,9 @@
-import Nav from './Nav';
+import Navbar from './Navbar';
 
 const UserDashboard = () => {
   return (
     <>
-      <Nav />
+      <Navbar />
     </>
   );
 };
