@@ -4,6 +4,10 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
+import { toast } from 'react-toastify';
+import { logoutUser } from '../api/authApi';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
 function getProfileImage(fullName) {
   if (!fullName) return '';
@@ -16,12 +20,27 @@ function getProfileImage(fullName) {
   if (tokens.length === 1) return tokens[0][0].toUpperCase();
   return (tokens[0][0] + tokens.at(-1)[0]).toUpperCase();
 }
-
 const Navbar = () => {
   const { userData, city } = useSelector(state => state.user);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      const response = await logoutUser();
+      toast.success(response.message);
+      window.location.reload();
+      dispatch(setUserData(null));
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   return (
     <div className="w-full h-[80px] flex items-center justify-between md:justify-center gap-[30px] px-[20px] fixed top-0 z-[9999]bg-[#fff9f6] overflow-visible">
       {showSearch && (
@@ -40,7 +59,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
       <h1 className="text-3xl font-bold mb-2 text-[#ff4d2d]">BiteBox</h1>
       <div className="md:w-[60%] lg:w-[40%] h-[70px] bg-white shadow-xl rounded-lg items-center gap-[20px] hidden md:flex">
         <div className="flex items-center w-[30%] overflow-hidden gap-[10px] px-[10px] border-r-[2px] border-gray-400">
@@ -87,12 +105,18 @@ const Navbar = () => {
           <div className="fixed top-[80px] right-[10px] md:right-[10%] lg:right-[25%] w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[10px] z[9999]">
             <div className="text-[17px] font-semibold">{userData?.fullName}</div>
             <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer">My orders</div>
-            <div className="text-[#ff4d2d] font-semibold cursor-pointer">Log Out</div>
+            <div
+              className={`text-[#ff4d2d] font-semibold ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+              }`}
+              onClick={() => !isLoading && handleLogout()}
+            >
+              {isLoading ? 'Logging out...' : 'Log Out'}
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 };
-
 export default Navbar;
