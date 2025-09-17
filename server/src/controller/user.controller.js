@@ -4,7 +4,8 @@ import {
   sendPasswordResetEmailService,
 } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
-import { transporter, generateEmail } from '../config/email.config.js';
+import transporter from '../config/nodemailer.config.js';
+import generateMailOptions from '../utils/mailTemplates.utils.js';
 
 //* Controller for registering a user
 const registerUser = async (req, res) => {
@@ -93,28 +94,13 @@ const sendPasswordResetEmail = async function (req, res) {
     const { user, otp } = await sendPasswordResetEmailService(email);
 
     // Send password reset email to user
-    const emailContent = generateEmail({
-      name: user.fullName,
-      intro: 'You have requested to reset your password.',
-      action: {
-        instructions: 'Please use the following OTP to reset your password:',
-        button: {
-          color: '#DC4D2F',
-          text: otp,
-          link: '#',
-          fallback: true,
-        },
-      },
-      outro: 'If you did not request this reset, please ignore this email.',
+    const mailOptions = generateMailOptions({
+      user,
+      otp,
+      type: 'forgetPassword',
+      companyName: ENV.COMPANY_NAME,
     });
 
-    const mailOptions = {
-      from: `${ENV.COMPANY_NAME} <${ENV.BREVO_SENDEREMAIL}>`,
-      to: email,
-      subject: 'Password Reset Request',
-      html: emailContent.html,
-      text: emailContent.text,
-    };
     try {
       await transporter.sendMail(mailOptions);
     } catch (emailError) {
