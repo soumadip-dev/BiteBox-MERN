@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { ENV } from './env.config';
 import fs from 'fs/promises';
 
+//* Upload image on cloudinary
 const uploadOnCloudinary = async file => {
   cloudinary.config({
     cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
