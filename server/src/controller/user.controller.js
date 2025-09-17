@@ -159,4 +159,11 @@ const resetPassword = async function (req, res) {
 };
 
 //* Export controllers
-export { registerUser, loginUser, logoutUser, sendPasswordResetEmail, verifyPasswordResetOtp };
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  sendPasswordResetEmail,
+  verifyPasswordResetOtp,
+  resetPassword,
+};
