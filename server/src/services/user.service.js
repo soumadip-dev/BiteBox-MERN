@@ -132,6 +132,15 @@ const verifyPasswordResetOtpService = async function (email, otp) {
   }
   // set isOtpVerified to true
   user.isOtpVerified = true;
+
+  // set resetPasswordOtp to undefined because it has been used
+  user.resetPasswordOtp = undefined;
+
+  // set resetPasswordOtpExpiry to undefined because it has been used
+  user.resetPasswordOtpExpiry = undefined;
+
+  // Save the updated user
+  await user.save();
 };
 
 //* Export services
