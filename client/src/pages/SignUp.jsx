@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
+import { registerUser } from '../api/authApi';
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,12 +11,31 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
   const [role, setRole] = useState('user');
+  const [isLoading, setIsLoading] = useState(false); // New loading state
 
   const themeColors = {
     primary: '#ff4d2d',
     hover: '#e64323',
     background: '#fff9f6',
     border: '#ddd',
+  };
+
+  const handleSignUp = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      const response = await registerUser({
+        fullName,
+        email,
+        password,
+        mobile,
+        role,
+      });
+      alert(response.message);
+    } catch (error) {
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
 
   return (
@@ -133,12 +153,14 @@ const SignUp = () => {
 
         {/* Submit Button */}
         <button
-          className="w-full text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+          className="w-full text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-50"
           style={{ backgroundColor: themeColors.primary }}
           onMouseEnter={e => (e.currentTarget.style.backgroundColor = themeColors.hover)}
           onMouseLeave={e => (e.currentTarget.style.backgroundColor = themeColors.primary)}
+          onClick={handleSignUp}
+          disabled={isLoading} // Disable button while loading
         >
-          Sign Up
+          {isLoading ? 'Signing Up...' : 'Sign Up'}
         </button>
 
         {/* Google Sign Up */}
