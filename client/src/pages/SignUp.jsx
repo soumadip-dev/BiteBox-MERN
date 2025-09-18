@@ -3,15 +3,19 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import { registerUser } from '../api/authApi';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    mobile: '',
+    role: 'user',
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [role, setRole] = useState('user');
-  const [isLoading, setIsLoading] = useState(false); // New loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const themeColors = {
     primary: '#ff4d2d',
@@ -20,21 +24,34 @@ const SignUp = () => {
     border: '#ddd',
   };
 
+  const handleChange = e => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleRoleChange = role => {
+    setFormData({ ...formData, role });
+  };
+
   const handleSignUp = async () => {
-    setIsLoading(true); // Start loading
+    const { fullName, email, password, mobile, role } = formData;
+
+    if (!fullName || !email || !password || !mobile) {
+      toast.error('Please fill all required fields.');
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      const response = await registerUser({
-        fullName,
-        email,
-        password,
-        mobile,
-        role,
-      });
-      alert(response.message);
+      const response = await registerUser({ fullName, email, password, mobile, role });
+      toast.success(response.message);
+      setFormData({ fullName: '', email: '', password: '', mobile: '', role: 'user' });
     } catch (error) {
-      alert('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
+      console.error(error);
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -52,91 +69,55 @@ const SignUp = () => {
         </h1>
         <p className="text-gray-600 mb-8">Sign up to start enjoying delicious food deliveries.</p>
 
-        {/* Full Name */}
-        <div className="mb-4">
-          <label htmlFor="fullName" className="block text-gray-700 font-medium mb-1">
-            Full Name
-          </label>
-          <input
-            type="text"
-            id="fullName"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
-            placeholder="Enter your full name"
-            value={fullName}
-            onChange={e => setFullName(e.target.value)}
-            style={{ border: `1px solid ${themeColors.border}` }}
-          />
-        </div>
+        {/* Input Fields */}
+        {['fullName', 'email', 'mobile', 'password'].map(field => (
+          <div className="mb-4 relative" key={field}>
+            <label htmlFor={field} className="block text-gray-700 font-medium mb-1 capitalize">
+              {field === 'mobile' ? 'Mobile Number' : field}
+            </label>
+            <input
+              type={
+                field === 'password'
+                  ? showPassword
+                    ? 'text'
+                    : 'password'
+                  : field === 'email'
+                  ? 'email'
+                  : field === 'mobile'
+                  ? 'tel'
+                  : 'text'
+              }
+              id={field}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
+              placeholder={`Enter your ${field === 'mobile' ? 'mobile number' : field}`}
+              value={formData[field]}
+              onChange={handleChange}
+              style={{ border: `1px solid ${themeColors.border}` }}
+            />
+            {field === 'password' && (
+              <button
+                type="button"
+                className="absolute right-3 top-[38px] cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
+              </button>
+            )}
+          </div>
+        ))}
 
-        {/* Email */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
-            placeholder="Enter your email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{ border: `1px solid ${themeColors.border}` }}
-          />
-        </div>
-
-        {/* Mobile Number */}
-        <div className="mb-4">
-          <label htmlFor="mobile" className="block text-gray-700 font-medium mb-1">
-            Mobile Number
-          </label>
-          <input
-            type="tel"
-            id="mobile"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
-            placeholder="Enter your mobile number"
-            value={mobile}
-            onChange={e => setMobile(e.target.value)}
-            style={{ border: `1px solid ${themeColors.border}` }}
-          />
-        </div>
-
-        {/* Password */}
-        <div className="mb-4 relative">
-          <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
-            Password
-          </label>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
-            placeholder="Enter your password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            style={{ border: `1px solid ${themeColors.border}` }}
-          />
-          <button
-            type="button"
-            className="absolute right-3 top-[38px] cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
-          </button>
-        </div>
-
-        {/* Role */}
+        {/* Role Selector */}
         <div className="mb-6">
-          <label htmlFor="role" className="block text-gray-700 font-medium mb-1">
-            Role
-          </label>
+          <label className="block text-gray-700 font-medium mb-1">Role</label>
           <div className="flex gap-2">
             {['user', 'owner', 'deliveryBoy'].map(r => (
               <button
                 key={r}
                 type="button"
                 className="flex-1 border rounded-lg px-3 py-2 text-center font-medium transition-colors cursor-pointer"
-                onClick={() => setRole(r)}
+                onClick={() => handleRoleChange(r)}
                 style={
-                  role === r
+                  formData.role === r
                     ? {
                         backgroundColor: themeColors.primary,
                         color: 'white',
@@ -151,14 +132,14 @@ const SignUp = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/* Sign Up Button */}
         <button
           className="w-full text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-50"
           style={{ backgroundColor: themeColors.primary }}
           onMouseEnter={e => (e.currentTarget.style.backgroundColor = themeColors.hover)}
           onMouseLeave={e => (e.currentTarget.style.backgroundColor = themeColors.primary)}
           onClick={handleSignUp}
-          disabled={isLoading} // Disable button while loading
+          disabled={isLoading}
         >
           {isLoading ? 'Signing Up...' : 'Sign Up'}
         </button>
