@@ -89,6 +89,13 @@ const SignIn = () => {
           </div>
         ))}
 
+        {/* Forgot Password */}
+        <div className="text-right mb-4">
+          <Link to="/forgot-password" className="text-sm text-orange-500 hover:underline">
+            Forgot Password?
+          </Link>
+        </div>
+
         {/* Sign In Button */}
         <button
           className="w-full text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer disabled:opacity-50"
