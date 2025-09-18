@@ -1,4 +1,4 @@
-import { registerService, loginService } from '../services/user.service.js';
+import { registerService, loginService, sendPasswordResetEmailService } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
 
 //* Controller for registering a user
@@ -31,7 +31,7 @@ const registerUser = async (req, res) => {
 };
 
 //* Controller for logging in a user
-const loginUser = async (req, res) => {
+const loginUser = async function (req, res) {
   // Get fields from request body
   const { email, password } = req.body;
 
@@ -60,7 +60,7 @@ const loginUser = async (req, res) => {
 };
 
 //* Controller for logout
-const logoutUser = async (req, res) => {
+const logoutUser = async function (req, res) {
   try {
     // Clear the cookie
     res.clearCookie('token', {
@@ -79,4 +79,16 @@ const logoutUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, logoutUser };
+//* Controller to send password reset email to the user's email
+const sendPasswordResetEmail = async function (req, res) {
+  // Get email from request body
+  const { email } = req.body;
+  try {
+    // Get the user and otp from sendPasswordResetEmailService
+    const { user, otp } = await sendPasswordResetEmailService(email);
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, sendPasswordResetEmail };

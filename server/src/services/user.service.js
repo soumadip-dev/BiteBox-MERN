@@ -4,7 +4,7 @@ import { generateToken } from '../utils/jwt.utils.js';
 import bcrypt from 'bcryptjs';
 
 //* Service for registering a user
-const registerService = async (fullName, email, password, mobile, role) => {
+const registerService = async function (fullName, email, password, mobile, role) {
   // Check if all fields are provided
   if (!fullName || !email || !password) {
     throw new Error('All fields are required');
@@ -50,7 +50,7 @@ const registerService = async (fullName, email, password, mobile, role) => {
 };
 
 //* Service for logging in a user
-const loginService = async (email, password) => {
+const loginService = async function (email, password) {
   // Check if email and password are provided
   if (!email || !password) {
     throw new Error('Email and password are required');
@@ -80,4 +80,9 @@ const loginService = async (email, password) => {
   return { user, token };
 };
 
-export { registerService, loginService };
+//* Service for sending password reset email to the user's email
+const sendPasswordResetEmailService = async function (email) {
+  
+};
+
+export { registerService, loginService, sendPasswordResetEmailService };

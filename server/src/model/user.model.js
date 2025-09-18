@@ -25,6 +25,14 @@ const userSchema = new mongoose.Schema(
       enum: ['owner', 'user', 'deliveryBoy'],
       required: true,
     },
+    resetPasswordOtp: {
+      type: String,
+      default: '',
+    },
+    resetPasswordOtpExpiry: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
