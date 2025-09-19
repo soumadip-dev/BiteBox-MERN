@@ -51,3 +51,16 @@ export const verifyPasswordResetOtp = async function (userData) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Reset password
+export const resetPassword = async function (userData) {
+  try {
+    const response = await axiosInstance.post('/api/v1/auth/reset-password', userData);
+    return response.data; // { success: true/false, message: "..." }
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

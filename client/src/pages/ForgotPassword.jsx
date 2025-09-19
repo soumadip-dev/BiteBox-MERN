@@ -3,7 +3,7 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { sendPasswordResetEmail, verifyPasswordResetOtp } from '../api/authApi';
+import { resetPassword, sendPasswordResetEmail, verifyPasswordResetOtp } from '../api/authApi';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1); // Step controller: 1 = Email, 2 = OTP, 3 = Reset Password
@@ -81,6 +81,22 @@ const ForgotPassword = () => {
     } catch (error) {
       toast.error('Network error occurred. Please try again.');
       console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResetPassword = function ({ email, newPassword }) {
+    if (!email) return toast.error('Please enter your email.');
+    if (!newPassword) return toast.error('Please enter a new password.');
+    setIsLoading(true);
+    try {
+      const response = resetPassword({ email, newPassword });
+      if (response.success) toast.success(response.message);
+      navigate('/');
+    } catch (error) {
+      toast.error('Network error occurred. Please try again.');
+      console.error(error);
     }
   };
 
@@ -96,7 +112,6 @@ const ForgotPassword = () => {
           />
           <h1 className="text-[#ff4d2d] text-2xl font-bold text-center">Forgot Password</h1>
         </div>
-
         {/* Step 1: Enter Email */}
         {step === 1 && (
           <div>
@@ -124,7 +139,6 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-
         {/* Step 2: Verify OTP */}
         {step === 2 && (
           <div>
@@ -172,8 +186,8 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-
         {/* Step 3: Reset Password */}
+
         {step === 3 && (
           <div>
             {/* New Password Input */}
@@ -221,8 +235,37 @@ const ForgotPassword = () => {
               style={{ backgroundColor: '#ff4d2d' }}
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e64323')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff4d2d')}
+              onClick={async () => {
+                // Validate passwords
+                if (!newPassword) {
+                  return toast.error('Please enter a new password.');
+                }
+                if (newPassword.length < 6) {
+                  return toast.error('Password must be at least 6 characters long.');
+                }
+                if (newPassword !== confirmPassword) {
+                  return toast.error('Passwords do not match.');
+                }
+
+                setIsLoading(true);
+                try {
+                  const response = await resetPassword({ email, newPassword });
+                  if (response.success) {
+                    toast.success(response.message);
+                    navigate('/signin');
+                  } else {
+                    toast.error(response.message || 'Failed to reset password.');
+                  }
+                } catch (error) {
+                  toast.error('Network error occurred. Please try again.');
+                  console.error(error);
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              disabled={isLoading}
             >
-              Reset Password
+              {isLoading ? 'Resetting...' : 'Reset Password'}
             </button>
           </div>
         )}
