@@ -109,4 +109,35 @@ const sendPasswordResetEmailService = async function (email) {
   return { user, otp };
 };
 
-export { registerService, loginService, sendPasswordResetEmailService };
+//* Service for verifying password reset otp
+const verifyPasswordResetOtpService = async function (email, otp) {
+  // Check if email and OTP are provided
+  if (!email || !otp) {
+    throw new Error('Email, OTP, and new password must be provided');
+  }
+  // Find user based on email
+  const user = await User.findOne({ email });
+
+  // Check if the user exists or not
+  if (!user) {
+    throw new Error('User not found');
+  }
+  // Check if provided OTP is valid and not expired
+  if (
+    user.resetPasswordOtp === '' ||
+    user.resetPasswordOtp !== otp ||
+    user.resetPasswordOtpExpiry < Date.now()
+  ) {
+    throw new Error('Invalid or expired OTP');
+  }
+  // set isOtpVerified to true
+  user.isOtpVerified = true;
+};
+
+//* Export services
+export {
+  registerService,
+  loginService,
+  sendPasswordResetEmailService,
+  verifyPasswordResetOtpService,
+};

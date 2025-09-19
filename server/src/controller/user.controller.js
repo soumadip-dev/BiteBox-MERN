@@ -2,6 +2,7 @@ import {
   registerService,
   loginService,
   sendPasswordResetEmailService,
+  verifyPasswordResetOtpService,
 } from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
 import transporter from '../config/nodemailer.config.js';
@@ -118,4 +119,24 @@ const sendPasswordResetEmail = async function (req, res) {
   }
 };
 
-export { registerUser, loginUser, logoutUser, sendPasswordResetEmail };
+//* Controller to verify password reset otp
+const verifyPasswordResetOtp = async function (req, res) {
+  // Get email and otp from request body
+  const { email, otp } = req.body;
+
+  try {
+    // verify password reset otp using verifyPasswordResetOtpService
+    await verifyPasswordResetOtpService(email, otp);
+
+    // Send success response
+    return res.status(200).json({
+      message: 'Password reset OTP verified successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+//* Export controllers
+export { registerUser, loginUser, logoutUser, sendPasswordResetEmail, verifyPasswordResetOtp };
