@@ -15,4 +15,5 @@ export const ENV = {
   BREVO_USERNAME: process.env.BREVO_USERNAME,
   BREVO_PASSWORD: process.env.BREVO_PASSWORD,
   BREVO_SENDEREMAIL: process.env.BREVO_SENDEREMAIL,
+  COMPANY_NAME: process.env.COMPANY_NAME,
 };
