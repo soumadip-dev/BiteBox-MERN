@@ -2,15 +2,18 @@ import { useState, useRef } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { sendPasswordResetEmail } from '../api/authApi';
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(3); // Step controller: 1 = Email, 2 = OTP, 3 = Reset Password
+  const [step, setStep] = useState(1); // Step controller: 1 = Email, 2 = OTP, 3 = Reset Password
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // References for OTP input fields
@@ -49,6 +52,23 @@ const ForgotPassword = () => {
     if (lastIndex >= 0) inputRefs.current[lastIndex]?.focus();
   };
 
+  //* Handle send OTP to email
+  const handleSendOtp = async function (email) {
+    if (!email) return toast.error('Please enter your email.');
+    setIsLoading(true);
+
+    try {
+      const response = await sendPasswordResetEmail(email);
+      if (response.success) toast.success(response.message);
+      setStep(2);
+    } catch (error) {
+      toast.error('Network error occurred. Please try again.');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#FFF9F6]">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8">
@@ -82,6 +102,8 @@ const ForgotPassword = () => {
               style={{ backgroundColor: '#ff4d2d' }}
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e64323')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff4d2d')}
+              onClick={() => handleSendOtp(email)}
+              disabled={isLoading}
             >
               Send OTP
             </button>
