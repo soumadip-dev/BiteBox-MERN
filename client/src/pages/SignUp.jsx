@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import { registerUser } from '../api/authApi';
+import { googleAuth, registerUser } from '../api/authApi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
+import MobileModal from '../components/MobileModal'; // Import the MobileModal component
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +19,7 @@ const SignUp = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false); // State for modal visibility
 
   const themeColors = {
     primary: '#ff4d2d',
@@ -33,6 +37,7 @@ const SignUp = () => {
     setFormData({ ...formData, role });
   };
 
+  //* Function for manually signing up
   const handleSignUp = async () => {
     const { fullName, email, password, mobile, role } = formData;
 
@@ -53,6 +58,41 @@ const SignUp = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  //* Function to handle mobile submission from modal
+  const handleMobileSubmit = mobileNumber => {
+    // Store the mobile number in formData
+    setFormData({ ...formData, mobile: mobileNumber });
+
+    // Close the modal
+    setIsMobileModalOpen(false);
+
+    // Proceed with Google authentication
+    handleGoogleAuthentication(mobileNumber);
+  };
+
+  //* Function for Google authentication (separated from UI interaction)
+  const handleGoogleAuthentication = async mobileNumber => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const response = await googleAuth({
+        fullName: result.user?.displayName,
+        email: result.user?.email,
+        mobile: mobileNumber,
+      });
+      toast.success(response.message);
+      setFormData({ fullName: '', email: '', password: '', mobile: '', role: 'user' });
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+      console.error(error);
+    }
+  };
+
+  //* Function for signing up with Google - now just opens the modal
+  const handleGoogleSignup = () => {
+    setIsMobileModalOpen(true);
   };
 
   return (
@@ -145,7 +185,10 @@ const SignUp = () => {
         </button>
 
         {/* Google Sign Up */}
-        <button className="w-full mt-4 flex items-center justify-center gap-2 rounded-lg px-4 py-2 transition duration-200 border border-gray-200 cursor-pointer hover:bg-gray-100">
+        <button
+          className="w-full mt-4 flex items-center justify-center gap-2 rounded-lg px-4 py-2 transition duration-200 border border-gray-200 cursor-pointer hover:bg-gray-100"
+          onClick={handleGoogleSignup}
+        >
           <FcGoogle size={20} />
           <span>Sign up with Google</span>
         </button>
@@ -158,6 +201,13 @@ const SignUp = () => {
           </Link>
         </p>
       </div>
+
+      {/* Mobile Modal */}
+      <MobileModal
+        isOpen={isMobileModalOpen}
+        onClose={() => setIsMobileModalOpen(false)}
+        onSubmit={handleMobileSubmit}
+      />
     </div>
   );
 };
