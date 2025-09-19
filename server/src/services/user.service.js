@@ -143,10 +143,51 @@ const verifyPasswordResetOtpService = async function (email, otp) {
   await user.save();
 };
 
+//* Service for resetting password
+const resetPasswordService = async function (email, newPassword) {
+  // Check if email and new password are provided
+  if (!email || !newPassword) {
+    throw new Error('Email and new password are required');
+  }
+
+  // Find user based on email
+  const user = await User.findOne({ email });
+
+  // Check if the user exists or not
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Check if the user has been verified or not
+  if (!user.isOtpVerified) {
+    throw new Error('OTP verification required');
+  }
+
+  // Check if password is strong enough or not
+  if (!isStrongPassword(newPassword)) {
+    throw new Error('Password is not strong enough');
+  }
+
+  // Check if password is same as previous
+  const isPasswordSame = await bcrypt.compare(newPassword, user.password);
+  if (isPasswordSame) {
+    throw new Error('Password is same as previous');
+  }
+
+  // Change the password
+  user.password = newPassword;
+
+  // set isOtpVerified to false
+  user.isOtpVerified = false;
+
+  // Save the user
+  await user.save();
+};
 //* Export services
 export {
   registerService,
   loginService,
   sendPasswordResetEmailService,
   verifyPasswordResetOtpService,
+  resetPasswordService,
 };
