@@ -19,7 +19,7 @@ router.post('/logout', logoutUser);
 router.post('/send-otp', sendPasswordResetEmail);
 router.post('/verify-otp', verifyPasswordResetOtp);
 router.post('/reset-password', resetPassword);
-router.post('/auth-route', googleAuth);
+router.post('/google-auth', googleAuth);
 
 //* Export the router
 export default router;
