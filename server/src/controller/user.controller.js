@@ -1,5 +1,13 @@
-import { registerService, loginService } from '../services/user.service.js';
+import {
+  registerService,
+  loginService,
+  sendPasswordResetEmailService,
+  verifyPasswordResetOtpService,
+  resetPasswordService,
+} from '../services/user.service.js';
 import { ENV } from '../config/env.config.js';
+import transporter from '../config/nodemailer.config.js';
+import generateMailOptions from '../utils/mailTemplates.utils.js';
 
 //* Controller for registering a user
 const registerUser = async (req, res) => {
@@ -19,6 +27,19 @@ const registerUser = async (req, res) => {
     };
     res.cookie('token', token, cookieOptions);
 
+    // Send welcome email to user
+    const mailOptions = generateMailOptions({
+      user,
+      type: 'welcome',
+      companyName: ENV.COMPANY_NAME,
+    });
+
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      return res.status(500).json({ message: 'Email sending failed', success: false });
+    }
+
     // Send success response
     res.status(201).json({
       user: user,
@@ -31,7 +52,7 @@ const registerUser = async (req, res) => {
 };
 
 //* Controller for logging in a user
-const loginUser = async (req, res) => {
+const loginUser = async function (req, res) {
   // Get fields from request body
   const { email, password } = req.body;
 
@@ -60,7 +81,7 @@ const loginUser = async (req, res) => {
 };
 
 //* Controller for logout
-const logoutUser = async (req, res) => {
+const logoutUser = async function (req, res) {
   try {
     // Clear the cookie
     res.clearCookie('token', {
@@ -79,4 +100,83 @@ const logoutUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, logoutUser };
+//* Controller to send password reset email to the user's email
+const sendPasswordResetEmail = async function (req, res) {
+  // Get email from request body
+  const { email } = req.body;
+  try {
+    // Get the user and otp from sendPasswordResetEmailService
+    const { user, otp } = await sendPasswordResetEmailService(email);
+
+    // Send password reset email to user
+    const mailOptions = generateMailOptions({
+      user,
+      otp,
+      type: 'forgetPassword',
+      companyName: ENV.COMPANY_NAME,
+    });
+
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      return res
+        .status(500)
+        .json({ message: emailError.message || 'Email sending failed', success: false });
+    }
+    // Send success response
+    return res.status(200).json({
+      message: 'Password reset email sent successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+//* Controller to verify password reset otp
+const verifyPasswordResetOtp = async function (req, res) {
+  // Get email and otp from request body
+  const { email, otp } = req.body;
+
+  try {
+    // verify password reset otp using verifyPasswordResetOtpService
+    await verifyPasswordResetOtpService(email, otp);
+
+    // Send success response
+    return res.status(200).json({
+      message: 'Password reset OTP verified successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+//* Controller to reset password
+const resetPassword = async function (req, res) {
+  // Get email and new password from request body
+  const { email, newPassword } = req.body;
+
+  try {
+    // reset password using resetPasswordService
+    await resetPasswordService(email, newPassword);
+
+    // Send success response
+    return res.status(200).json({
+      message: 'Password reset successfully',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
+//* Export controllers
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  sendPasswordResetEmail,
+  verifyPasswordResetOtp,
+  resetPassword,
+};
