@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import { loginUser } from '../api/authApi';
+import { googleAuth, loginUser } from '../api/authApi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +28,7 @@ const SignIn = () => {
     setFormData({ ...formData, [id]: value });
   };
 
-  const handleSignin = async () => {
+  const handleSignin = async function () {
     const { email, password } = formData;
 
     if (!email || !password) {
@@ -45,6 +47,26 @@ const SignIn = () => {
       console.error(error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  //* Function for Google authentication
+  const handleGoogleSignin = async function () {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const response = await googleAuth({
+        email: result.user?.email,
+      });
+      if (response.success) {
+        toast.success(response.message);
+        setFormData({ email: '', password: '' });
+      } else {
+        toast.error("You don't have an account. Please sign up first.");
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+      console.log(error);
     }
   };
 
@@ -109,7 +131,10 @@ const SignIn = () => {
         </button>
 
         {/* Google Sign In */}
-        <button className="w-full mt-4 flex items-center justify-center gap-2 rounded-lg px-4 py-2 transition duration-200 border border-gray-200 cursor-pointer hover:bg-gray-100">
+        <button
+          className="w-full mt-4 flex items-center justify-center gap-2 rounded-lg px-4 py-2 transition duration-200 border border-gray-200 cursor-pointer hover:bg-gray-100"
+          onClick={handleGoogleSignin}
+        >
           <FcGoogle size={20} />
           <span>Sign in with Google</span>
         </button>

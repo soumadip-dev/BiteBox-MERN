@@ -2,6 +2,7 @@ import User from '../model/user.model.js';
 import { isStrongPassword, isValidEmail, isValidMobile } from '../utils/validation.utils.js';
 import { generateToken } from '../utils/jwt.utils.js';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 //* Service for registering a user
 const registerService = async function (fullName, email, password, mobile, role) {
@@ -41,7 +42,7 @@ const registerService = async function (fullName, email, password, mobile, role)
   }
 
   // Generate JWT token
-  const token = generateToken({ id: newUser._id });
+  const token = await generateToken({ id: newUser._id });
 
   // Get user without password
   const user = await User.findById(newUser._id).select('-password');
@@ -71,7 +72,7 @@ const loginService = async function (email, password) {
   }
 
   // Generate JWT token
-  const token = generateToken({ id: loggedInuser._id });
+  const token = await generateToken({ id: loggedInuser._id });
 
   // Get user without password
   const user = await User.findById(loggedInuser._id).select('-password');
@@ -183,6 +184,38 @@ const resetPasswordService = async function (email, newPassword) {
   // Save the user
   await user.save();
 };
+
+//* Service for Google authentication
+const googleAuthService = async function (fullName, email, mobile, role) {
+  // Check if email is provided
+  if (!email) {
+    throw new Error('Email is required');
+  }
+  // Check if user already exists
+  let user = await User.findOne({ email });
+
+  // If user does not exist, create a new user
+  if (!user) {
+    if (!isValidMobile(mobile)) {
+      throw new Error('Mobile number is not valid');
+    }
+    const randomPassword = crypto.randomBytes(10).toString('hex');
+    user = await User.create({
+      fullName,
+      email,
+      mobile,
+      role,
+      password: randomPassword,
+    });
+  }
+
+  const token = await generateToken({ id: user._id });
+
+  const responseUser = await User.findById(user._id).select('-password');
+
+  return { user: responseUser, token };
+};
+
 //* Export services
 export {
   registerService,
@@ -190,4 +223,5 @@ export {
   sendPasswordResetEmailService,
   verifyPasswordResetOtpService,
   resetPasswordService,
+  googleAuthService,
 };

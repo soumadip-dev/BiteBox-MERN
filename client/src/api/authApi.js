@@ -64,3 +64,16 @@ export const resetPassword = async function (userData) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Google Authentication
+export const googleAuth = async function (userData) {
+  try {
+    const response = await axiosInstance.post('/api/v1/auth/google-auth', userData);
+    return response.data; // { success: true/false, message: "..." }
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
