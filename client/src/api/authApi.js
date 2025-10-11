@@ -26,6 +26,20 @@ export const loginUser = async function (userData) {
   }
 };
 
+//* Logout user
+export const logoutUser = async function () {
+  try {
+    // router.post('/logout', logoutUser);
+    const response = await axiosInstance.post('/api/v1/auth/logout');
+    return response.data; // { success: true/false, message: "..." }
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
 //* Send password reset email
 export const sendPasswordResetEmail = async function (email) {
   try {
