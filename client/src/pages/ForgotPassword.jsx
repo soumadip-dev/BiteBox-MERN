@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { resetPassword, sendPasswordResetEmail, verifyPasswordResetOtp } from '../api/authApi';
 
 const ForgotPassword = () => {
