@@ -1,5 +1,5 @@
 import uploadOnCloudinary from '../config/cloudinary.config.js';
-import { createAndEditShopService } from '../services/shop.service.js';
+import { createAndEditShopService, getMyShopService } from '../services/shop.service.js';
 
 //* Controller for creating or editing a shop
 const createAndEditShop = async (req, res) => {
@@ -26,5 +26,21 @@ const createAndEditShop = async (req, res) => {
   }
 };
 
+//* Controller for getting my shop
+const getMyShop = async (req, res) => {
+  try {
+    // Get user ID from the request (added by middleware)
+    const owner = req.userId;
+
+    // Call the service to get my shop
+    const shop = await getMyShopService(owner);
+
+    // Send success response
+    res.status(200).json({ message: 'My shop fetched successfully', success: true, shop });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controller
-export { createAndEditShop };
+export { createAndEditShop, getMyShop };

@@ -29,5 +29,18 @@ const createAndEditShopService = async data => {
   return shop;
 };
 
+//* Service for getting my shop
+const getMyShopService = async owner => {
+  // Find the shop
+  const shop = await Shop.findOne({ owner }).populate('owner items');
+
+  // Check if shop exists
+  if (!shop) {
+    return null;
+  }
+
+  // Return the shop
+  return shop;
+};
 //* Export service
-export { createAndEditShopService };
+export { createAndEditShopService, getMyShopService };
