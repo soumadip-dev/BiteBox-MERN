@@ -18,5 +18,25 @@ const createItemService = async data => {
   const item = await Item.create({ name, category, foodType, price, image, shop: shop._id });
 };
 
+const editItemService = async data => {
+  // Destructure the data
+  const { itemId, name, category, foodType, price, image } = data;
+
+  // Find and update the item
+  const editedItem = await Item.findByIdAndUpdate(
+    itemId,
+    { name, category, foodType, price, image },
+    { new: true }
+  );
+
+  // Check if item exists
+  if (!editedItem) {
+    throw new Error('Item not found');
+  }
+
+  // Return the updated item
+  return editedItem;
+};
+
 //* Export service
-export { createItemService };
+export { createItemService, editItemService };
