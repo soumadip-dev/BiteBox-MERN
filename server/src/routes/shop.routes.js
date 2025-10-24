@@ -6,7 +6,7 @@ import { isAuth } from '../middleware/user.middleware.js';
 const router = Router();
 
 //* Define routes
-router.get('/create-edit', isAuth, createAndEditShop);
+router.post('/create-edit', isAuth, createAndEditShop);
 
 //* Export the router
 export default router;
