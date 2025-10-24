@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import Navbar from './Navbar';
 
 const OwnerDashboard = () => {
   return (
-    <div>OwnerDashboard</div>
-  )
-}
+    <>
+      <Navbar />
+    </>
+  );
+};
 
-export default OwnerDashboard
+export default OwnerDashboard;
