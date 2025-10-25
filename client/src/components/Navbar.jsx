@@ -43,40 +43,41 @@ const Navbar = () => {
     }
   };
 
-  // Show location for user, admin, AND owner roles
-  const shouldShowLocation =
-    userData?.role === 'user' || userData?.role === 'admin' || userData?.role === 'owner';
+  // Show location for user, AND owner roles
+  const shouldShowLocation = userData?.role === 'user' || userData?.role === 'owner';
   // Show search only for users
   const shouldShowSearch = userData?.role === 'user';
 
   return (
     <>
       {/* Fixed Navigation Bar */}
-      <nav className="w-full h-20 flex items-center justify-between md:justify-center gap-8 px-6 fixed top-0 z-[9999] bg-[#fff9f6] backdrop-blur-sm">
+      <nav className="w-full h-16 md:h-20 flex items-center justify-between md:justify-center gap-4 md:gap-8 px-4 md:px-6 fixed top-0 z-[9999] bg-[#fff9f6] backdrop-blur-sm border-b border-gray-100">
         {showSearch && (
-          <div className="w-[90%] h-[70px] bg-white shadow-2xl rounded-xl items-center gap-6 flex fixed top-20 left-[5%] z-[10000] px-5 border border-gray-100">
+          <div className="w-[calc(100%-2rem)] h-16 md:h-[70px] bg-white shadow-2xl rounded-xl items-center gap-4 md:gap-6 flex fixed top-16 md:top-20 left-4 md:left-[5%] z-[10000] px-4 md:px-5 border border-gray-100">
             {shouldShowLocation && (
-              <div className="flex items-center w-[30%] overflow-hidden gap-3 pr-3 border-r-2 border-gray-200">
-                <FaLocationDot size={26} className="text-[#ff4d2d] flex-shrink-0" />
-                <div className="w-[80%] truncate text-gray-700 text-sm font-medium">
+              <div className="flex items-center w-[30%] overflow-hidden gap-2 md:gap-3 pr-2 md:pr-3 border-r-2 border-gray-200">
+                <FaLocationDot size={20} className="md:size-6 text-[#ff4d2d] flex-shrink-0" />
+                <div className="w-[80%] truncate text-gray-700 text-xs md:text-sm font-medium">
                   {city || 'India'}
                 </div>
               </div>
             )}
             {shouldShowSearch && (
-              <div className="w-[70%] flex items-center gap-3">
-                <IoIosSearch size={26} className="text-[#ff4d2d] flex-shrink-0" />
+              <div className="w-[70%] flex items-center gap-2 md:gap-3">
+                <IoIosSearch size={20} className="md:size-6 text-[#ff4d2d] flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Search delicious food"
-                  className="px-3 text-gray-800 outline-0 w-full bg-transparent placeholder-gray-500 font-medium"
+                  className="px-2 md:px-3 text-gray-800 outline-0 w-full bg-transparent placeholder-gray-500 font-medium text-sm md:text-base"
                 />
               </div>
             )}
           </div>
         )}
 
-        <h1 className="text-3xl font-black text-[#ff4d2d] tracking-tight">BiteBox</h1>
+        <h1 className="text-2xl md:text-3xl font-black text-[#ff4d2d] tracking-tight min-w-[100px]">
+          BiteBox
+        </h1>
 
         {/* Main search and location bar - hidden on mobile */}
         {shouldShowLocation && (
@@ -104,19 +105,19 @@ const Navbar = () => {
           </div>
         )}
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2 md:gap-4 lg:gap-5 flex-shrink-0">
           {/* Mobile search toggle */}
           {showSearch && shouldShowSearch ? (
             <RxCross2
               onClick={() => setShowSearch(false)}
-              size={26}
-              className="text-[#ff4d2d] md:hidden cursor-pointer flex-shrink-0 hover:scale-110 transition-transform"
+              size={20}
+              className="md:size-6 text-[#ff4d2d] md:hidden cursor-pointer flex-shrink-0 hover:scale-110 transition-transform"
             />
           ) : (
             shouldShowSearch && (
               <IoIosSearch
-                size={26}
-                className="text-[#ff4d2d] md:hidden cursor-pointer flex-shrink-0 hover:scale-110 transition-transform"
+                size={20}
+                className="md:size-6 text-[#ff4d2d] md:hidden cursor-pointer flex-shrink-0 hover:scale-110 transition-transform"
                 onClick={() => setShowSearch(true)}
               />
             )
@@ -124,68 +125,70 @@ const Navbar = () => {
 
           {userData?.role === 'owner' ? (
             <>
-              <button className="hidden md:flex items-center gap-3 p-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <FaPlus size={20} />
+              {/* Add Food Item Button */}
+              <button className="hidden md:flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+                <FaPlus size={18} className="lg:size-5 flex-shrink-0" />
                 <span className="text-sm font-semibold">Add Food Item</span>
               </button>
-              <button className="md:hidden flex items-center p-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <FaPlus size={20} />
+              <button className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <FaPlus size={18} className="flex-shrink-0" />
               </button>
-              <div className="hidden md:flex items-center gap-3 cursor-pointer relative px-4 py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <TbReceipt2 size={22} />
-                <span>My Orders</span>
-                <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+
+              {/* My Orders Button */}
+              <button className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+                <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
+                <span className="text-sm lg:text-base">My Orders</span>
+                <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center shadow-lg">
                   0
                 </span>
-              </div>
-              <div className="md:hidden flex items-center cursor-pointer relative p-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <TbReceipt2 size={22} />
-                <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+              </button>
+              <div className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer relative rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <TbReceipt2 size={18} className="flex-shrink-0" />
+                <span className="absolute -right-1 -top-1 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-4 h-4 flex items-center justify-center shadow-lg">
                   0
                 </span>
-              </div>
-            </>
-          ) : userData?.role === 'admin' ? (
-            <>
-              {/* Admin specific buttons can go here */}
-              <div className="hidden md:flex items-center gap-3 cursor-pointer relative px-4 py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <span>Admin Panel</span>
               </div>
             </>
           ) : (
             <>
               {/* User specific elements */}
-              <div className="relative cursor-pointer p-2 hover:scale-110 transition-transform">
-                <FiShoppingCart size={26} className="text-[#ff4d2d]" />
-                <span className="absolute -right-1 -top-1 text-[#ff4d2d] text-xs font-black bg-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-[#ff4d2d]/20 shadow-sm">
+              <div className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0">
+                <FiShoppingCart size={20} className="md:size-6 text-[#ff4d2d]" />
+                <span className="absolute -right-1 -top-1 text-[#ff4d2d] text-xs font-black bg-white rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center border-2 border-[#ff4d2d]/20 shadow-sm">
                   0
                 </span>
               </div>
 
-              <button className="hidden md:block px-4 py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-semibold cursor-pointer hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <button className="hidden md:block px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-semibold cursor-pointer hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
                 My orders
               </button>
             </>
           )}
 
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-sm font-black cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 flex-shrink-0 hover:scale-105"
+          {/* Profile Button */}
+          <button
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-xs md:text-sm font-black cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 flex-shrink-0 hover:scale-105 min-w-[32px] md:min-w-[40px]"
             onClick={() => setShowInfo(!showInfo)}
           >
             {getProfileImage(userData?.fullName)}
-          </div>
+          </button>
 
+          {/* User Info Dropdown */}
           {showInfo && (
-            <div className="fixed top-20 right-4 md:right-[10%] lg:right-[25%] w-52 bg-white shadow-2xl rounded-2xl p-5 flex flex-col gap-4 z-[10000] border border-gray-100 backdrop-blur-sm">
-              <div className="text-base font-bold truncate text-gray-900">{userData?.fullName}</div>
-              <div className="text-sm text-gray-600 truncate capitalize">{userData?.role}</div>
+            <div className="fixed top-16 md:top-20 right-4 md:right-6 w-48 md:w-52 bg-white shadow-2xl rounded-2xl p-4 md:p-5 flex flex-col gap-3 md:gap-4 z-[10000] border border-gray-100 backdrop-blur-sm">
+              <div className="text-sm md:text-base font-bold truncate text-gray-900">
+                {userData?.fullName}
+              </div>
+              <div className="text-xs md:text-sm text-gray-600 truncate capitalize">
+                {userData?.role}
+              </div>
               {userData?.role === 'user' && (
-                <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200">
+                <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm">
                   My orders
                 </div>
               )}
               <div
-                className={`text-[#ff4d2d] font-semibold ${
+                className={`text-[#ff4d2d] font-semibold text-sm md:text-base ${
                   isLoading
                     ? 'opacity-50 cursor-not-allowed'
                     : 'cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200'
@@ -198,9 +201,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-
-      {/* Spacer to prevent content from going behind fixed navbar */}
-      <div className="h-20"></div>
+      <div className="h-16 md:h-20"></div>
     </>
   );
 };
