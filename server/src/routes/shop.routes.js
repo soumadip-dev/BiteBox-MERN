@@ -7,7 +7,7 @@ const router = Router();
 
 //* Define routes
 router.post('/create-edit', isAuth, createAndEditShop);
-router.get('/', isAuth, getMyShop);
+router.get('/get-my', isAuth, getMyShop);
 
 //* Export the router
 export default router;
