@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { ENV } from './env.config';
+import { ENV } from './env.config.js';
 import fs from 'fs/promises';
 
 //* Upload image on cloudinary

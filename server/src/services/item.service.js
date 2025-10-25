@@ -1,5 +1,5 @@
-import Item from '../model/item.model';
-import Shop from '../model/shop.model';
+import Item from '../model/item.model.js';
+import Shop from '../model/shop.model.js';
 
 //* Service for creating an item
 const createItemService = async data => {
