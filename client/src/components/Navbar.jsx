@@ -4,7 +4,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { logoutUser } from '../api/authApi';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';

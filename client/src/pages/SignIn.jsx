@@ -3,12 +3,11 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import { googleAuth, loginUser } from '../api/authApi';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice.js';
+import toast from 'react-hot-toast';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
