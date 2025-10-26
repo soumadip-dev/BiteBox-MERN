@@ -5,14 +5,14 @@ import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/useGetCurrentUser';
 import { useSelector } from 'react-redux';
 import Home from './pages/Home';
-import useGetCityState from './hooks/useGetCityState';
 import { Toaster } from 'react-hot-toast';
 import useGetMyShop from './hooks/useGetMyShop';
 import CreateEditShop from './pages/CreateEditShop';
+import useGetLocation from './hooks/useGetLocation';
 
 const App = () => {
   useGetCurrentUser();
-  useGetCityState();
+  useGetLocation();
   useGetMyShop();
   const { userData } = useSelector(state => state.user);
   return (

@@ -1,10 +1,10 @@
 import { useDispatch } from 'react-redux';
-import { setCity, setState } from '../redux/userSlice.js';
+import { setAddress, setCity, setState } from '../redux/userSlice.js';
 import { useEffect } from 'react';
 import axios from 'axios';
 
 //* Custom hook to get and store user's current city
-const useGetCityState = () => {
+const useGetLocation = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,8 +17,14 @@ const useGetCityState = () => {
         );
         const city = response.data?.results?.[0]?.city || 'Unknown';
         const state = response.data?.results?.[0]?.state || 'Unknown';
+        const address =
+          response.data?.results?.[0].address_line2 ||
+          response.data?.results?.[0].address_line1 ||
+          'Unknown';
+
         dispatch(setCity(city));
         dispatch(setState(state));
+        dispatch(setAddress(address));
       } catch (error) {
         console.error('Error fetching city:', error);
       }
@@ -40,4 +46,4 @@ const useGetCityState = () => {
   }, [dispatch]);
 };
 
-export default useGetCityState;
+export default useGetLocation;
