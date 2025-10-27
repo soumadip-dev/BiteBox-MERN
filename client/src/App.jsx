@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import useGetCity from './hooks/useGetCity';
 import { Toaster } from 'react-hot-toast';
 import useGetMyShop from './hooks/useGetMyShop';
+import CreateEditShop from './pages/CreateEditShop';
 
 const App = () => {
   useGetCurrentUser();
@@ -25,6 +26,7 @@ const App = () => {
           element={!userData ? <ForgotPassword /> : <Navigate to="/" />}
         />
         <Route path="/" element={userData ? <Home /> : <SignIn />} />
+        <Route path="/create-edit-shop" element={userData ? <CreateEditShop /> : <SignIn />} />
       </Routes>
     </>
   );
