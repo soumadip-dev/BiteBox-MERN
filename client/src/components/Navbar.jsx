@@ -169,40 +169,41 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Profile Button */}
-          <button
-            className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-xs md:text-sm font-black cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 flex-shrink-0 hover:scale-105 min-w-[32px] md:min-w-[40px]"
-            onClick={() => setShowInfo(!showInfo)}
-          >
-            {getProfileImage(userData?.fullName)}
-          </button>
+          <div className="relative flex-shrink-0">
+            <button
+              className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-[#ff4d2d] text-white text-xs md:text-sm font-black cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 flex-shrink-0 hover:scale-105 min-w-[32px] md:min-w-[40px]"
+              onClick={() => setShowInfo(!showInfo)}
+            >
+              {getProfileImage(userData?.fullName)}
+            </button>
 
-          {/* User Info Dropdown */}
-          {showInfo && (
-            <div className="fixed top-16 md:top-20 right-4 md:right-6 w-48 md:w-52 bg-white shadow-2xl rounded-2xl p-4 md:p-5 flex flex-col gap-3 md:gap-4 z-[10000] border border-gray-100 backdrop-blur-sm">
-              <div className="text-sm md:text-base font-bold truncate text-gray-900">
-                {userData?.fullName}
-              </div>
-              <div className="text-xs md:text-sm text-gray-600 truncate capitalize">
-                {userData?.role}
-              </div>
-              {userData?.role === 'user' && (
-                <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm">
-                  My orders
+            {/* User Info Dropdown - Now positioned absolutely relative to the profile button container */}
+            {showInfo && (
+              <div className="absolute top-full right-0 mt-2 w-48 md:w-52 bg-white shadow-2xl rounded-2xl p-4 md:p-5 flex flex-col gap-3 md:gap-4 z-[10000] border border-gray-100 backdrop-blur-sm">
+                <div className="text-sm md:text-base font-bold truncate text-gray-900">
+                  {userData?.fullName}
                 </div>
-              )}
-              <div
-                className={`text-[#ff4d2d] font-semibold text-sm md:text-base ${
-                  isLoading
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200'
-                }`}
-                onClick={() => !isLoading && handleLogout()}
-              >
-                {isLoading ? 'Logging out...' : 'Log Out'}
+                <div className="text-xs md:text-sm text-gray-600 truncate capitalize">
+                  {userData?.role}
+                </div>
+                {userData?.role === 'user' && (
+                  <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm">
+                    My orders
+                  </div>
+                )}
+                <div
+                  className={`text-[#ff4d2d] font-semibold text-sm md:text-base ${
+                    isLoading
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200'
+                  }`}
+                  onClick={() => !isLoading && handleLogout()}
+                >
+                  {isLoading ? 'Logging out...' : 'Log Out'}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </nav>
       <div className="h-16 md:h-20"></div>
