@@ -24,6 +24,7 @@ function getProfileImage(fullName) {
 
 const Navbar = () => {
   const { userData, city } = useSelector(state => state.user);
+  const { myShopData } = useSelector(state => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,14 +127,17 @@ const Navbar = () => {
           {userData?.role === 'owner' ? (
             <>
               {/* Add Food Item Button */}
-              <button className="hidden md:flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
-                <FaPlus size={18} className="lg:size-5 flex-shrink-0" />
-                <span className="text-sm font-semibold">Add Food Item</span>
-              </button>
-              <button className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
-                <FaPlus size={18} className="flex-shrink-0" />
-              </button>
-
+              {myShopData && (
+                <>
+                  <button className="hidden md:flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+                    <FaPlus size={18} className="lg:size-5 flex-shrink-0" />
+                    <span className="text-sm font-semibold">Add Food Item</span>
+                  </button>
+                  <button className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <FaPlus size={18} className="flex-shrink-0" />
+                  </button>
+                </>
+              )}
               {/* My Orders Button */}
               <button className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
                 <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
