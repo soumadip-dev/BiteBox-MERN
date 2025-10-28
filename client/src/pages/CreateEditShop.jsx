@@ -22,6 +22,7 @@ const CreateEditShop = () => {
   const [address, setAddress] = useState(myShopData?.address || userAddress || '');
   const [frontendImage, setFrontendImage] = useState(myShopData?.image || null);
   const [backendImage, setBackendImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -33,8 +34,14 @@ const CreateEditShop = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     console.log('Backend Image:', backendImage);
     console.log('Existing Shop Image:', myShopData?.image);
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('city', city);
@@ -43,6 +50,7 @@ const CreateEditShop = () => {
     if (backendImage) {
       formData.append('image', backendImage);
     }
+
     try {
       const result = await createEditShop(formData);
       console.log(result);
@@ -50,9 +58,17 @@ const CreateEditShop = () => {
       if (result.success) {
         dispatch(setMyShopData(result.shop));
         toast.success(result.message);
+
+        // Navigate back to home page after successful submission
+        navigate('/');
+      } else {
+        toast.error(result.message || 'Something went wrong');
       }
     } catch (error) {
       console.error('Error creating/editing shop:', error);
+      toast.error('Failed to save shop details');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -89,6 +105,7 @@ const CreateEditShop = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-200 placeholder-gray-400"
               value={name}
               onChange={e => setName(e.target.value)}
+              required
             />
           </div>
 
@@ -124,6 +141,7 @@ const CreateEditShop = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-200 placeholder-gray-400"
                 value={city}
                 onChange={e => setCity(e.target.value)}
+                required
               />
             </div>
             <div className="space-y-1">
@@ -136,6 +154,7 @@ const CreateEditShop = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-200 placeholder-gray-400"
                 value={state}
                 onChange={e => setState(e.target.value)}
+                required
               />
             </div>
           </div>
@@ -150,14 +169,18 @@ const CreateEditShop = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-200 placeholder-gray-400"
               value={address}
               onChange={e => setAddress(e.target.value)}
+              required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-200 cursor-pointer active:scale-95"
+            disabled={isSubmitting}
+            className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 ${
+              isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
+            }`}
           >
-            Save Shop Details
+            {isSubmitting ? 'Saving...' : 'Save Shop Details'}
           </button>
         </form>
       </div>
