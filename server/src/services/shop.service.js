@@ -5,27 +5,26 @@ const createAndEditShopService = async data => {
   // Destructure the data
   const { name, city, state, address, image, owner } = data;
 
-  let shop;
+  let shop = await Shop.findOne({ owner });
 
-  // Check if any shop is present for the owner
-  shop = await Shop.findOne({ owner });
-
-  // If a shop is present, update it
   if (shop) {
-    shop = await Shop.findByIdAndUpdate(
-      shop._id,
-      { name, city, state, address, image },
-      { new: true }
-    );
+    // If no new image provided, keep the existing one
+    const updateData = { name, city, state, address };
+    if (image) {
+      updateData.image = image;
+    }
+    
+    // Otherwise, image remains unchanged
+    shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
   } else {
-    // Or create a new shop
+    // For new shop, image is required
+    if (!image) {
+      throw new Error('Image is required for new shop');
+    }
     shop = await Shop.create({ name, city, state, address, image, owner });
   }
 
-  // Populate the owner field
   await shop.populate('owner');
-
-  // Return the shop
   return shop;
 };
 
