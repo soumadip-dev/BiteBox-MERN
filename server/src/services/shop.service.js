@@ -13,7 +13,7 @@ const createAndEditShopService = async data => {
     if (image) {
       updateData.image = image;
     }
-    
+
     // Otherwise, image remains unchanged
     shop = await Shop.findByIdAndUpdate(shop._id, updateData, { new: true });
   } else {
@@ -31,7 +31,7 @@ const createAndEditShopService = async data => {
 //* Service for getting my shop
 const getMyShopService = async owner => {
   // Find the shop
-  const shop = await Shop.findOne({ owner }).populate('owner items');
+  const shop = await Shop.findOne({ owner });
 
   // Check if shop exists
   if (!shop) {
