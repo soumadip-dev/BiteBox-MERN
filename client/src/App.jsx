@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import useGetMyShop from './hooks/useGetMyShop';
 import CreateEditShop from './pages/CreateEditShop';
 import useGetLocation from './hooks/useGetLocation';
+import AddItem from './pages/AddItem';
 
 const App = () => {
   useGetCurrentUser();
@@ -27,6 +28,7 @@ const App = () => {
         />
         <Route path="/" element={userData ? <Home /> : <SignIn />} />
         <Route path="/create-edit-shop" element={userData ? <CreateEditShop /> : <SignIn />} />
+        <Route path="/add-food" element={userData ? <AddItem /> : <SignIn />} />
       </Routes>
     </>
   );
