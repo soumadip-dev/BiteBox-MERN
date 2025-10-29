@@ -31,7 +31,9 @@ const createAndEditShopService = async data => {
 //* Service for getting my shop
 const getMyShopService = async owner => {
   // Find the shop
-  const shop = await Shop.findOne({ owner });
+  const shop = await Shop.findOne({ owner })
+    .populate('items') // Add this line to populate items
+    .populate('owner');
 
   // Check if shop exists
   if (!shop) {
