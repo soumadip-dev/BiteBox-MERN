@@ -26,6 +26,7 @@ const createItemService = async data => {
   return shop;
 };
 
+//* Service for editing an item
 const editItemService = async data => {
   // Destructure the data
   const { itemId, name, category, foodType, price, image } = data;
@@ -46,5 +47,11 @@ const editItemService = async data => {
   return editedItem;
 };
 
+//* Service for getting an item by id
+const getItemByIdService = async itemId => {
+  // Find and return the item
+  return await Item.findById(itemId);
+};
+
 //* Export service
-export { createItemService, editItemService };
+export { createItemService, editItemService, getItemByIdService };
