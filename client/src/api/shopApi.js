@@ -52,3 +52,39 @@ export const addFoodItem = async function (foodData) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Edit food item
+export const editFoodItem = async function (itemId, foodData) {
+  try {
+    const response = await axiosInstance.post(`/api/v1/item/edit-item/${itemId}`, foodData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log('API Error:', error.message);
+    console.log('Error response:', error.response?.data);
+
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
+//* Get food item by ID
+export const getFoodItemById = async function (itemId) {
+  try {
+    const response = await axiosInstance.get(`/api/v1/item/get-by-id/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.log('API Error:', error.message);
+    console.log('Error response:', error.response?.data);
+
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
