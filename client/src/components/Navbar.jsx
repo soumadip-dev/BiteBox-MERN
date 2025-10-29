@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { logoutUser } from '../api/authApi';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function getProfileImage(fullName) {
   if (!fullName) return '';
@@ -23,6 +24,7 @@ function getProfileImage(fullName) {
 }
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { userData, city } = useSelector(state => state.user);
   const { myShopData } = useSelector(state => state.owner);
   const [showInfo, setShowInfo] = useState(false);
@@ -129,7 +131,10 @@ const Navbar = () => {
               {/* Add Food Item Button */}
               {myShopData && (
                 <>
-                  <button className="hidden md:flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+                  <button
+                    className="hidden md:flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2 lg:py-3 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                    onClick={() => navigate('/add-food')}
+                  >
                     <FaPlus size={18} className="lg:size-5 flex-shrink-0" />
                     <span className="text-sm font-semibold">Add Food Item</span>
                   </button>
