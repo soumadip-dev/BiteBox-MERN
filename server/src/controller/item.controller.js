@@ -84,4 +84,4 @@ const getItemById = async (req, res) => {
 };
 
 //* Export controllers
-export { addItem, editItem };
+export { addItem, editItem, getItemById };
