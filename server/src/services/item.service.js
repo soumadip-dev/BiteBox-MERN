@@ -16,6 +16,14 @@ const createItemService = async data => {
 
   // Create item and add it to the shop
   const item = await Item.create({ name, category, foodType, price, image, shop: shop._id });
+
+  // Add item to the shop
+  shop.items.push(item._id);
+  await shop.save();
+  await shop.populate('items owner');
+
+  // Return the shop
+  return shop;
 };
 
 const editItemService = async data => {

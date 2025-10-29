@@ -16,11 +16,11 @@ const addItem = async (req, res) => {
     // Get user ID from the request (added by middleware)
     const owner = req.userId;
 
-    // Call the service to create item
-    const item = await createItemService({ name, category, foodType, price, image, owner });
+    // Call the service to create item and get shop
+    const shop = await createItemService({ name, category, foodType, price, image, owner });
 
     // Send success response
-    res.status(200).json({ message: 'Item created successfully', success: true, item });
+    res.status(200).json({ message: 'Item created successfully', success: true, shop });
   } catch (error) {
     res.status(400).json({ message: error.message || 'Something went wrong', success: false });
   }
