@@ -128,7 +128,6 @@ const Navbar = () => {
 
           {userData?.role === 'owner' ? (
             <>
-              {/* Add Food Item Button */}
               {myShopData && (
                 <>
                   <button
@@ -138,7 +137,10 @@ const Navbar = () => {
                     <FaPlus size={18} className="lg:size-5 flex-shrink-0" />
                     <span className="text-sm font-semibold">Add Food Item</span>
                   </button>
-                  <button className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <button
+                    className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    onClick={() => navigate('/add-food')}
+                  >
                     <FaPlus size={18} className="flex-shrink-0" />
                   </button>
                 </>
