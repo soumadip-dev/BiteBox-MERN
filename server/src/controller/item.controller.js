@@ -4,6 +4,7 @@ import {
   editItemService,
   getItemByIdService,
 } from '../services/item.service.js';
+import Shop from '../model/shop.model.js';
 
 //* Controller for creating an item
 const addItem = async (req, res) => {
@@ -46,7 +47,7 @@ const editItem = async (req, res) => {
     }
 
     // Call the service to edit item
-    const item = await editItemService({
+    await editItemService({
       itemId: id,
       name,
       category,
@@ -55,8 +56,13 @@ const editItem = async (req, res) => {
       image,
     });
 
+    const shop = await Shop.findOne({ owner: req.userId }).populate({
+      path: 'items',
+      option: { sort: { updatedAt: -1 } },
+    });
+
     // Send success response
-    res.status(200).json({ message: 'Item edited successfully', success: true, item });
+    res.status(200).json({ message: 'Item edited successfully', success: true, shop });
   } catch (error) {
     res.status(400).json({ message: error.message || 'Something went wrong', success: false });
   }

@@ -7,7 +7,10 @@ const createItemService = async data => {
   const { name, category, foodType, price, image, owner } = data;
 
   // Find the shop
-  const shop = await Shop.findOne({ owner });
+  const shop = await Shop.findOne({ owner }).populate({
+    path: 'items',
+    option: { sort: { updatedAt: -1 } },
+  });
 
   // Check if shop exists
   if (!shop) {
@@ -42,9 +45,6 @@ const editItemService = async data => {
   if (!editedItem) {
     throw new Error('Item not found');
   }
-
-  // Return the updated item
-  return editedItem;
 };
 
 //* Service for getting an item by id

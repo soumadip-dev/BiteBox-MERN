@@ -32,7 +32,10 @@ const createAndEditShopService = async data => {
 const getMyShopService = async owner => {
   // Find the shop
   const shop = await Shop.findOne({ owner })
-    .populate('items') // Add this line to populate items
+    .populate({
+      path: 'items',
+      option: { sort: { updatedAt: -1 } },
+    }) // Add this line to populate items
     .populate('owner');
 
   // Check if shop exists
