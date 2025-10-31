@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { FaUtensils } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import { addFoodItem } from '../api/shopApi';
-
+import { addFoodItem, getMyShop } from '../api/shopApi';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMyShopData } from '../redux/ownerSlice';
 
 const AddItem = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
@@ -48,14 +49,22 @@ const AddItem = () => {
       const result = await addFoodItem(formData);
       console.log(result);
       if (result.success) {
-        toast.success(result.message);
-        navigate('/');
+        // Refresh shop data to get updated items
+        const shopResult = await getMyShop();
+        if (shopResult.success) {
+          dispatch(setMyShopData(shopResult.shop));
+          toast.success(result.message || 'Item added successfully!');
+          navigate('/');
+        } else {
+          toast.error('Item added but failed to refresh shop data');
+          navigate('/');
+        }
       } else {
         toast.error(result.message || 'Something went wrong');
       }
     } catch (error) {
-      console.error('Error creating/editing shop:', error);
-      toast.error('Failed to save shop details');
+      console.error('Error adding item:', error);
+      toast.error('Failed to add item');
     } finally {
       setIsSubmitting(false);
     }
@@ -81,6 +90,7 @@ const AddItem = () => {
       <button
         className="absolute top-6 left-6 p-2 rounded-full hover:bg-orange-50 transition-all duration-200 cursor-pointer group"
         onClick={() => navigate(-1)}
+        disabled={isSubmitting}
       >
         <IoIosArrowRoundBack
           size={32}
@@ -192,11 +202,18 @@ const AddItem = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 ${
+            className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center gap-2 ${
               isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
             }`}
           >
-            {isSubmitting ? 'Adding Item...' : 'Add Item'}
+            {isSubmitting ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Adding Item...
+              </>
+            ) : (
+              'Add Item'
+            )}
           </button>
         </form>
       </div>
