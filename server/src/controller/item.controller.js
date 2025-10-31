@@ -3,6 +3,7 @@ import {
   createItemService,
   editItemService,
   getItemByIdService,
+  deleteItemService,
 } from '../services/item.service.js';
 import Shop from '../model/shop.model.js';
 
@@ -89,5 +90,23 @@ const getItemById = async (req, res) => {
   }
 };
 
+//* Controller for deleting item
+const deleteItem = async (req, res) => {
+  try {
+    // Get the item ID from the request params
+    const { id } = req.params;
+
+    const currentOwner = req.userId;
+
+    // Call the service to delete item
+    const shop = await deleteItemService(id, currentOwner);
+
+    // Send success response
+    res.status(200).json({ message: 'Item deleted successfully', success: true, shop });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controllers
-export { addItem, editItem, getItemById };
+export { addItem, editItem, getItemById, deleteItem };

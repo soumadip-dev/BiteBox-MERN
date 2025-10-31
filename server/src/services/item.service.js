@@ -53,5 +53,29 @@ const getItemByIdService = async itemId => {
   return await Item.findById(itemId);
 };
 
+//* Service for deleting an item
+const deleteItemService = async (itemId, currentOwner) => {
+  // Find and delete the item
+  const item = await Item.findByIdAndDelete(itemId);
+
+  // Check if item exists
+  if (!item) {
+    throw new Error('Item not found');
+  }
+
+  const shop = await Shop.findOne({ owner: currentOwner });
+
+  shop.items = shop.items.filter(item => item._id !== itemId);
+
+  await shop.save();
+
+  await shop.populate({
+    path: 'items',
+    option: { sort: { updatedAt: -1 } },
+  });
+
+  return shop;
+};
+
 //* Export service
-export { createItemService, editItemService, getItemByIdService };
+export { createItemService, editItemService, getItemByIdService, deleteItemService };
