@@ -215,11 +215,22 @@ const EditItem = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 ${
+            className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center gap-2 ${
               isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
             }`}
           >
-            {isSubmitting ? 'Updating Item...' : 'Update Item'}
+            {isSubmitting ? (
+              <>
+                <div
+                  className={`w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin ${
+                    isSubmitting ? 'opacity-100' : 'opacity-0'
+                  }`}
+                ></div>
+                Updating Item...
+              </>
+            ) : (
+              'Update Item'
+            )}
           </button>
         </form>
       </div>
