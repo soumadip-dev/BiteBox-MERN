@@ -5,12 +5,17 @@ import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/useGetCurrentUser';
 import { useSelector } from 'react-redux';
 import Home from './pages/Home';
-import useGetCity from './hooks/useGetCity';
 import { Toaster } from 'react-hot-toast';
+import useGetMyShop from './hooks/useGetMyShop';
+import CreateEditShop from './pages/CreateEditShop';
+import useGetLocation from './hooks/useGetLocation';
+import AddItem from './pages/AddItem';
+import EditItem from './pages/EditItem';
 
 const App = () => {
   useGetCurrentUser();
-  useGetCity();
+  useGetLocation();
+  useGetMyShop();
   const { userData } = useSelector(state => state.user);
   return (
     <>
@@ -23,6 +28,9 @@ const App = () => {
           element={!userData ? <ForgotPassword /> : <Navigate to="/" />}
         />
         <Route path="/" element={userData ? <Home /> : <SignIn />} />
+        <Route path="/create-edit-shop" element={userData ? <CreateEditShop /> : <SignIn />} />
+        <Route path="/add-food" element={userData ? <AddItem /> : <SignIn />} />
+        <Route path="/edit-food/:itemId" element={userData ? <EditItem /> : <SignIn />} />
       </Routes>
     </>
   );

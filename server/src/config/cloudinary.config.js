@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { ENV } from './env.config';
+import { ENV } from './env.config.js';
 import fs from 'fs/promises';
 
 //* Upload image on cloudinary
@@ -11,11 +11,12 @@ const uploadOnCloudinary = async file => {
   });
   try {
     const { secure_url } = await cloudinary.uploader.upload(file);
-    fs.unlinkSync(file);
+    await fs.unlink(file);
     return secure_url;
   } catch (error) {
-    fs.unlinkSync(file);
+    await fs.unlink(file);
     console.log(error);
+    throw error;
   }
 };
 

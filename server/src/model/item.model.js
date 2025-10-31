@@ -50,7 +50,7 @@ const itemSchema = new mongoose.Schema(
 );
 
 //* Create the model
-const Item = mongoose.model('item', itemSchema);
+const Item = mongoose.model('Item', itemSchema);
 
 //* Export the model
 export default Item;
