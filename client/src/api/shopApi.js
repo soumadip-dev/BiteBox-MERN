@@ -88,3 +88,19 @@ export const getFoodItemById = async function (itemId) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Delete food item
+export const deleteFoodItem = async function (itemId) {
+  try {
+    const response = await axiosInstance.delete(`/api/v1/item/delete-item/${itemId}`);
+    return response.data;
+  } catch (error) {
+    console.log('API Error:', error.message);
+    console.log('Error response:', error.response?.data);
+
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
