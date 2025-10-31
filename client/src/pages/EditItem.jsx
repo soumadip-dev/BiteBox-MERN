@@ -31,8 +31,6 @@ const EditItem = () => {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
-
-    console.log('Backend Image:', backendImage);
     const formData = new FormData();
     formData.append('name', name);
     formData.append('category', category);
@@ -44,18 +42,10 @@ const EditItem = () => {
 
     try {
       const result = await editFoodItem(itemId, formData);
-      console.log(result);
       if (result.success) {
-        // Refresh shop data to get updated items
-        const shopResult = await getMyShop();
-        if (shopResult.success) {
-          dispatch(setMyShopData(shopResult.shop));
-          toast.success(result.message || 'Item updated successfully!');
-          navigate('/');
-        } else {
-          toast.error('Item updated but failed to refresh shop data');
-          navigate('/');
-        }
+        dispatch(setMyShopData(result.shop));
+        navigate('/');
+        toast.success(result.message || 'Item updated successfully!');
       } else {
         toast.error(result.message || 'Something went wrong');
       }

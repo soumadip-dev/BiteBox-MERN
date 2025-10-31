@@ -47,18 +47,10 @@ const AddItem = () => {
 
     try {
       const result = await addFoodItem(formData);
-      console.log(result);
       if (result.success) {
-        // Refresh shop data to get updated items
-        const shopResult = await getMyShop();
-        if (shopResult.success) {
-          dispatch(setMyShopData(shopResult.shop));
-          toast.success(result.message || 'Item added successfully!');
-          navigate('/');
-        } else {
-          toast.error('Item added but failed to refresh shop data');
-          navigate('/');
-        }
+        dispatch(setMyShopData(result.shop));
+        navigate('/');
+        toast.success('Item added successfully!');
       } else {
         toast.error(result.message || 'Something went wrong');
       }
