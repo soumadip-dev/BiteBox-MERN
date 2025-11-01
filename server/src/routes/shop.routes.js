@@ -9,7 +9,7 @@ const router = Router();
 //* Define routes
 router.post('/create-edit', isAuth, upload.single('image'), createAndEditShop);
 router.get('/get-my', isAuth, getMyShop);
-router.get('/get-by-city:city', isAuth, getShopsByCity);
+router.get('/get-by-city/:city', isAuth, getShopsByCity);
 
 //* Export the router
 export default router;
