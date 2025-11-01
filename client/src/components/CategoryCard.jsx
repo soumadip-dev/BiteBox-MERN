@@ -9,7 +9,9 @@ const CategoryCard = ({ data }) => {
         className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-out"
       />
       <div className="absolute bottom-0 left-0 w-full bg-white/90 bg-opacity-95 py-2 px-3 rounded-t-xl text-center border-t border-[#ff4d2d]/10">
-        <span className="text-sm font-semibold text-gray-800 tracking-tight">{data.category}</span>
+        <span className="text-sm font-semibold text-gray-800 tracking-tight truncate block">
+          {data.category}
+        </span>
       </div>
     </div>
   );
