@@ -4,9 +4,10 @@ import CategoryCard from './CategoryCard';
 import Navbar from './Navbar';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import FoodCard from './FoodCard';
 
 const UserDashboard = () => {
-  const { city, shopsInMyCity } = useSelector(state => state.user);
+  const { city, shopsInMyCity, ItemsInMyCity } = useSelector(state => state.user);
   const categoriScrollRef = useRef(null);
   const shopsScrollRef = useRef(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
@@ -26,12 +27,8 @@ const UserDashboard = () => {
   const checkScrollButtons = (scrollRef, setLeftButton, setRightButton) => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-
-      // Show left button only if scrolled from start
       setLeftButton(scrollLeft > 0);
-
-      // Show right button only if there's more content to scroll
-      setRightButton(scrollLeft < scrollWidth - clientWidth - 10); // 10px tolerance
+      setRightButton(scrollLeft < scrollWidth - clientWidth - 10);
     }
   };
 
@@ -69,29 +66,31 @@ const UserDashboard = () => {
       window.removeEventListener('resize', checkCategoryScrollButtons);
       window.removeEventListener('resize', checkShopsScrollButtons);
     };
-  }, [shopsInMyCity]); // Re-run when shops data changes
+  }, [shopsInMyCity]);
 
   return (
     <>
       <Navbar />
-      <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-5 sm:px-6 sm:py-6 mx-auto">
-        <h1 className="text-gray-800 text-2xl sm:text-3xl font-semibold tracking-tight leading-tight">
+
+      {/* Categories Section */}
+      <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
+        <h1 className="text-gray-900 text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
           Inspiration for your first order
         </h1>
 
         <div className="w-full relative group">
           {showLeftButton && (
             <button
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] transition-all duration-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-105"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-xl hover:bg-[#e64528] transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-110 active:scale-95"
               onClick={() => scrollHandler(categoriScrollRef, 'left')}
               aria-label="Scroll left"
             >
-              <FaCircleChevronLeft className="w-5 h-5" />
+              <FaCircleChevronLeft className="w-6 h-6" />
             </button>
           )}
 
           <div
-            className="w-full flex overflow-x-auto gap-5 pb-4 scrollbar-thin scrollbar-thumb-[#ff4d2d] scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scroll-smooth"
+            className="w-full flex overflow-x-auto gap-6 pb-5 scrollbar-thin scrollbar-thumb-[#ff4d2d] scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scroll-smooth"
             ref={categoriScrollRef}
             onScroll={checkCategoryScrollButtons}
           >
@@ -102,19 +101,19 @@ const UserDashboard = () => {
 
           {showRightButton && (
             <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] transition-all duration-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-105"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-xl hover:bg-[#e64528] transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-110 active:scale-95"
               onClick={() => scrollHandler(categoriScrollRef, 'right')}
               aria-label="Scroll right"
             >
-              <FaCircleChevronRight className="w-5 h-5" />
+              <FaCircleChevronRight className="w-6 h-6" />
             </button>
           )}
         </div>
       </div>
 
       {/* Shops in City Section */}
-      <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-5 sm:px-6 sm:py-6 mx-auto">
-        <h1 className="text-gray-800 text-2xl sm:text-3xl font-semibold tracking-tight leading-tight">
+      <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
+        <h1 className="text-gray-900 text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
           Popular Restaurants in {city || 'Your City'}
         </h1>
 
@@ -122,23 +121,23 @@ const UserDashboard = () => {
           <div className="w-full relative group">
             {showShopsLeftButton && (
               <button
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] transition-all duration-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-105"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-xl hover:bg-[#e64528] transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-110 active:scale-95"
                 onClick={() => scrollHandler(shopsScrollRef, 'left')}
                 aria-label="Scroll shops left"
               >
-                <FaCircleChevronLeft className="w-5 h-5" />
+                <FaCircleChevronLeft className="w-6 h-6" />
               </button>
             )}
 
             <div
-              className="w-full flex overflow-x-auto gap-5 pb-4 scrollbar-thin scrollbar-thumb-[#ff4d2d] scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scroll-smooth"
+              className="w-full flex overflow-x-auto gap-6 pb-5 scrollbar-thin scrollbar-thumb-[#ff4d2d] scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scroll-smooth"
               ref={shopsScrollRef}
               onScroll={checkShopsScrollButtons}
             >
               {shopsInMyCity.map((shop, index) => (
                 <CategoryCard
                   data={{
-                    image: shop.image || '/default-shop-image.jpg', // Fallback image
+                    image: shop.image || '/default-shop-image.jpg',
                     category: shop.name || 'Restaurant',
                   }}
                   key={index}
@@ -148,19 +147,19 @@ const UserDashboard = () => {
 
             {showShopsRightButton && (
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-lg hover:bg-[#e64528] transition-all duration-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-105"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#ff4d2d] text-white p-2 rounded-full shadow-xl hover:bg-[#e64528] transition-all duration-300 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 transform hover:scale-110 active:scale-95"
                 onClick={() => scrollHandler(shopsScrollRef, 'right')}
                 aria-label="Scroll shops right"
               >
-                <FaCircleChevronRight className="w-5 h-5" />
+                <FaCircleChevronRight className="w-6 h-6" />
               </button>
             )}
           </div>
         ) : (
-          <div className="w-full flex flex-col items-center justify-center py-12 px-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-            <div className="text-gray-400 mb-4">
+          <div className="w-full flex flex-col items-center justify-center py-16 px-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 transition-all duration-300 hover:border-gray-400">
+            <div className="text-gray-400 mb-5 transform transition-transform duration-300 hover:scale-110">
               <svg
-                className="w-16 h-16 mx-auto"
+                className="w-20 h-20 mx-auto"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -173,15 +172,27 @@ const UserDashboard = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-600 mb-2 text-center">
+            <h3 className="text-xl font-semibold text-gray-700 mb-3 text-center">
               No restaurants available
             </h3>
-            <p className="text-gray-500 text-center max-w-md">
+            <p className="text-gray-600 text-center max-w-md leading-relaxed">
               We're working on bringing the best restaurants to {city || 'your city'}. Check back
               soon for new options!
             </p>
           </div>
         )}
+      </div>
+
+      {/* Suggested Food Items */}
+      <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
+        <h1 className="text-gray-900 text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
+          Suggested Food Items
+        </h1>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {ItemsInMyCity.map((item, index) => (
+            <FoodCard data={item} key={index} />
+          ))}
+        </div>
       </div>
     </>
   );
