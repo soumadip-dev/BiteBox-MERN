@@ -47,6 +47,7 @@ const getMyShopService = async owner => {
   return shop;
 };
 
+//* Service for getting shops by city
 const getShopsByCityService = async city => {
   const shops = await Shop.find({
     city: {
