@@ -46,5 +46,18 @@ const getMyShopService = async owner => {
   // Return the shop
   return shop;
 };
+
+//* Service for getting shops by city
+const getShopsByCityService = async city => {
+  const shops = await Shop.find({
+    city: {
+      $regex: new RegExp(`^${city}$`, 'i'),
+    },
+  }).populate('items');
+
+  if (!shops) throw new Error('No shops found');
+  return shops;
+};
+
 //* Export service
-export { createAndEditShopService, getMyShopService };
+export { createAndEditShopService, getMyShopService, getShopsByCityService };

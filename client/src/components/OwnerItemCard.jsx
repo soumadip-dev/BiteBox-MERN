@@ -1,4 +1,4 @@
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaLeaf, FaDrumstickBite } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { deleteFoodItem } from '../api/shopApi';
 import { useState } from 'react';
@@ -52,7 +52,7 @@ const OwnerItemCard = ({ data }) => {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
-          {/* Enhanced Food Type Badge */}
+          {/* Enhanced Food Type Badge with Icons */}
           <div className="absolute top-3 left-3">
             <div
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border backdrop-blur-sm ${
@@ -61,11 +61,11 @@ const OwnerItemCard = ({ data }) => {
                   : 'bg-rose-50 border-rose-200 text-rose-700'
               }`}
             >
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  data.foodType === 'veg' ? 'bg-emerald-500' : 'bg-rose-500'
-                }`}
-              ></div>
+              {data.foodType === 'veg' ? (
+                <FaLeaf size={12} className="text-emerald-600" />
+              ) : (
+                <FaDrumstickBite size={12} className="text-rose-600" />
+              )}
               <span className="text-xs font-semibold capitalize">{data.foodType}</span>
             </div>
           </div>
@@ -77,7 +77,7 @@ const OwnerItemCard = ({ data }) => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
               <h3 className="text-xl font-bold text-gray-900 truncate pr-2">{data.name}</h3>
-              <span className="text-xs font-semibold text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 whitespace-nowrap flex-shrink-0">
+              <span className="text-xs font-semibold px-3 py-1.5 rounded-full border whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200 text-orange-700 shadow-sm">
                 {data.category}
               </span>
             </div>

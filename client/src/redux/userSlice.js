@@ -6,6 +6,8 @@ const initialState = {
   city: null,
   state: null,
   address: null,
+  shopsInMyCity: [],
+  ItemsInMyCity: [],
 };
 
 //* Create a Redux slice for user
@@ -25,9 +27,16 @@ export const userSlice = createSlice({
     setAddress: (state, action) => {
       state.address = action.payload;
     },
+    setShopsInMyCity: (state, action) => {
+      state.shopsInMyCity = action.payload;
+    },
+    setItemsInMyCity: (state, action) => {
+      state.ItemsInMyCity = action.payload;
+    },
   },
 });
 
 //* Export actions and reducer
-export const { setUserData, setCity, setState, setAddress } = userSlice.actions;
+export const { setUserData, setCity, setState, setAddress, setShopsInMyCity, setItemsInMyCity } =
+  userSlice.actions;
 export default userSlice.reducer;

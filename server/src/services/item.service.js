@@ -77,5 +77,30 @@ const deleteItemService = async (itemId, currentOwner) => {
   return shop;
 };
 
+//* Service for getting items by city
+const getItemsByCityService = async city => {
+  if (!city) {
+    throw new Error('City is required');
+  }
+  const shops = await Shop.find({
+    city: {
+      $regex: new RegExp(`^${city}$`, 'i'),
+    },
+  }).populate('items');
+
+  if (!shops) throw new Error('No shops found');
+
+  const shopIds = shops.map(shop => shop._id);
+  const items = await Item.find({ shop: { $in: shopIds } });
+
+  return items;
+};
+
 //* Export service
-export { createItemService, editItemService, getItemByIdService, deleteItemService };
+export {
+  createItemService,
+  editItemService,
+  getItemByIdService,
+  deleteItemService,
+  getItemsByCityService,
+};

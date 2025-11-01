@@ -104,3 +104,30 @@ export const deleteFoodItem = async function (itemId) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Get all shop by city
+export const getShopByCity = async function (city) {
+  try {
+    const response = await axiosInstance.get(`/api/v1/shop/get-by-city/${city}`);
+
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
+//* Get all shop by city
+export const getItemByCity = async function (city) {
+  try {
+    const response = await axiosInstance.get(`/api/v1/item/get-by-city/${city}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

@@ -1,5 +1,9 @@
 import uploadOnCloudinary from '../config/cloudinary.config.js';
-import { createAndEditShopService, getMyShopService } from '../services/shop.service.js';
+import {
+  createAndEditShopService,
+  getMyShopService,
+  getShopsByCityService,
+} from '../services/shop.service.js';
 
 //* Controller for creating or editing a shop
 const createAndEditShop = async (req, res) => {
@@ -42,5 +46,17 @@ const getMyShop = async (req, res) => {
   }
 };
 
+//* Controller to get all shops in the user's city
+const getShopsByCity = async (req, res) => {
+  const { city } = req.params;
+  try {
+    const shops = await getShopsByCityService(city);
+
+    res.status(200).json({ message: 'Shops fetched successfully', success: true, shops });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controller
-export { createAndEditShop, getMyShop };
+export { createAndEditShop, getMyShop, getShopsByCity };

@@ -11,11 +11,15 @@ import CreateEditShop from './pages/CreateEditShop';
 import useGetLocation from './hooks/useGetLocation';
 import AddItem from './pages/AddItem';
 import EditItem from './pages/EditItem';
+import useGetShopByCity from './hooks/useGetShopByCity';
+import useGetItemByCity from './hooks/useGetItemByCity';
 
 const App = () => {
   useGetCurrentUser();
   useGetLocation();
   useGetMyShop();
+  useGetShopByCity();
+  useGetItemByCity()
   const { userData } = useSelector(state => state.user);
   return (
     <>
