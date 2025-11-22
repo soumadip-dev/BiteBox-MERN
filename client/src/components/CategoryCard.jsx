@@ -2,14 +2,18 @@ import React from 'react';
 
 const CategoryCard = ({ data }) => {
   return (
-    <div className="w-32 h-30 md:w-45 md:h-45 rounded-2xl border-2 border-[#ff4d2d] shrink-0 overflow-hidden bg-white shadow-lg shadow-gray-200/80 hover:shadow-xl hover:shadow-gray-200/90 transition-all duration-300 relative group">
-      <img
-        src={data.image}
-        alt={data.category}
-        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-out"
-      />
-      <div className="absolute bottom-0 left-0 w-full bg-white/90 bg-opacity-95 py-2 px-3 rounded-t-xl text-center border-t border-[#ff4d2d]/10">
-        <span className="text-sm font-semibold text-gray-800 tracking-tight truncate block">
+    <div className="min-w-[160px] bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-orange-200 group cursor-pointer">
+      <div className="relative h-32 overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100">
+        <img
+          src={data.image}
+          alt={data.category}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+      </div>
+
+      <div className="p-4 text-center">
+        <span className="text-sm font-semibold text-gray-900 tracking-tight truncate block">
           {data.category}
         </span>
       </div>
