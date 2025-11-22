@@ -8,17 +8,7 @@ const initialState = {
   address: null,
   shopsInMyCity: [],
   ItemsInMyCity: [],
-  cartItems: [
-    {
-      id: null,
-      name: null,
-      price: null,
-      image: null,
-      shop: null,
-      quantity: null,
-      foodType: null,
-    },
-  ],
+  cartItems: [],
 };
 
 //* Create a Redux slice for user
@@ -57,6 +47,13 @@ export const userSlice = createSlice({
 });
 
 //* Export actions and reducer
-export const { setUserData, setCity, setState, setAddress, setShopsInMyCity, setItemsInMyCity } =
-  userSlice.actions;
+export const {
+  setUserData,
+  setCity,
+  setState,
+  setAddress,
+  setShopsInMyCity,
+  setItemsInMyCity,
+  addToCart,
+} = userSlice.actions;
 export default userSlice.reducer;
