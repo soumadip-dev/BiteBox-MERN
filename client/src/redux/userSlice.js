@@ -8,6 +8,17 @@ const initialState = {
   address: null,
   shopsInMyCity: [],
   ItemsInMyCity: [],
+  cartItems: [
+    {
+      id: null,
+      name: null,
+      price: null,
+      image: null,
+      shop: null,
+      quantity: null,
+      foodType: null,
+    },
+  ],
 };
 
 //* Create a Redux slice for user
@@ -32,6 +43,15 @@ export const userSlice = createSlice({
     },
     setItemsInMyCity: (state, action) => {
       state.ItemsInMyCity = action.payload;
+    },
+    addToCart: (state, action) => {
+      const cartItem = action.payload;
+      const existingItem = state.cartItems.some(item => item.id === cartItem.id);
+      if (existingItem) {
+        existingItem.quantity += cartItem.quantity;
+      } else {
+        state.cartItems.push(cartItem);
+      }
     },
   },
 });
