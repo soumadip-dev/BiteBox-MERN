@@ -1,4 +1,3 @@
-import React from 'react';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import CartItemCard from '../components/CartItemCard';
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const { cartItems } = useSelector(state => state.user);
+  const { cartItems, cartTotal } = useSelector(state => state.user);
 
   return (
     <div className="flex justify-center flex-col items-center p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen">
@@ -21,7 +20,6 @@ const CartPage = () => {
       </button>
 
       <div className="max-w-4xl w-full">
-        {/* Header Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="bg-gradient-to-br from-orange-100 to-orange-50 p-4 rounded-2xl shadow-inner mb-4 border border-orange-200/30">
             <div className="text-3xl">🛒</div>
@@ -31,7 +29,6 @@ const CartPage = () => {
           </h1>
         </div>
 
-        {/* Cart Content */}
         {cartItems?.length === 0 ? (
           <div className="max-w-lg w-full mx-auto bg-white rounded-2xl p-8 border border-orange-100/50 text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="text-6xl mb-4">🛒</div>
@@ -52,7 +49,7 @@ const CartPage = () => {
                   Cart Items ({cartItems?.length})
                 </h2>
                 <span className="text-orange-600 font-medium">
-                  Total: $
+                  Total: ₹
                   {cartItems
                     ?.reduce((total, item) => total + item.price * item.quantity, 0)
                     .toFixed(2)}
@@ -60,10 +57,27 @@ const CartPage = () => {
               </div>
 
               <div className="space-y-4">
-                {cartItems?.map(item => (
-                  <CartItemCard key={item._id} data={item} />
+                {cartItems?.map((item, index) => (
+                  <CartItemCard key={index} data={item} />
                 ))}
               </div>
+            </div>
+            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 shadow-lg border border-orange-200/50">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-gray-700 font-medium">Subtotal</span>
+                <span className="text-lg font-semibold text-gray-900">₹{cartTotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-gray-700 font-medium">Shipping</span>
+                <span className="text-lg font-semibold text-green-600">Free</span>
+              </div>
+              <div className="flex justify-between items-center mb-6 pt-4 border-t border-orange-200/50">
+                <span className="text-xl font-bold text-gray-900">Total</span>
+                <span className="text-xl font-bold text-orange-600">₹{cartTotal.toFixed(2)}</span>
+              </div>
+              <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+                Proceed to Checkout
+              </button>
             </div>
           </div>
         )}

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-//* Initial state for user
 const initialState = {
   userData: null,
   city: null,
@@ -9,9 +8,9 @@ const initialState = {
   shopsInMyCity: [],
   ItemsInMyCity: [],
   cartItems: [],
+  cartTotal: 0,
 };
 
-//* Create a Redux slice for user
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -36,17 +35,39 @@ export const userSlice = createSlice({
     },
     addToCart: (state, action) => {
       const cartItem = action.payload;
-      const existingItem = state.cartItems.some(item => item.id === cartItem.id);
+      const existingItem = state.cartItems.find(item => item.id === cartItem.id);
       if (existingItem) {
         existingItem.quantity += cartItem.quantity;
       } else {
         state.cartItems.push(cartItem);
       }
+      state.cartTotal = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+    },
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const existingItem = state.cartItems.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity = quantity;
+      }
+      state.cartTotal = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+    },
+    removeFromCart: (state, action) => {
+      const id = action.payload;
+      state.cartItems = state.cartItems.filter(item => item.id !== id);
+      state.cartTotal = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
     },
   },
 });
 
-//* Export actions and reducer
 export const {
   setUserData,
   setCity,
@@ -55,5 +76,7 @@ export const {
   setShopsInMyCity,
   setItemsInMyCity,
   addToCart,
+  updateQuantity,
+  removeFromCart,
 } = userSlice.actions;
 export default userSlice.reducer;

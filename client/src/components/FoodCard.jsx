@@ -81,7 +81,7 @@ const FoodCard = ({ data }) => {
             {/* Combined Quantity Controls and Add to Cart */}
             <div className="flex items-center border border-orange-200 rounded-lg overflow-hidden bg-orange-50">
               <button
-                className="px-2 py-1.5 hover:bg-orange-100 transition-colors text-gray-700 flex items-center justify-center w-8"
+                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 hover:text-orange-600"
                 onClick={handleQuantityDecrement}
               >
                 <FaMinus size={12} />
@@ -90,7 +90,7 @@ const FoodCard = ({ data }) => {
                 {quantity}
               </span>
               <button
-                className="px-2 py-1.5 hover:bg-orange-100 transition-colors text-gray-700 flex items-center justify-center w-8 border-r border-orange-200"
+                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 border-r border-orange-200 hover:text-orange-600"
                 onClick={handleQuantityIncrement}
               >
                 <FaPlus size={12} />
