@@ -25,7 +25,7 @@ function getProfileImage(fullName) {
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { userData, city } = useSelector(state => state.user);
+  const { userData, city, cartItems } = useSelector(state => state.user);
   const { myShopData } = useSelector(state => state.owner);
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -145,7 +145,7 @@ const Navbar = () => {
                   </button>
                 </>
               )}
-              {/* My Orders Button */}
+
               <button className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
                 <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
                 <span className="text-sm lg:text-base">My Orders</span>
@@ -162,11 +162,13 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* User specific elements */}
-              <div className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0">
+              <div
+                className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0"
+                onClick={() => navigate('/cart')}
+              >
                 <FiShoppingCart size={20} className="md:size-6 text-[#ff4d2d]" />
                 <span className="absolute -right-1 -top-1 text-[#ff4d2d] text-xs font-black bg-white rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center border-2 border-[#ff4d2d]/20 shadow-sm">
-                  0
+                  {cartItems.length}
                 </span>
               </div>
 
@@ -184,7 +186,6 @@ const Navbar = () => {
               {getProfileImage(userData?.fullName)}
             </button>
 
-            {/* User Info Dropdown - Now positioned absolutely relative to the profile button container */}
             {showInfo && (
               <div className="absolute top-full right-0 mt-2 w-48 md:w-52 bg-white shadow-2xl rounded-2xl p-4 md:p-5 flex flex-col gap-3 md:gap-4 z-[10000] border border-gray-100 backdrop-blur-sm">
                 <div className="text-sm md:text-base font-bold truncate text-gray-900">

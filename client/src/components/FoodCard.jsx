@@ -101,19 +101,20 @@ const FoodCard = ({ data }) => {
                     ? 'bg-gray-800'
                     : 'bg-gradient-to-r from-[#ff4d2d] to-orange-500'
                 }`}
-                onClick={() =>
-                  dispatch(
-                    addToCart({
-                      id: data._id,
-                      name: data.name,
-                      price: data.price,
-                      image: data.image,
-                      shop: data.shop,
-                      quantity,
-                      foodType: data.foodType,
-                    })
-                  )
-                }
+                onClick={() => {
+                  quantity > 0 &&
+                    dispatch(
+                      addToCart({
+                        id: data._id,
+                        name: data.name,
+                        price: data.price,
+                        image: data.image,
+                        shop: data.shop,
+                        quantity,
+                        foodType: data.foodType,
+                      })
+                    );
+                }}
               >
                 <FaShoppingCart size={15} />
               </button>
