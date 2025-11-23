@@ -14,6 +14,8 @@ import EditItem from './pages/EditItem';
 import useGetShopByCity from './hooks/useGetShopByCity';
 import useGetItemByCity from './hooks/useGetItemByCity';
 import CartPage from './pages/CartPage';
+import CheckOut from './pages/CheckOut';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   useGetCurrentUser();
@@ -37,6 +39,8 @@ const App = () => {
         <Route path="/add-food" element={userData ? <AddItem /> : <SignIn />} />
         <Route path="/edit-food/:itemId" element={userData ? <EditItem /> : <SignIn />} />
         <Route path="/cart" element={userData ? <CartPage /> : <SignIn />} />
+        <Route path="/checkout" element={userData ? <CheckOut /> : <SignIn />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
