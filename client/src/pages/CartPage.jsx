@@ -75,7 +75,12 @@ const CartPage = () => {
                 <span className="text-xl font-bold text-gray-900">Total</span>
                 <span className="text-xl font-bold text-orange-600">₹{cartTotal.toFixed(2)}</span>
               </div>
-              <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+              <button
+                className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                onClick={() => {
+                  navigate('/checkout');
+                }}
+              >
                 Proceed to Checkout
               </button>
             </div>
