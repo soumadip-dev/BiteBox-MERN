@@ -2,17 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   location: {
-    lat: null,
-    lon: null,
+    lat: 20.5937,
+    lon: 78.9629,
   },
-  address: null,
+  address: '',
 };
 
 export const mapSlice = createSlice({
   name: 'map',
   initialState,
   reducers: {
-    setLoaction: (state, action) => {
+    setLocation: (state, action) => {
       const { lat, lon } = action.payload;
       state.location.lat = lat;
       state.location.lon = lon;
@@ -23,9 +23,5 @@ export const mapSlice = createSlice({
   },
 });
 
-export const { setLoaction, setAddressForDelivery } = mapSlice.actions;
+export const { setLocation, setAddressForDelivery } = mapSlice.actions;
 export default mapSlice.reducer;
-
-
-
-
