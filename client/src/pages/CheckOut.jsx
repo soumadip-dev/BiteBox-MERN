@@ -131,7 +131,7 @@ const CheckOut = () => {
       const response = await placeOrder(orderData);
 
       toast.success(response.message);
-      console.log(response);
+      navigate('/order-placed');
     } catch (error) {
       toast.error(error.message);
     } finally {
