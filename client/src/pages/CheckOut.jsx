@@ -13,6 +13,7 @@ import 'leaflet/dist/leaflet.css';
 import { setAddressForDelivery, setLocation } from '../redux/mapSlice';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { placeOrder } from '../api/orderApi';
 
 //* Recenter map on drag end
 function RecenterMap({ location }) {
@@ -28,6 +29,7 @@ const CheckOut = () => {
   const { cartItems, cartTotal } = useSelector(state => state.user);
   const [addressInput, setAddressInput] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [isLoading, setIsLoading] = useState(false); // Loading state
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -110,6 +112,30 @@ const CheckOut = () => {
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      const orderData = {
+        cartItems,
+        paymentMethod,
+        deliveryAddress: {
+          text: addressInput,
+          latitude: location.lat,
+          longitude: location.lon,
+        },
+        totalAmount: subTotal,
+      };
+      const response = await placeOrder(orderData);
+
+      toast.success(response.message);
+      navigate('/order-placed');
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false); // Stop loading regardless of success/error
     }
   };
 
@@ -305,6 +331,7 @@ const CheckOut = () => {
               <div className="space-y-2 sm:space-y-3">
                 <div className="flex justify-between items-center py-1">
                   <span className="text-gray-600 font-medium text-sm sm:text-base">Subtotal</span>
+
                   <span className="font-semibold text-gray-800 text-sm sm:text-base whitespace-nowrap min-w-[80px] text-right">
                     ₹{subTotal}
                   </span>
@@ -350,8 +377,25 @@ const CheckOut = () => {
           </section>
 
           {/* Place Order Button */}
-          <button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg">
-            {paymentMethod === 'cod' ? 'Place Order' : 'Pay and Place Order'}
+          <button
+            className={`w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 transform ${
+              isLoading
+                ? 'opacity-70 cursor-not-allowed'
+                : 'hover:-translate-y-0.5 hover:shadow-lg hover:from-orange-600 hover:to-red-600'
+            }`}
+            onClick={handlePlaceOrder}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Placing Order...</span>
+              </div>
+            ) : paymentMethod === 'cod' ? (
+              'Place Order'
+            ) : (
+              'Pay and Place Order'
+            )}
           </button>
         </div>
       </div>

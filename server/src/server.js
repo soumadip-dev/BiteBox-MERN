@@ -7,6 +7,8 @@ import auth_routes from './routes/auth.routes.js';
 import user_routes from './routes/user.routes.js';
 import shop_routes from './routes/shop.routes.js';
 import item_routes from './routes/item.routes.js';
+import order_routes from './routes/order.routes.js';
+
 import morgan from 'morgan';
 
 const app = express();
@@ -33,6 +35,7 @@ app.use('/api/v1/auth', auth_routes);
 app.use('/api/v1/user', user_routes);
 app.use('/api/v1/shop', shop_routes);
 app.use('/api/v1/item', item_routes);
+app.use('/api/v1/order', order_routes);
 
 //* Function to connect the DB and start the server
 const startServer = async () => {

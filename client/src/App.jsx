@@ -16,6 +16,8 @@ import useGetItemByCity from './hooks/useGetItemByCity';
 import CartPage from './pages/CartPage';
 import CheckOut from './pages/CheckOut';
 import NotFound from './pages/NotFound';
+import OrderPlaced from './pages/OrderPlaced';
+import MyOrders from './pages/MyOrders';
 
 const App = () => {
   useGetCurrentUser();
@@ -40,6 +42,8 @@ const App = () => {
         <Route path="/edit-food/:itemId" element={userData ? <EditItem /> : <SignIn />} />
         <Route path="/cart" element={userData ? <CartPage /> : <SignIn />} />
         <Route path="/checkout" element={userData ? <CheckOut /> : <SignIn />} />
+        <Route path="/order-placed" element={userData ? <OrderPlaced /> : <SignIn />} />
+        <Route path="/my-orders" element={userData ? <MyOrders /> : <SignIn />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
