@@ -4,7 +4,7 @@ import { placeOrderService } from '../services/order.service.js';
 const placeOrder = async (req, res) => {
   try {
     const { cartItems, paymentMethod, deliveryAddress, totalAmount } = req.body;
-    const userId = req.user._id;
+    const userId = req.userId;
 
     const order = await placeOrderService(
       cartItems,
