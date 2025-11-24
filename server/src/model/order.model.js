@@ -11,6 +11,10 @@ const shopOrderItemSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
     quantity: {
       type: Number,
       required: true,
@@ -63,7 +67,7 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    shopOrder: [shopOrderSchema],
+    shopOrders: [shopOrderSchema],
   },
   { timestamps: true }
 );
