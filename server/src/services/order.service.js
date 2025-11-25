@@ -66,30 +66,49 @@ const placeOrderService = async (
 
 //* Service for getting user orders
 const getUserOrdersService = async userId => {
-  const orders = (await Order.find({ user: userId }))
-    .toSorted({ createdAt: -1 })
-    .populate('shopOrders.shop', 'name')
-    .populate('shopOrders.owner', 'name email mobile')
-    .populate('shopOrders.shopOrderItems.item', 'name image price');
-  return orders;
+  try {
+    const orders = await Order.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .populate('shopOrders.shop', 'name')
+      .populate('shopOrders.owner', 'name email mobile')
+      .populate('shopOrders.shopOrderItems.item', 'name image price');
+
+    return orders;
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    throw error;
+  }
 };
 
 //* Service for getting owner orders
 const getOwnerOrdersService = async ownerId => {
-  const orders = (await Order.find({ 'shopOrders.owner': ownerId }))
-    .toSorted({ createdAt: -1 })
-    .populate('shopOrders.shop', 'name')
-    .populate('user')
-    .populate('shopOrders.shopOrderItems.item', 'name image price');
-  return orders;
+  try {
+    const orders = await Order.find({ 'shopOrders.owner': ownerId })
+      .sort({ createdAt: -1 })
+      .populate('shopOrders.shop', 'name')
+      .populate('user')
+      .populate('shopOrders.shopOrderItems.item', 'name image price');
+
+    return orders;
+  } catch (error) {
+    console.error('Error fetching owner orders:', error);
+    throw error;
+  }
 };
 
 //* Service for getting orders
 const getOrdersService = async (userId, userRole) => {
-  if (userRole === 'user') {
-    return getUserOrdersService(userId);
-  } else if (userRole === 'owner') {
-    return getOwnerOrdersService(userId);
+  try {
+    if (userRole === 'user') {
+      return await getUserOrdersService(userId);
+    } else if (userRole === 'owner') {
+      return await getOwnerOrdersService(userId);
+    } else {
+      throw new Error('Invalid user role');
+    }
+  } catch (error) {
+    console.error('Error in getOrdersService:', error);
+    throw error;
   }
 };
 
