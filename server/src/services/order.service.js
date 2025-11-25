@@ -44,7 +44,7 @@ const placeOrderService = async (
         owner: shop.owner._id,
         subtotal,
         shopOrderItems: items.map(item => ({
-          item: item._id,
+          item: item.id,
           price: item.price,
           quantity: item.quantity,
           name: item.name,
@@ -64,5 +64,15 @@ const placeOrderService = async (
   return order;
 };
 
+//* Service for get user orders
+const getUserOrdersService = async userId => {
+  const orders = (await Order.find({ user: userId }))
+    .toSorted({ createdAt: -1 })
+    .populate('shopOrders.shop', 'name')
+    .populate('shopOrders.owner', 'name email mobile')
+    .populate('shopOrders.shopOrderItems.item', 'name image price');
+  return orders;
+};
+
 //* Export services
-export { placeOrderService };
+export { placeOrderService, getUserOrdersService };
