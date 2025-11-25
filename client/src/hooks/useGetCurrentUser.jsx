@@ -13,7 +13,7 @@ const useGetCurrentUser = () => {
         const response = await getCurrentUser();
         dispatch(setUserData(response.user));
       } catch {
-        console.log('Network error occurred. Please try again.');
+        console.error('Network error occurred. Please try again.');
       }
     };
     fetchUser();

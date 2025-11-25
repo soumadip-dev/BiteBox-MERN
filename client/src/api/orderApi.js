@@ -12,3 +12,16 @@ export const placeOrder = async function (orderData) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Get orders
+export const getOrders = async function () {
+  try {
+    const response = await axiosInstance.get('/api/v1/order/get-orders');
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

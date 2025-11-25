@@ -14,7 +14,7 @@ const useGetShopByCity = () => {
         const response = await getShopByCity(city);
         dispatch(setShopsInMyCity(response.shops));
       } catch {
-        console.log('Network error occurred. Please try again.');
+        console.error('Network error occurred. Please try again.');
       }
     };
 
