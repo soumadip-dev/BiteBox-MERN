@@ -84,5 +84,14 @@ const getOwnerOrdersService = async ownerId => {
   return orders;
 };
 
+//* Service for getting orders
+const getOrdersService = async (userId, userRole) => {
+  if (userRole === 'user') {
+    return getUserOrdersService(userId);
+  } else if (userRole === 'owner') {
+    return getOwnerOrdersService(userId);
+  }
+};
+
 //* Export services
-export { placeOrderService, getUserOrdersService, getOwnerOrdersService };
+export { placeOrderService, getOrdersService };

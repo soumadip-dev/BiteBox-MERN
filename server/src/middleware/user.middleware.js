@@ -14,11 +14,14 @@ export const isAuth = async (req, res, next) => {
 
     // Verify token using secret key
     const decoded = jwt.verify(authToken, ENV.JWT_SECRET);
+
     const userId = decoded.id;
+    const userRole = decoded.role;
 
     // Attach userId to request if present
     if (userId) {
       req.userId = userId;
+      req.userRole = userRole;
     } else {
       return res.status(401).json({ success: false, message: 'Unauthorized, please login again' });
     }

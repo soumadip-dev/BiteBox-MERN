@@ -42,7 +42,7 @@ const registerService = async function (fullName, email, password, mobile, role)
   }
 
   // Generate JWT token
-  const token = await generateToken({ id: newUser._id });
+  const token = await generateToken({ id: newUser._id, role: newUser.role });
 
   // Get user without password
   const user = await User.findById(newUser._id).select('-password');
@@ -72,7 +72,7 @@ const loginService = async function (email, password) {
   }
 
   // Generate JWT token
-  const token = await generateToken({ id: loggedInuser._id });
+  const token = await generateToken({ id: loggedInuser._id, role: loggedInuser.role });
 
   // Get user without password
   const user = await User.findById(loggedInuser._id).select('-password');
@@ -209,7 +209,7 @@ const googleAuthService = async function (fullName, email, mobile, role) {
     });
   }
 
-  const token = await generateToken({ id: user._id });
+  const token = await generateToken({ id: user._id, role: user.role });
 
   const responseUser = await User.findById(user._id).select('-password');
 
