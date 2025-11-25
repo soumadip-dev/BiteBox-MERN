@@ -64,7 +64,7 @@ const placeOrderService = async (
   return order;
 };
 
-//* Service for get user orders
+//* Service for getting user orders
 const getUserOrdersService = async userId => {
   const orders = (await Order.find({ user: userId }))
     .toSorted({ createdAt: -1 })
@@ -74,5 +74,15 @@ const getUserOrdersService = async userId => {
   return orders;
 };
 
+//* Service for getting owner orders
+const getOwnerOrdersService = async ownerId => {
+  const orders = (await Order.find({ 'shopOrders.owner': ownerId }))
+    .toSorted({ createdAt: -1 })
+    .populate('shopOrders.shop', 'name')
+    .populate('user')
+    .populate('shopOrders.shopOrderItems.item', 'name image price');
+  return orders;
+};
+
 //* Export services
-export { placeOrderService, getUserOrdersService };
+export { placeOrderService, getUserOrdersService, getOwnerOrdersService };
