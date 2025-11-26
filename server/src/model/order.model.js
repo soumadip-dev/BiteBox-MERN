@@ -41,6 +41,11 @@ const shopOrderSchema = new mongoose.Schema(
       required: true,
     },
     shopOrderItems: [shopOrderItemSchema],
+    status: {
+      type: String,
+      enum: ['pending', 'preparing', 'delivered', 'out for delivery'],
+      default: 'pending',
+    },
   },
   { timestamps: true }
 );

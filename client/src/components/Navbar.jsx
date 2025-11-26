@@ -146,14 +146,20 @@ const Navbar = () => {
                 </>
               )}
 
-              <button className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+              <button
+                className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                onClick={() => navigate('/my-orders')}
+              >
                 <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
                 <span className="text-sm lg:text-base">My Orders</span>
                 <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center shadow-lg">
                   0
                 </span>
               </button>
-              <div className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer relative rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <div
+                className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer relative rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl"
+                onClick={() => navigate('/my-orders')}
+              >
                 <TbReceipt2 size={18} className="flex-shrink-0" />
                 <span className="absolute -right-1 -top-1 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-4 h-4 flex items-center justify-center shadow-lg">
                   0
@@ -172,7 +178,10 @@ const Navbar = () => {
                 </span>
               </div>
 
-              <button className="hidden md:block px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-semibold cursor-pointer hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap">
+              <button
+                className="hidden md:block px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-semibold cursor-pointer hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                onClick={() => navigate('/my-orders')}
+              >
                 My orders
               </button>
             </>
@@ -195,7 +204,10 @@ const Navbar = () => {
                   {userData?.role}
                 </div>
                 {userData?.role === 'user' && (
-                  <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm">
+                  <div
+                    className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm"
+                    onClick={() => navigate('/my-orders')}
+                  >
                     My orders
                   </div>
                 )}
