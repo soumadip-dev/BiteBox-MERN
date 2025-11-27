@@ -87,9 +87,23 @@ const getOwnerOrdersService = async ownerId => {
       .sort({ createdAt: -1 })
       .populate('shopOrders.shop', 'name')
       .populate('user')
+      .populate('shopOrders.owner', 'name email mobile') // Populate owner field
       .populate('shopOrders.shopOrderItems.item', 'name image price');
 
-    return orders;
+    const filteredOrder = orders.map(order => ({
+      _id: order._id,
+      user: order.user,
+      paymentMethod: order.paymentMethod,
+      createdAt: order.createdAt,
+      deliveryAddress: order.deliveryAddress,
+      totalAmount: order.totalAmount,
+      updatedAt: order.updatedAt,
+      shopOrders: order.shopOrders.filter(
+        shopOrder => shopOrder.owner._id.toString() === ownerId.toString()
+      ),
+    }));
+
+    return filteredOrder;
   } catch (error) {
     console.error('Error fetching owner orders:', error);
     throw error;
