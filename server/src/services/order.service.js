@@ -129,5 +129,31 @@ const getOrdersService = async (userId, userRole) => {
   }
 };
 
+//* Service for updating order status
+const updateOrderStatusService = async (orderId, shopId, status) => {
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new Error('Order not found');
+  }
+
+  const shopOrder = order.shopOrders.find(
+    shopOrder => shopOrder.shop.toString() === shopId.toString()
+  );
+
+  if (!shopOrder) {
+    throw new Error('Shop order not found');
+  }
+
+  shopOrder.status = status;
+
+  await shopOrder.save();
+
+  // await shopOrder.populate('shopOrderItems.item', 'name image price');
+  await order.save();
+
+  return shopOrder.status;
+};
+
 //* Export services
-export { placeOrderService, getOrdersService };
+export { placeOrderService, getOrdersService, updateOrderStatusService };

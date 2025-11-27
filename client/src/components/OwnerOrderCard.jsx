@@ -1,6 +1,21 @@
 import { MdPhone } from 'react-icons/md';
+import { updateOrderStatus } from '../api/orderApi';
+import { updateShopOrderStatus } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 const OwnerOrderCard = ({ order }) => {
+  const dispatch = useDispatch();
+
+  const handleUpdateStatus = async (orderId, shopId, status) => {
+    try {
+      const response = await updateOrderStatus(orderId, shopId, status);
+      dispatch(updateShopOrderStatus({ orderId, shopId, status }));
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 space-y-6 border border-gray-100 hover:shadow-md transition-all duration-200 ease-in-out transform hover:-translate-y-0.5">
       {/* Customer Info */}
@@ -64,16 +79,11 @@ const OwnerOrderCard = ({ order }) => {
               <select
                 value={shopOrder?.status}
                 className="rounded-lg border border-blue-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 text-gray-700 font-medium bg-white hover:bg-blue-50 transition-all duration-200 shadow-xs appearance-none pr-10"
+                onChange={e => handleUpdateStatus(order._id, shopOrder.shop._id, e.target.value)}
               >
-                {['pending', 'preparing', 'out for delivery'].map(status => (
-                  <option
-                    key={status}
-                    value={status}
-                    className="text-gray-700 bg-white hover:bg-blue-50"
-                  >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
-                ))}
+                <option value="pending">Pending</option>
+                <option value="preparing">Preparing</option>
+                <option value="out for delivery">Out for delivery</option>
               </select>
             </div>
           </div>

@@ -25,3 +25,19 @@ export const getOrders = async function () {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Update order status
+export const updateOrderStatus = async function (orderId, shopId, status) {
+  try {
+    const response = await axiosInstance.put(
+      `/api/v1/order/update-order-status/${orderId}/${shopId}`,
+      { status }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

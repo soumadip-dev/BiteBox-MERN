@@ -1,4 +1,8 @@
-import { placeOrderService, getOrdersService } from '../services/order.service.js';
+import {
+  placeOrderService,
+  getOrdersService,
+  updateOrderStatusService,
+} from '../services/order.service.js';
 
 //* Controller for placing Order
 const placeOrder = async (req, res) => {
@@ -47,5 +51,26 @@ const getOrders = async (req, res) => {
   }
 };
 
+//* Controller for updating order status
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId, shopId } = req.params;
+    const { status } = req.body;
+
+    const shopOrder = await updateOrderStatusService(orderId, shopId, status);
+
+    res.status(200).json({
+      message: 'Order status updated successfully',
+      success: true,
+      shopOrder,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
-export { placeOrder, getOrders };
+export { placeOrder, getOrders, updateOrderStatus };
