@@ -44,7 +44,7 @@ const placeOrderService = async (
         owner: shop.owner._id,
         subtotal,
         shopOrderItems: items.map(item => ({
-          item: item._id,
+          item: item.id,
           price: item.price,
           quantity: item.quantity,
           name: item.name,
@@ -61,8 +61,99 @@ const placeOrderService = async (
     shopOrders,
   });
 
+  await order.populate('shopOrders.shop', 'name');
+  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+
   return order;
 };
 
+//* Service for getting user orders
+const getUserOrdersService = async userId => {
+  try {
+    const orders = await Order.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .populate('shopOrders.shop', 'name')
+      .populate('shopOrders.owner', 'name email mobile')
+      .populate('shopOrders.shopOrderItems.item', 'name image price');
+
+    return orders;
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    throw error;
+  }
+};
+
+//* Service for getting owner orders
+const getOwnerOrdersService = async ownerId => {
+  try {
+    const orders = await Order.find({ 'shopOrders.owner': ownerId })
+      .sort({ createdAt: -1 })
+      .populate('shopOrders.shop', 'name')
+      .populate('user')
+      .populate('shopOrders.owner', 'name email mobile') // Populate owner field
+      .populate('shopOrders.shopOrderItems.item', 'name image price');
+
+    const filteredOrder = orders.map(order => ({
+      _id: order._id,
+      user: order.user,
+      paymentMethod: order.paymentMethod,
+      createdAt: order.createdAt,
+      deliveryAddress: order.deliveryAddress,
+      totalAmount: order.totalAmount,
+      updatedAt: order.updatedAt,
+      shopOrders: order.shopOrders.filter(
+        shopOrder => shopOrder.owner._id.toString() === ownerId.toString()
+      ),
+    }));
+
+    return filteredOrder;
+  } catch (error) {
+    console.error('Error fetching owner orders:', error);
+    throw error;
+  }
+};
+
+//* Service for getting orders
+const getOrdersService = async (userId, userRole) => {
+  try {
+    if (userRole === 'user') {
+      return await getUserOrdersService(userId);
+    } else if (userRole === 'owner') {
+      return await getOwnerOrdersService(userId);
+    } else {
+      throw new Error('Invalid user role');
+    }
+  } catch (error) {
+    console.error('Error in getOrdersService:', error);
+    throw error;
+  }
+};
+
+//* Service for updating order status
+const updateOrderStatusService = async (orderId, shopId, status) => {
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    throw new Error('Order not found');
+  }
+
+  const shopOrder = order.shopOrders.find(
+    shopOrder => shopOrder.shop.toString() === shopId.toString()
+  );
+
+  if (!shopOrder) {
+    throw new Error('Shop order not found');
+  }
+
+  shopOrder.status = status;
+
+  await shopOrder.save();
+
+  // await shopOrder.populate('shopOrderItems.item', 'name image price');
+  await order.save();
+
+  return shopOrder.status;
+};
+
 //* Export services
-export { placeOrderService };
+export { placeOrderService, getOrdersService, updateOrderStatusService };

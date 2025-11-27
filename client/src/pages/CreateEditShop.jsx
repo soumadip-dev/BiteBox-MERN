@@ -39,9 +39,6 @@ const CreateEditShop = () => {
 
     setIsSubmitting(true);
 
-    console.log('Backend Image:', backendImage);
-    console.log('Existing Shop Image:', myShopData?.image);
-
     const formData = new FormData();
     formData.append('name', name);
     formData.append('city', city);

@@ -14,6 +14,7 @@ import { setAddressForDelivery, setLocation } from '../redux/mapSlice';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { placeOrder } from '../api/orderApi';
+import { addMyOrder } from '../redux/userSlice';
 
 //* Recenter map on drag end
 function RecenterMap({ location }) {
@@ -129,13 +130,13 @@ const CheckOut = () => {
         totalAmount: subTotal,
       };
       const response = await placeOrder(orderData);
-
+      dispatch(addMyOrder(response.order));
       toast.success(response.message);
       navigate('/order-placed');
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setIsLoading(false); // Stop loading regardless of success/error
+      setIsLoading(false);
     }
   };
 

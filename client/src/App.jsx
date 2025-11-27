@@ -18,6 +18,7 @@ import CheckOut from './pages/CheckOut';
 import NotFound from './pages/NotFound';
 import OrderPlaced from './pages/OrderPlaced';
 import MyOrders from './pages/MyOrders';
+import useGetMyOrders from './hooks/useGetMyOrders';
 
 const App = () => {
   useGetCurrentUser();
@@ -25,6 +26,7 @@ const App = () => {
   useGetMyShop();
   useGetShopByCity();
   useGetItemByCity();
+  useGetMyOrders();
   const { userData } = useSelector(state => state.user);
   return (
     <>
