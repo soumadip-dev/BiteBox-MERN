@@ -61,6 +61,9 @@ const placeOrderService = async (
     shopOrders,
   });
 
+  await order.populate('shopOrders.shop', 'name');
+  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+
   return order;
 };
 
