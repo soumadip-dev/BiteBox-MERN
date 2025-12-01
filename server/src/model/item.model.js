@@ -1,4 +1,3 @@
-//* Schema definition
 import mongoose from 'mongoose';
 
 const itemSchema = new mongoose.Schema(
@@ -59,8 +58,6 @@ const itemSchema = new mongoose.Schema(
   }
 );
 
-//* Create the model
 const Item = mongoose.model('Item', itemSchema);
 
-//* Export the model
 export default Item;
