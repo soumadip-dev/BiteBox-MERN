@@ -36,9 +36,16 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    location: {
+      type: { type: String, enum: ['Point'], default: 'Point' },
+      coordinates: { type: [Number], default: [0, 0] },
+    },
   },
   { timestamps: true }
 );
+
+//* Index for location field to enable geospatial queries
+userSchema.index({ location: '2dsphere' });
 
 //* Pre save hook to hash the password and convert email to lowercase
 userSchema.pre('save', async function (next) {
