@@ -1,4 +1,4 @@
-import { FaLocationDot, FaP, FaPlus } from 'react-icons/fa6';
+import { FaLocationDot, FaPlus } from 'react-icons/fa6';
 import { TbReceipt2 } from 'react-icons/tb';
 import { IoIosSearch } from 'react-icons/io';
 import { FiShoppingCart } from 'react-icons/fi';
@@ -46,10 +46,15 @@ const Navbar = () => {
     }
   };
 
-  // Show location for user, AND owner roles
-  const shouldShowLocation = userData?.role === 'user' || userData?.role === 'owner';
+  // Show location for user, owner, AND delivery boy roles
+  const shouldShowLocation =
+    userData?.role === 'user' || userData?.role === 'owner' || userData?.role === 'delivery';
   // Show search only for users
   const shouldShowSearch = userData?.role === 'user';
+  // Show cart only for users
+  const shouldShowCart = userData?.role === 'user';
+  // Show receipt icon for owner and delivery boy
+  const shouldShowReceipt = userData?.role === 'owner' || userData?.role === 'delivery';
 
   return (
     <>
@@ -109,7 +114,7 @@ const Navbar = () => {
         )}
 
         <div className="flex items-center gap-2 md:gap-4 lg:gap-5 flex-shrink-0">
-          {/* Mobile search toggle */}
+          {/* Mobile search toggle - only for users */}
           {showSearch && shouldShowSearch ? (
             <RxCross2
               onClick={() => setShowSearch(false)}
@@ -166,17 +171,47 @@ const Navbar = () => {
                 </span>
               </div>
             </>
+          ) : userData?.role === 'delivery' ? (
+            <>
+              {/* Delivery Boy - Receipt Icon */}
+              {shouldShowReceipt && (
+                <>
+                  <button
+                    className="hidden md:flex items-center gap-2 lg:gap-3 cursor-pointer relative px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                    onClick={() => navigate('/delivery-orders')}
+                  >
+                    <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
+                    <span className="text-sm lg:text-base">My Deliveries</span>
+                    <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center shadow-lg">
+                      0
+                    </span>
+                  </button>
+                  <div
+                    className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer relative rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    onClick={() => navigate('/delivery-orders')}
+                  >
+                    <TbReceipt2 size={18} className="flex-shrink-0" />
+                    <span className="absolute -right-1 -top-1 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-4 h-4 flex items-center justify-center shadow-lg">
+                      0
+                    </span>
+                  </div>
+                </>
+              )}
+            </>
           ) : (
             <>
-              <div
-                className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0"
-                onClick={() => navigate('/cart')}
-              >
-                <FiShoppingCart size={20} className="md:size-6 text-[#ff4d2d]" />
-                <span className="absolute -right-1 -top-1 text-[#ff4d2d] text-xs font-black bg-white rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center border-2 border-[#ff4d2d]/20 shadow-sm">
-                  {cartItems.length}
-                </span>
-              </div>
+              {/* Show cart only for users */}
+              {shouldShowCart && (
+                <div
+                  className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0"
+                  onClick={() => navigate('/cart')}
+                >
+                  <FiShoppingCart size={20} className="md:size-6 text-[#ff4d2d]" />
+                  <span className="absolute -right-1 -top-1 text-[#ff4d2d] text-xs font-black bg-white rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center border-2 border-[#ff4d2d]/20 shadow-sm">
+                    {cartItems.length}
+                  </span>
+                </div>
+              )}
 
               <button
                 className="hidden md:block px-3 lg:px-4 py-2 lg:py-3 rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-semibold cursor-pointer hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
@@ -203,12 +238,14 @@ const Navbar = () => {
                 <div className="text-xs md:text-sm text-gray-600 truncate capitalize">
                   {userData?.role}
                 </div>
-                {userData?.role === 'user' && (
+                {(userData?.role === 'user' || userData?.role === 'delivery') && (
                   <div
                     className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer hover:text-[#ff4d2d]/80 transition-colors duration-200 text-sm"
-                    onClick={() => navigate('/my-orders')}
+                    onClick={() =>
+                      navigate(userData?.role === 'delivery' ? '/delivery-orders' : '/my-orders')
+                    }
                   >
-                    My orders
+                    {userData?.role === 'delivery' ? 'My Deliveries' : 'My orders'}
                   </div>
                 )}
                 <div
