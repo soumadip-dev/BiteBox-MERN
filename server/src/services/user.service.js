@@ -19,4 +19,22 @@ const getCurrentUserDetailsService = async userId => {
   return user;
 };
 
-export { getCurrentUserDetailsService };
+const updateUserLocationService = async (userId, latitude, longitude) => {
+  // Throw error if no userId is provided
+  if (!userId) {
+    throw new Error('Unauthorized');
+  }
+
+  // Find user by ID
+  const user = await User.findByIdAndUpdate(userId, {
+    location: { type: 'Point', coordinates: [longitude, latitude] },
+    new: true,
+  });
+
+  // Throw error if user not found
+  if (!user) {
+    throw new Error('User not found');
+  }
+};
+
+export { getCurrentUserDetailsService, updateUserLocationService };
