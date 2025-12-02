@@ -57,12 +57,19 @@ const updateOrderStatus = async (req, res) => {
     const { orderId, shopId } = req.params;
     const { status } = req.body;
 
-    const shopOrder = await updateOrderStatusService(orderId, shopId, status);
+    const { updatedShopOrder, deliveryBoysPayload } = await updateOrderStatusService(
+      orderId,
+      shopId,
+      status
+    );
 
     res.status(200).json({
       message: 'Order status updated successfully',
       success: true,
-      shopOrder,
+      shopOrder: updatedShopOrder,
+      assignedDeliveryBoy: updatedShopOrder.assignedDeliveryBoy,
+      availableBoys: deliveryBoysPayload,
+      assignment: updatedShopOrder.assignment._id,
     });
   } catch (error) {
     res.status(400).json({

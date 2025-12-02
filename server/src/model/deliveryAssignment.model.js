@@ -4,11 +4,11 @@ const deliveryAssignmentSchema = new mongoose.Schema(
   {
     order: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Order,
+      ref: 'Order',
     },
     shop: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Shop,
+      ref: 'Shop',
     },
     shopOrderId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,12 +17,12 @@ const deliveryAssignmentSchema = new mongoose.Schema(
     brodcastedTo: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User,
+        ref: 'User',
       },
     ],
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User,
+      ref: ' User',
       default: null,
     },
     status: {
