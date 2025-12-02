@@ -197,7 +197,9 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
     });
 
     shopOrder.assignment = deliveryAssignment._id;
+
     shopOrder.assignedDeliveryBoy = deliveryAssignment.assignedTo;
+
     await deliveryAssignment.save();
 
     deliveryBoysPayload = availableDeliveryBoys.map(deliveryBoy => ({
@@ -210,15 +212,12 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
     }));
   }
 
-  await shopOrder.save();
-
   await order.save();
+
+  const updatedShopOrder = order.shopOrders.find(so => so.shop.toString() === shopId.toString());
+
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.assignedDeliveryBoy', 'fullName email mobile');
-
-  const updatedShopOrder = await Order.shopOrders.find(
-    o => o.shop.toString() === shopId.toString()
-  );
 
   return { updatedShopOrder, deliveryBoysPayload };
 };

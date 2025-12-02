@@ -67,9 +67,9 @@ const updateOrderStatus = async (req, res) => {
       message: 'Order status updated successfully',
       success: true,
       shopOrder: updatedShopOrder,
-      assignedDeliveryBoy: updatedShopOrder.assignedDeliveryBoy,
+      assignedDeliveryBoy: updatedShopOrder?.assignedDeliveryBoy,
       availableBoys: deliveryBoysPayload,
-      assignment: updatedShopOrder.assignment._id,
+      assignment: updatedShopOrder?.assignment._id,
     });
   } catch (error) {
     res.status(400).json({
