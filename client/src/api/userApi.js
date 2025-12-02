@@ -12,3 +12,19 @@ export const getCurrentUser = async function () {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Update user location
+export const updateUserLocation = async function (latitude, longitude) {
+  try {
+    const response = await axiosInstance.put('/api/v1/user/update-location', {
+      latitude,
+      longitude,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

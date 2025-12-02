@@ -2,15 +2,35 @@ import { MdPhone } from 'react-icons/md';
 import { updateOrderStatus } from '../api/orderApi';
 import { updateShopOrderStatus } from '../redux/userSlice';
 import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 const OwnerOrderCard = ({ order }) => {
   const dispatch = useDispatch();
+  const [availableBoys, setAvailableBoys] = useState([]);
+
+  // Function to fetch available delivery boys
+  const fetchAvailableBoys = async (orderId, shopId) => {
+    try {
+      const response = await updateOrderStatus(orderId, shopId, 'out for delivery');
+      setAvailableBoys(response.availableBoys || []);
+    } catch (error) {
+      console.log('Error fetching delivery boys:', error);
+      setAvailableBoys([]);
+    }
+  };
+
+  // Fetch delivery boys when component loads and status is "out for delivery"
+  useEffect(() => {
+    if (order?.shopOrders?.[0]?.status === 'out for delivery') {
+      fetchAvailableBoys(order._id, order.shopOrders[0].shop._id);
+    }
+  }, [order]);
 
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
       const response = await updateOrderStatus(orderId, shopId, status);
       dispatch(updateShopOrderStatus({ orderId, shopId, status }));
-      console.log(response);
+      setAvailableBoys(response.availableBoys || []);
     } catch (error) {
       console.log(error);
     }
@@ -124,13 +144,79 @@ const OwnerOrderCard = ({ order }) => {
           </div>
         ))}
       </div>
+      {order?.shopOrders[0]?.status === 'out for delivery' && (
+        <div className="mt-4 sm:mt-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-100 shadow-sm">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
+              Available Delivery Boys
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Delivery boys currently available for assignment
+            </p>
+          </div>
 
+          {availableBoys.length > 0 ? (
+            <div className="space-y-3">
+              {availableBoys.map((boy, index) => (
+                <div
+                  key={boy._id || index}
+                  className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200 hover:border-purple-300 hover:shadow-sm transition-all duration-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-blue-100 text-purple-700 font-medium">
+                      {boy.fullname?.charAt(0)?.toUpperCase() || 'D'}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{boy.fullname}</p>
+                      <p className="text-sm text-gray-600 flex items-center gap-2 mt-0.5">
+                        <MdPhone className="text-gray-400" size={14} />
+                        {boy.mobile}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-3">
+                <svg
+                  className="h-6 w-6 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <p className="text-gray-600 font-medium">Waiting for available delivery boys</p>
+              <p className="text-sm text-gray-500 mt-1">
+                No delivery boys are currently available. Please check back soon.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
       {/* Order Summary */}
       <div className="border-t border-gray-200 pt-4 sm:pt-5 space-y-2 sm:space-y-3">
         <div className="flex justify-between items-center flex-wrap gap-2">
           <span className="text-gray-600 font-medium text-sm sm:text-base">Total Amount:</span>
           <span className="font-bold text-lg text-gray-900 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-            ₹{order?.totalAmount}
+            ₹{order?.shopOrders[0]?.subtotal}
           </span>
         </div>
         <div className="flex justify-between items-center flex-wrap gap-2">

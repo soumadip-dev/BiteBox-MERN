@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-//* Schema definition
 const shopSchema = new mongoose.Schema(
   {
     name: {
@@ -38,8 +37,6 @@ const shopSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//* Create the model
 const Shop = mongoose.model('Shop', shopSchema);
 
-//* Export the model
 export default Shop;

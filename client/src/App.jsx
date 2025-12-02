@@ -19,6 +19,7 @@ import NotFound from './pages/NotFound';
 import OrderPlaced from './pages/OrderPlaced';
 import MyOrders from './pages/MyOrders';
 import useGetMyOrders from './hooks/useGetMyOrders';
+import useUpdateLocation from './hooks/useUpdateLocation';
 
 const App = () => {
   useGetCurrentUser();
@@ -27,6 +28,7 @@ const App = () => {
   useGetShopByCity();
   useGetItemByCity();
   useGetMyOrders();
+  useUpdateLocation();
   const { userData } = useSelector(state => state.user);
   return (
     <>
