@@ -151,7 +151,7 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
 
   let deliveryBoysPayload = [];
 
-  if (status === 'out for delivery' || !shopOrder.assignment) {
+  if (status === 'out for delivery' && !shopOrder.assignment) {
     const { latitude, longitude } = order.deliveryAddress;
 
     // Get the delivery boys who are near by 5 km
