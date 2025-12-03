@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { placeOrder, getOrders, updateOrderStatus } from '../controller/order.controller.js';
+import {
+  placeOrder,
+  getOrders,
+  updateOrderStatus,
+  getDeliveryBoyAssignment,
+} from '../controller/order.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 
 //* Create a new Express router
@@ -9,6 +14,7 @@ const router = Router();
 router.post('/place-order', isAuth, placeOrder);
 router.get('/get-orders', isAuth, getOrders);
 router.put('/update-order-status/:orderId/:shopId', isAuth, updateOrderStatus);
+router.get('/get-delivery-boy-assignment', isAuth, getDeliveryBoyAssignment);
 
 //* Export the router
 export default router;

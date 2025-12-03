@@ -151,7 +151,7 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
 
   let deliveryBoysPayload = [];
 
-  if (status === 'out for delivery' || !shopOrder.assignment) {
+  if (status === 'out for delivery' && !shopOrder.assignment) {
     const { latitude, longitude } = order.deliveryAddress;
 
     // Get the delivery boys who are near by 5 km
@@ -167,6 +167,11 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
         },
       },
     });
+
+    if (nearByDeliveryBoys.length === 0) {
+      await order.save();
+      throw new Error('No Delivery Boy Available');
+    }
 
     const deliveryBoyIds = nearByDeliveryBoys.map(deliveryBoy => deliveryBoy._id);
 
@@ -222,5 +227,35 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
   return { updatedShopOrder, deliveryBoysPayload };
 };
 
+//* Service for getting delivery boy assignment
+const getDeliveryBoyAssignmentService = async deliveryBoyId => {
+  const assignment = await DeliveryAssignment.find({
+    brodcastedTo: deliveryBoyId,
+    status: 'broadcasted',
+  })
+    .populate('order')
+    .populate('shop');
+
+  const formatedResponse = assignment.map(assign => ({
+    assignmentId: assign._id,
+    orderId: assign.order?._id,
+    shopName: assign.shop.name,
+    deliveryAddress: assign.order?.deliveryAddress,
+    items:
+      assign.order?.shopOrders.find(shop => shop._id.toString() === assign.shopOrderId.toString())
+        ?.shopOrderItems || [],
+    subtotal: assign.order?.shopOrders.find(
+      shop => shop._id.toString() === assign.shopOrderId.toString()
+    )?.subtotal,
+  }));
+
+  return formatedResponse;
+};
+
 //* Export services
-export { placeOrderService, getOrdersService, updateOrderStatusService };
+export {
+  placeOrderService,
+  getOrdersService,
+  updateOrderStatusService,
+  getDeliveryBoyAssignmentService,
+};

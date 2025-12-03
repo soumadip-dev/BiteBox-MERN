@@ -2,34 +2,17 @@ import { MdPhone } from 'react-icons/md';
 import { updateOrderStatus } from '../api/orderApi';
 import { updateShopOrderStatus } from '../redux/userSlice';
 import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const OwnerOrderCard = ({ order }) => {
   const dispatch = useDispatch();
   const [availableBoys, setAvailableBoys] = useState([]);
 
-  // Function to fetch available delivery boys
-  const fetchAvailableBoys = async (orderId, shopId) => {
-    try {
-      const response = await updateOrderStatus(orderId, shopId, 'out for delivery');
-      setAvailableBoys(response.availableBoys || []);
-    } catch (error) {
-      console.log('Error fetching delivery boys:', error);
-      setAvailableBoys([]);
-    }
-  };
-
-  // Fetch delivery boys when component loads and status is "out for delivery"
-  useEffect(() => {
-    if (order?.shopOrders?.[0]?.status === 'out for delivery') {
-      fetchAvailableBoys(order._id, order.shopOrders[0].shop._id);
-    }
-  }, [order]);
-
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
       const response = await updateOrderStatus(orderId, shopId, status);
       dispatch(updateShopOrderStatus({ orderId, shopId, status }));
+
       setAvailableBoys(response.availableBoys || []);
     } catch (error) {
       console.log(error);

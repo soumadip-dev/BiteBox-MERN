@@ -2,6 +2,7 @@ import {
   placeOrderService,
   getOrdersService,
   updateOrderStatusService,
+  getDeliveryBoyAssignmentService,
 } from '../services/order.service.js';
 
 //* Controller for placing Order
@@ -79,5 +80,24 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+//* Controller for getting delivery boy assignment
+const getDeliveryBoyAssignment = async (req, res) => {
+  try {
+    const deliveryBoyId = req.userId;
+    const assignments = await getDeliveryBoyAssignmentService(deliveryBoyId);
+
+    return res.status(200).json({
+      message: 'Assignments fetched successfully',
+      success: true,
+      assignments,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
-export { placeOrder, getOrders, updateOrderStatus };
+export { placeOrder, getOrders, updateOrderStatus, getDeliveryBoyAssignment };
