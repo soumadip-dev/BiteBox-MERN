@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
+import { getDeliveryBoyAssignment } from '../api/orderApi';
 
 const DeliveryBoyDashboard = () => {
+  const [availableOrders, setAvailableOrders] = useState([]);
+  const getAssignment = async () => {
+    const response = await getDeliveryBoyAssignment();
+    response && setAvailableOrders(response?.assignments);
+  };
+  useEffect(() => {
+    getAssignment();
+  }, []);
   const { userData } = useSelector(state => state.user);
+  console.log(availableOrders);
+
   return (
     <>
       <Navbar />
@@ -35,6 +46,33 @@ const DeliveryBoyDashboard = () => {
                 </span>
               </div>
             </div>
+          </div>
+          <div className="bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100">
+            <h1 className="text-lg font-bold mb-4 flex items-center gap-2">Available Orders</h1>
+            {availableOrders?.length > 0 ? (
+              availableOrders?.map(order => (
+                <div
+                  key={order?.assignmentId}
+                  className="border rounded-lg flex justify-between items-center"
+                >
+                  <div>
+                    <p className="text-sm font-semibold">{order?.shopName}</p>
+                    <p className="text-sm text-gray-500">
+                      <span className="font-semibold">Delivery Address:</span>
+                      {order?.deliveryAddress?.text}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {order?.items.length} items | {order?.subtotal}
+                    </p>
+                  </div>
+                  <button className="bg-orange-500 text-white px-4 py-1 rounded-lg text-sm hover:bg-orange-600">
+                    Accept
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>No available orders</p>
+            )}
           </div>
         </div>
       </div>

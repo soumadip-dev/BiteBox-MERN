@@ -168,6 +168,11 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
       },
     });
 
+    if (nearByDeliveryBoys.length === 0) {
+      await order.save();
+      throw new Error('No Delivery Boy Available');
+    }
+
     const deliveryBoyIds = nearByDeliveryBoys.map(deliveryBoy => deliveryBoy._id);
 
     // Get the available delivery boy who are not assigned to any order
@@ -233,13 +238,13 @@ const getDeliveryBoyAssignmentService = async deliveryBoyId => {
 
   const formatedResponse = assignment.map(assign => ({
     assignmentId: assign._id,
-    orderId: assign.order._id,
+    orderId: assign.order?._id,
     shopName: assign.shop.name,
-    deliveryAddress: assign.order.deliveryAddress,
+    deliveryAddress: assign.order?.deliveryAddress,
     items:
-      assign.order.shopOrders.find(shop => shop._id.toString() === assign.shopOrderId.toString())
+      assign.order?.shopOrders.find(shop => shop._id.toString() === assign.shopOrderId.toString())
         ?.shopOrderItems || [],
-    subtotal: assign.order.shopOrders.find(
+    subtotal: assign.order?.shopOrders.find(
       shop => shop._id.toString() === assign.shopOrderId.toString()
     )?.subtotal,
   }));
