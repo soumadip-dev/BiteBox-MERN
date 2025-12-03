@@ -222,5 +222,35 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
   return { updatedShopOrder, deliveryBoysPayload };
 };
 
+//* Service for getting delivery boy assignment
+const getDeliveryBoyAssignmentService = async deliveryBoyId => {
+  const assignment = await DeliveryAssignment.find({
+    brodcastedTo: deliveryBoyId,
+    status: 'broadcasted',
+  })
+    .populate('order')
+    .populate('shop');
+
+  const formatedResponse = assignment.map(assign => ({
+    assignmentId: assign._id,
+    orderId: assign.order._id,
+    shopName: assign.shop.name,
+    deliveryAddress: assign.order.deliveryAddress,
+    items:
+      assign.order.shopOrders.find(shop => shop._id.toString() === assign.shopOrderId.toString())
+        ?.shopOrderItems || [],
+    subtotal: assign.order.shopOrders.find(
+      shop => shop._id.toString() === assign.shopOrderId.toString()
+    )?.subtotal,
+  }));
+
+  return formatedResponse;
+};
+
 //* Export services
-export { placeOrderService, getOrdersService, updateOrderStatusService };
+export {
+  placeOrderService,
+  getOrdersService,
+  updateOrderStatusService,
+  getDeliveryBoyAssignmentService,
+};
