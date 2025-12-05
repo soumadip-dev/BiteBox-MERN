@@ -20,7 +20,7 @@ const DeliveryBoyDashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full min-h-screen bg-gradient-to-b from-[#fff9f6] to-white px-3 xs:px-4 sm:px-6 py-4 sm:py-6 md:py-8 pt-16 sm:pt-20 md:pt-24">
+      <div className="w-full min-h-screen bg-gradient-to-b from-[#fff9f6] to-white px-3 xs:px-4 sm:px-6 py-4 sm:py-6 md:py-8 pt-10 sm:pt-20">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Header */}
           <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 xs:gap-4 bg-white rounded-xl sm:rounded-2xl px-4 xs:px-5 sm:px-6 py-4 xs:py-5 shadow-sm border border-orange-100 mb-6 sm:mb-8">

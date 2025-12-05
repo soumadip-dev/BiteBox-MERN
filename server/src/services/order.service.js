@@ -252,10 +252,59 @@ const getDeliveryBoyAssignmentService = async deliveryBoyId => {
   return formatedResponse;
 };
 
+//* Service for accepting order
+const acceptOrderService = async (assignmentId, userId) => {
+  const assignment = await DeliveryAssignment.findById(assignmentId);
+
+  if (!assignment) {
+    throw new Error('Delivery assignment not found.');
+  }
+
+  if (assignment.status !== 'broadcasted') {
+    throw new Error(
+      'This delivery assignment has expired or has already been accepted by another delivery partner.'
+    );
+  }
+
+  const alreadyAssigned = await DeliveryAssignment.findOne({
+    assignedTo: userId,
+    status: { $nin: ['broadcasted', 'completed'] },
+  });
+
+  if (alreadyAssigned) {
+    throw new Error('You already have an active order.');
+  }
+
+  assignment.assignedTo = userId;
+  assignment.status = 'assigned';
+  assignment.acceptedAt = new Date();
+
+  await assignment.save();
+
+  const order = await Order.findById(assignment.order);
+
+  if (!order) {
+    throw Error('Order not found');
+  }
+
+  const shopOrder = order.shopOrders.find(
+    shopOrder => shopOrder._id.toString() === assignment.shopOrderId.toString()
+  );
+
+  if (!shopOrder) {
+    throw Error('Shop order not found');
+  }
+
+  shopOrder.assignedDeliveryBoy = userId;
+
+  await order.save();
+};
+
 //* Export services
 export {
   placeOrderService,
   getOrdersService,
   updateOrderStatusService,
   getDeliveryBoyAssignmentService,
+  acceptOrderService,
 };

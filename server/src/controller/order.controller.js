@@ -3,6 +3,7 @@ import {
   getOrdersService,
   updateOrderStatusService,
   getDeliveryBoyAssignmentService,
+  acceptOrderService,
 } from '../services/order.service.js';
 
 //* Controller for placing Order
@@ -99,5 +100,25 @@ const getDeliveryBoyAssignment = async (req, res) => {
   }
 };
 
+//* Controller for accepting order
+const acceptOrder = async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    const userId = req.userId;
+
+    await acceptOrderService(assignmentId, userId);
+
+    res.status(200).json({
+      message: 'Order accepted successfully.',
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
-export { placeOrder, getOrders, updateOrderStatus, getDeliveryBoyAssignment };
+export { placeOrder, getOrders, updateOrderStatus, getDeliveryBoyAssignment, acceptOrder };
