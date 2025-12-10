@@ -261,9 +261,7 @@ const acceptOrderService = async (assignmentId, userId) => {
   }
 
   if (assignment.status !== 'broadcasted') {
-    throw new Error(
-      'This delivery assignment has expired or has already been accepted by another delivery partner.'
-    );
+    throw new Error('This delivery assignment has expired.');
   }
 
   const alreadyAssigned = await DeliveryAssignment.findOne({

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
-import { getDeliveryBoyAssignment } from '../api/orderApi';
+import { acceptTheOrder, getDeliveryBoyAssignment } from '../api/orderApi';
 import { FaMapMarkerAlt, FaBoxOpen, FaMotorcycle, FaCheckCircle } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 const DeliveryBoyDashboard = () => {
   const [availableOrders, setAvailableOrders] = useState([]);
@@ -15,7 +16,20 @@ const DeliveryBoyDashboard = () => {
 
   useEffect(() => {
     getAssignment();
-  }, []);
+  }, [userData]);
+  const acceptOrder = async assignmentId => {
+    try {
+      const response = await acceptTheOrder(assignmentId);
+
+      if (response?.success === true) {
+        toast.success(response?.message || 'Order accepted successfully!');
+      } else {
+        toast.error(response?.message || 'Failed to accept order');
+      }
+    } catch (error) {
+      toast.error(error?.message || 'An error occurred');
+    }
+  };
 
   return (
     <>
@@ -163,7 +177,10 @@ const DeliveryBoyDashboard = () => {
                             Ready for pickup
                           </span>
                         </div>
-                        <button className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 hover:from-[#ff5c3d] hover:to-orange-600 text-white px-4 xs:px-5 py-2 xs:py-2.5 rounded-lg xs:rounded-xl font-semibold text-xs xs:text-sm transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg w-full xs:w-auto">
+                        <button
+                          className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 hover:from-[#ff5c3d] hover:to-orange-600 text-white px-4 xs:px-5 py-2 xs:py-2.5 rounded-lg xs:rounded-xl font-semibold text-xs xs:text-sm transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg w-full xs:w-auto"
+                          onClick={() => acceptOrder(order?.assignmentId)}
+                        >
                           Accept Delivery
                         </button>
                       </div>

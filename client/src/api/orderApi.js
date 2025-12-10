@@ -28,8 +28,6 @@ export const getOrders = async function () {
 
 //* Update order status
 export const updateOrderStatus = async function (orderId, shopId, status) {
-  console.log(orderId, '---------', shopId, '---------', status);
-
   try {
     const response = await axiosInstance.put(
       `/api/v1/order/update-order-status/${orderId}/${shopId}`,
@@ -48,6 +46,19 @@ export const updateOrderStatus = async function (orderId, shopId, status) {
 export const getDeliveryBoyAssignment = async function () {
   try {
     const response = await axiosInstance.get('/api/v1/order/get-delivery-boy-assignment');
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
+//* Accept order
+export const acceptTheOrder = async function (assignmentId) {
+  try {
+    const response = await axiosInstance.put(`/api/v1/order/accept-order/${assignmentId}`);
     return response.data;
   } catch (error) {
     if (error.response && error.response.data) {
