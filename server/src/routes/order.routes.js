@@ -5,6 +5,7 @@ import {
   updateOrderStatus,
   getDeliveryBoyAssignment,
   acceptOrder,
+  getCurrentOrder,
 } from '../controller/order.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 
@@ -17,6 +18,7 @@ router.get('/get-orders', isAuth, getOrders);
 router.put('/update-order-status/:orderId/:shopId', isAuth, updateOrderStatus);
 router.get('/get-delivery-boy-assignment', isAuth, getDeliveryBoyAssignment);
 router.put('/accept-order/:assignmentId', isAuth, acceptOrder);
+router.get('/get-current-order', isAuth, getCurrentOrder);
 
 //* Export the router
 export default router;

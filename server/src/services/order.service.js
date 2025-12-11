@@ -92,7 +92,7 @@ const getOwnerOrdersService = async ownerId => {
       .sort({ createdAt: -1 })
       .populate('shopOrders.shop', 'name')
       .populate('user')
-      .populate('shopOrders.owner', 'name email mobile') // Populate owner field
+      .populate('shopOrders.owner', 'name email mobile')
       .populate('shopOrders.shopOrderItems.item', 'name image price')
       .populate('shopOrders.assignedDeliveryBoy', 'fullName mobile');
 
@@ -297,6 +297,66 @@ const acceptOrderService = async (assignmentId, userId) => {
   await order.save();
 };
 
+//* Service for getting current order
+const getCurrentOrderService = async (userId, userRole) => {
+  if (!userId || userRole.toString() !== 'deliveryBoy') {
+    throw new Error('Invalid user role');
+  }
+
+  const assignment = await DeliveryAssignment.findOne({
+    assignedTo: userId,
+    status: 'assigned',
+  })
+    .populate('assignedTo', 'fullName email mobile location')
+    .populate('shop', 'name')
+    .populate({
+      path: 'order',
+      populate: [{ path: 'user', select: 'fullName email mobile location' }],
+    });
+
+  if (!assignment) {
+    throw new Error('No active order found.');
+  }
+
+  if (!assignment.order) {
+    throw new Error('Order not found');
+  }
+
+  const shopOrder = assignment.order.shopOrders.find(
+    shopOrder => shopOrder._id.toString() === assignment.shopOrderId.toString()
+  );
+
+  if (!shopOrder) {
+    throw new Error('Shop order not found');
+  }
+
+  let deliveryBoyLocation = { lat: null, lon: null };
+
+  if (assignment.assignedTo.location) {
+    deliveryBoyLocation = {
+      lat: assignment.assignedTo.location.coordinates[1],
+      lon: assignment.assignedTo.location.coordinates[0],
+    };
+  }
+
+  let customerLocation = { lat: null, lon: null };
+
+  if (assignment.order.deliveryAddress) {
+    customerLocation = {
+      lat: assignment.order.deliveryAddress.latitude,
+      lon: assignment.order.deliveryAddress.longitude,
+    };
+  }
+  return {
+    _id: assignment.order._id,
+    user: assignment.order.user,
+    shopOrder,
+    deliveryAddress: assignment.order.deliveryAddress,
+    deliveryBoyLocation,
+    customerLocation,
+  };
+};
+
 //* Export services
 export {
   placeOrderService,
@@ -304,4 +364,5 @@ export {
   updateOrderStatusService,
   getDeliveryBoyAssignmentService,
   acceptOrderService,
+  getCurrentOrderService,
 };

@@ -4,6 +4,7 @@ import {
   updateOrderStatusService,
   getDeliveryBoyAssignmentService,
   acceptOrderService,
+  getCurrentOrderService,
 } from '../services/order.service.js';
 
 //* Controller for placing Order
@@ -120,5 +121,32 @@ const acceptOrder = async (req, res) => {
   }
 };
 
+//* Controller for getting current order
+const getCurrentOrder = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const userRole = req.userRole;
+    const data = await getCurrentOrderService(userId, userRole);
+
+    return res.status(200).json({
+      message: 'Current order fetched successfully',
+      success: true,
+      data,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
-export { placeOrder, getOrders, updateOrderStatus, getDeliveryBoyAssignment, acceptOrder };
+export {
+  placeOrder,
+  getOrders,
+  updateOrderStatus,
+  getDeliveryBoyAssignment,
+  acceptOrder,
+  getCurrentOrder,
+};
