@@ -33,7 +33,7 @@ const DeliveryBoyTracking = ({ data }) => {
 
   return (
     <div className="rounded-xl border border-gray-200 overflow-hidden shadow-inner">
-      <div className="h-49 sm:h-71 w-full">
+      <div className="h-49 sm:h-96 w-full">
         <MapContainer className={'w-full h-full rounded-lg'} center={center} zoom={16}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
