@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
-import { acceptTheOrder, getDeliveryBoyAssignment } from '../api/orderApi';
+import { acceptTheOrder, getDeliveryBoyAssignment, getTheCurrentOrder } from '../api/orderApi';
 import { FaMapMarkerAlt, FaBoxOpen, FaMotorcycle, FaCheckCircle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
@@ -14,9 +14,16 @@ const DeliveryBoyDashboard = () => {
     response && setAvailableOrders(response?.assignments || []);
   };
 
-  useEffect(() => {
-    getAssignment();
-  }, [userData]);
+  const getCurrentOrder = async () => {
+    try {
+      const response = await getTheCurrentOrder();
+
+      console.log('GET CURRENTORDER RESPONSE ::::::::', response);
+    } catch (error) {
+      toast.error(error?.message || 'An error occurred');
+    }
+  };
+
   const acceptOrder = async assignmentId => {
     try {
       const response = await acceptTheOrder(assignmentId);
@@ -26,10 +33,16 @@ const DeliveryBoyDashboard = () => {
       } else {
         toast.error(response?.message || 'Failed to accept order');
       }
+      await getCurrentOrder();
     } catch (error) {
       toast.error(error?.message || 'An error occurred');
     }
   };
+
+  useEffect(() => {
+    getAssignment();
+    getCurrentOrder();
+  }, [userData]);
 
   return (
     <>

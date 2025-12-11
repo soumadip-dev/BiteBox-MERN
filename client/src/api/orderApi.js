@@ -67,3 +67,16 @@ export const acceptTheOrder = async function (assignmentId) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Get current order
+export const getTheCurrentOrder = async function () {
+  try {
+    const response = await axiosInstance.get('/api/v1/order/get-current-order');
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
