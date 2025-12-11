@@ -92,8 +92,9 @@ const getOwnerOrdersService = async ownerId => {
       .sort({ createdAt: -1 })
       .populate('shopOrders.shop', 'name')
       .populate('user')
-      .populate('shopOrders.owner', 'name email mobile') // Populate owner field
-      .populate('shopOrders.shopOrderItems.item', 'name image price');
+      .populate('shopOrders.owner', 'name email mobile')
+      .populate('shopOrders.shopOrderItems.item', 'name image price')
+      .populate('shopOrders.assignedDeliveryBoy', 'fullName mobile');
 
     const filteredOrder = orders.map(order => ({
       _id: order._id,
@@ -252,10 +253,116 @@ const getDeliveryBoyAssignmentService = async deliveryBoyId => {
   return formatedResponse;
 };
 
+//* Service for accepting order
+const acceptOrderService = async (assignmentId, userId) => {
+  const assignment = await DeliveryAssignment.findById(assignmentId);
+
+  if (!assignment) {
+    throw new Error('Delivery assignment not found.');
+  }
+
+  if (assignment.status !== 'broadcasted') {
+    throw new Error('This delivery assignment has expired.');
+  }
+
+  const alreadyAssigned = await DeliveryAssignment.findOne({
+    assignedTo: userId,
+    status: { $nin: ['broadcasted', 'completed'] },
+  });
+
+  if (alreadyAssigned) {
+    throw new Error('You already have an active order.');
+  }
+
+  assignment.assignedTo = userId;
+  assignment.status = 'assigned';
+  assignment.acceptedAt = new Date();
+
+  await assignment.save();
+
+  const order = await Order.findById(assignment.order);
+
+  if (!order) {
+    throw Error('Order not found');
+  }
+
+  const shopOrder = order.shopOrders.id(assignment.shopOrderId);
+
+  if (!shopOrder) {
+    throw Error('Shop order not found');
+  }
+
+  shopOrder.assignedDeliveryBoy = userId;
+
+  await order.save();
+};
+
+//* Service for getting current order
+const getCurrentOrderService = async (userId, userRole) => {
+  if (!userId || userRole.toString() !== 'deliveryBoy') {
+    throw new Error('Invalid user role');
+  }
+
+  const assignment = await DeliveryAssignment.findOne({
+    assignedTo: userId,
+    status: 'assigned',
+  })
+    .populate('assignedTo', 'fullName email mobile location')
+    .populate('shop', 'name')
+    .populate({
+      path: 'order',
+      populate: [{ path: 'user', select: 'fullName email mobile location' }],
+    });
+
+  if (!assignment) {
+    throw new Error('No active order found.');
+  }
+
+  if (!assignment.order) {
+    throw new Error('Order not found');
+  }
+
+  const shopOrder = assignment.order.shopOrders.find(
+    shopOrder => shopOrder._id.toString() === assignment.shopOrderId.toString()
+  );
+
+  if (!shopOrder) {
+    throw new Error('Shop order not found');
+  }
+
+  let deliveryBoyLocation = { lat: null, lon: null };
+
+  if (assignment.assignedTo.location) {
+    deliveryBoyLocation = {
+      lat: assignment.assignedTo.location.coordinates[1],
+      lon: assignment.assignedTo.location.coordinates[0],
+    };
+  }
+
+  let customerLocation = { lat: null, lon: null };
+
+  if (assignment.order.deliveryAddress) {
+    customerLocation = {
+      lat: assignment.order.deliveryAddress.latitude,
+      lon: assignment.order.deliveryAddress.longitude,
+    };
+  }
+  return {
+    _id: assignment.order._id,
+    user: assignment.order.user,
+    shopOrder,
+    deliveryAddress: assignment.order.deliveryAddress,
+    deliveryBoyLocation,
+    customerLocation,
+  };
+};
+
 //* Export services
 export {
   placeOrderService,
   getOrdersService,
   updateOrderStatusService,
   getDeliveryBoyAssignmentService,
+  acceptOrderService,
+  getCurrentOrderService,
 };

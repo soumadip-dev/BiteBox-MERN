@@ -32,7 +32,7 @@ const App = () => {
   const { userData } = useSelector(state => state.user);
   return (
     <>
-      <Toaster />
+      <Toaster position="bottom-right" />
       <Routes>
         <Route path="/signin" element={!userData ? <SignIn /> : <Navigate to="/" />} />
         <Route path="/signup" element={!userData ? <SignUp /> : <Navigate to="/" />} />
