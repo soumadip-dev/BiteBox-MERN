@@ -93,7 +93,8 @@ const getOwnerOrdersService = async ownerId => {
       .populate('shopOrders.shop', 'name')
       .populate('user')
       .populate('shopOrders.owner', 'name email mobile') // Populate owner field
-      .populate('shopOrders.shopOrderItems.item', 'name image price');
+      .populate('shopOrders.shopOrderItems.item', 'name image price')
+      .populate('shopOrders.assignedDeliveryBoy', 'fullName mobile');
 
     const filteredOrder = orders.map(order => ({
       _id: order._id,
@@ -285,9 +286,7 @@ const acceptOrderService = async (assignmentId, userId) => {
     throw Error('Order not found');
   }
 
-  const shopOrder = order.shopOrders.find(
-    shopOrder => shopOrder._id.toString() === assignment.shopOrderId.toString()
-  );
+  const shopOrder = order.shopOrders.id(assignment.shopOrderId);
 
   if (!shopOrder) {
     throw Error('Shop order not found');
