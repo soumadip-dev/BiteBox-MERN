@@ -80,3 +80,16 @@ export const getTheCurrentOrder = async function () {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Get order by id
+export const getOrderById = async function (orderId) {
+  try {
+    const response = await axiosInstance.get(`/api/v1/order/get-order-by-id/${orderId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

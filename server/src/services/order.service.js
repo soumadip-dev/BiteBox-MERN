@@ -357,6 +357,34 @@ const getCurrentOrderService = async (userId, userRole) => {
   };
 };
 
+const getOrderByIdService = async orderId => {
+  try {
+    const order = await Order.findById(orderId)
+      .populate('user')
+      .populate({
+        path: 'shopOrders',
+        model: 'Shop',
+      })
+      .populate({
+        path: 'shopOrders.assignedDeliveryBoy',
+        model: 'User',
+      })
+      .populate({
+        path: 'shopOrders.shopOrderItems',
+        model: 'ShopOrderItem',
+      })
+      .lean();
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    return order;
+  } catch (error) {
+    throw new Error('Error fetching order');
+  }
+};
+
 //* Export services
 export {
   placeOrderService,
@@ -365,4 +393,5 @@ export {
   getDeliveryBoyAssignmentService,
   acceptOrderService,
   getCurrentOrderService,
+  getOrderByIdService,
 };
