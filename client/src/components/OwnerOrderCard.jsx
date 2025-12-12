@@ -156,10 +156,10 @@ const OwnerOrderCard = ({ order }) => {
           3. We have available boys data */}
       {order?.shopOrders[0]?.status === 'out for delivery' &&
         !order?.shopOrders[0]?.assignedDeliveryBoy && (
-          <div className="mt-4 sm:mt-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-100 shadow-sm">
+          <div className="mt-4 sm:mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200 shadow-sm">
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-100 text-purple-700">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-gray-700">
                   <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
@@ -168,10 +168,10 @@ const OwnerOrderCard = ({ order }) => {
                     />
                   </svg>
                 </span>
-                Assign Delivery Boy
+                Available Delivery Boys
               </h3>
               <p className="text-sm text-gray-600 mt-1">
-                Select a delivery boy to assign for this order
+                View available delivery boys for this order
               </p>
             </div>
 
@@ -180,17 +180,11 @@ const OwnerOrderCard = ({ order }) => {
                 {availableBoys.map((boy, index) => (
                   <div
                     key={boy._id || index}
-                    className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200 hover:border-purple-300 hover:shadow-sm transition-all duration-200 cursor-pointer"
-                    onClick={() => {
-                      // Add your delivery boy assignment logic here
-                      console.log('Assigning delivery boy:', boy);
-                      // You would call an API to assign this delivery boy
-                      // assignDeliveryBoy(order._id, shopOrder.shop._id, boy._id);
-                    }}
+                    className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-blue-100 text-purple-700 font-medium">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-gray-100 to-blue-100 text-gray-700 font-medium">
                           {boy.fullname?.charAt(0)?.toUpperCase() || 'D'}
                         </div>
                         <div>
@@ -201,9 +195,9 @@ const OwnerOrderCard = ({ order }) => {
                           </p>
                         </div>
                       </div>
-                      <button className="px-3 py-1.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200">
-                        Assign
-                      </button>
+                      <div className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg">
+                        Available
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -225,9 +219,9 @@ const OwnerOrderCard = ({ order }) => {
                     />
                   </svg>
                 </div>
-                <p className="text-gray-600 font-medium">Waiting for available delivery boys</p>
+                <p className="text-gray-600 font-medium">No delivery boys available</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  No delivery boys are currently available. Please check back soon.
+                  Delivery boys will be assigned automatically when available
                 </p>
               </div>
             )}

@@ -6,6 +6,7 @@ import {
   getDeliveryBoyAssignment,
   acceptOrder,
   getCurrentOrder,
+  getOrderById,
 } from '../controller/order.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 
@@ -13,12 +14,13 @@ import { isAuth } from '../middleware/user.middleware.js';
 const router = Router();
 
 //* Define routes
-router.post('/place-order', isAuth, placeOrder);
 router.get('/get-orders', isAuth, getOrders);
-router.put('/update-order-status/:orderId/:shopId', isAuth, updateOrderStatus);
 router.get('/get-delivery-boy-assignment', isAuth, getDeliveryBoyAssignment);
-router.put('/accept-order/:assignmentId', isAuth, acceptOrder);
 router.get('/get-current-order', isAuth, getCurrentOrder);
+router.get('/get-order-by-id/:orderId', isAuth, getOrderById);
+router.put('/update-order-status/:orderId/:shopId', isAuth, updateOrderStatus);
+router.put('/accept-order/:assignmentId', isAuth, acceptOrder);
+router.post('/place-order', isAuth, placeOrder);
 
 //* Export the router
 export default router;

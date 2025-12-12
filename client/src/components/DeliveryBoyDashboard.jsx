@@ -67,7 +67,7 @@ const DeliveryBoyDashboard = () => {
                   Welcome, {userData?.fullName}
                 </h1>
                 <p className="text-gray-600 text-xs xs:text-sm sm:text-base mt-0.5">
-                  Ready to deliver happiness! 🚀
+                  Ready to deliver happiness! 
                 </p>
               </div>
             </div>
@@ -200,7 +200,7 @@ const DeliveryBoyDashboard = () => {
                             </span>
                           </div>
                           <button
-                            className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 hover:from-[#ff5c3d] hover:to-orange-600 text-white px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-lg xs:rounded-xl font-semibold text-xs xs:text-sm sm:text-base transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg w-full xs:w-auto"
+                            className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 hover:from-[#ff5c3d] hover:to-orange-600 text-white px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 rounded-lg xs:rounded-xl font-semibold text-xs xs:text-sm sm:text-base transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg w-full xs:w-auto cursor-pointer"
                             onClick={() => acceptOrder(order?.assignmentId)}
                           >
                             Accept Delivery
@@ -327,7 +327,7 @@ const DeliveryBoyDashboard = () => {
                 {!showOtpBox ? (
                   <div className="mt-4 xs:mt-5 sm:mt-6 md:mt-8 flex justify-end">
                     <button
-                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2 xs:py-2.5 sm:py-3 px-4 xs:px-5 sm:px-6 md:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-xs xs:text-sm sm:text-base md:text-lg w-full xs:w-auto"
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2 xs:py-2.5 sm:py-3 px-4 xs:px-5 sm:px-6 md:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-xs xs:text-sm sm:text-base md:text-lg w-full xs:w-auto cursor-pointer"
                       onClick={handleSendOtp}
                     >
                       Mark as Delivered
@@ -364,12 +364,12 @@ const DeliveryBoyDashboard = () => {
                       </div>
 
                       <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 sm:gap-4">
-                        <button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg flex-1">
+                        <button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg flex-1 cursor-pointer">
                           Submit OTP & Complete Delivery
                         </button>
                         <button
                           onClick={() => setShowOtpBox(false)}
-                          className="bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-800 font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl border border-gray-300 hover:border-gray-400 active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg"
+                          className="bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-800 font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl border border-gray-300 hover:border-gray-400 active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg cursor-pointer"
                         >
                           Cancel
                         </button>

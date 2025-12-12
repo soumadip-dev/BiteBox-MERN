@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserOrderCard = ({ order }) => {
   const formatDate = dateString => {
@@ -9,6 +10,8 @@ const UserOrderCard = ({ order }) => {
       year: 'numeric',
     });
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 space-y-6 border border-gray-100 hover:shadow-md transition-all duration-200 ease-in-out">
@@ -84,7 +87,10 @@ const UserOrderCard = ({ order }) => {
             Total: ₹{order.totalAmount}
           </p>
         </div>
-        <button className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg text-sm font-semibold transition-all duration-200 shadow-xs hover:shadow-md active:scale-95">
+        <button
+          className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-lg text-sm font-semibold transition-all duration-200 shadow-xs hover:shadow-md active:scale-95 cursor-pointer"
+          onClick={() => navigate(`/track-order/${order._id}`)}
+        >
           Track Order
         </button>
       </div>

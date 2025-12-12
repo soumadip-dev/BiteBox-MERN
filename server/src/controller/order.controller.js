@@ -5,6 +5,7 @@ import {
   getDeliveryBoyAssignmentService,
   acceptOrderService,
   getCurrentOrderService,
+  getOrderByIdService,
 } from '../services/order.service.js';
 
 //* Controller for placing Order
@@ -141,6 +142,25 @@ const getCurrentOrder = async (req, res) => {
   }
 };
 
+//* Controller for getting order by id
+const getOrderById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await getOrderByIdService(orderId);
+
+    return res.status(200).json({
+      message: 'Order fetched successfully',
+      success: true,
+      order,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
 export {
   placeOrder,
@@ -149,4 +169,5 @@ export {
   getDeliveryBoyAssignment,
   acceptOrder,
   getCurrentOrder,
+  getOrderById,
 };
