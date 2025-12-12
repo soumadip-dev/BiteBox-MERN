@@ -6,42 +6,84 @@
   A full-stack MERN food delivery application with real-time order tracking, Razorpay payments, Firebase OAuth, Brevo mail service, and a modern UI for customers and admins.
 </p>
 
+## User Role
+
 <table align="center">
   <tr>
-    <th>Login Page</th>
-    <th>Register Page</th>
-  </tr>
-  <tr>
     <td align="center">
-      <img src="./client/public/loginPage_ss.png" alt="Login Page">
+      <img src="./client/public/01_user_home_page.png" alt="User Home Page">
     </td>
     <td align="center">
-      <img src="./client/public/registerPage_ss.png" alt="Register Page">
+      <img src="./client/public/02_user_cart.png" alt="User Cart">
+    </td>
+    <td align="center">
+      <img src="./client/public/03_user_checkout.png" alt="User Checkout">
+    </td>
+    <td align="center">
+      <img src="./client/public/04_user_order_tracking.png" alt="User Order Tracking">
     </td>
   </tr>
 </table>
 
-## 🌟 Features (Current)
+## Restaurant Owner Role
 
-- 👤 User registration and login
-- 🔑 JWT and Firebase OAuth authentication
-- 🛡 Protected backend routes
-- 💻 Frontend auth flow (signup, login, logout)
-- ☁️ Image upload via Cloudinary and Multer
-- 📬 Automated mail service using Brevo Studio
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="./client/public/01_owner_home_page.png" alt="Owner HomePage">
+    </td>
+    <td align="center">
+      <img src="./client/public/02_owner_add_item.png" alt="Owner Add Item">
+    </td>
+    <td align="center">
+      <img src="./client/public/02_owner_edit_item.png" alt="Owner Edit Item">
+    </td>
+    <td align="center">
+      <img src="./client/public/02_owner_my_order.png" alt="Owner My Order">
+    </td>
+  </tr>
+</table>
+
+## Delivery Boy Role
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="./client/public/01_Delivery_boy_HomePage.png" alt="Delivery Boy HomePage">
+    </td>
+    <td align="center">
+      <img src="./client/public/02_DeliveryBoy_track_Order.png" alt="Delivery Boy Track Order">
+    </td>
+  </tr>
+</table>
+
+## 🔋 Features
+
+- 👤 **User registration and login** with secure authentication
+- 🔑 **JWT and Firebase OAuth** with role-based access control
+- 💻 **Seamless frontend auth flow** (signup, login, logout)
+- ☁️ **Image upload** via Cloudinary and Multer
+- 📬 **Automated mail service** using Brevo Studio
+- 👥 **Three distinct roles**: User, Restaurant Owner, Delivery Boy
+- 🛒 **User features**: Order food items, pay via COD or Razorpay, and track orders in real-time on an interactive map
+- 🏪 **Restaurant Owner features**: Add, edit, delete food items, and manage order status (Pending, Preparing, Out for Delivery)
+- 🚚 **Delivery Boy features**: Accept orders, track delivery routes in real-time on map, and update order status with OTP validation upon delivery
+- ⚡ **Real-time updates** for all actions using Socket.io
 
 ## ⚙️ Tech Stack
 
-- **🎨 Frontend**: React, Tailwind CSS, React Router, Redux
+- **🎨 Frontend**: React, Tailwind CSS, React Router, Redux, React Leaflet (Map)
 - **🛠 Backend**: Node.js, Express.js, Multer
 - **🗄 Database**: MongoDB, Mongoose
 - **☁️ Cloud Storage**: Cloudinary
-- **🔐 Auth**: JWT, Firebase OAuth
+- **🔐 Authentication**: JWT, Firebase OAuth
 - **📧 Mail Service**: Brevo Studio
+- **💸 Payment Gateway**: Razorpay
+- **📍 Real-time Tracking**: Socket.io
 
-## 📦 Installation
+## 🤸 Installation
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/soumadip-dev/BiteBox-MERN.git
@@ -55,7 +97,7 @@ cd server
 pnpm install
 ```
 
-Create a `.env` file in the `server` directory with:
+Create a `.env` file in the `server` directory with the following variables:
 
 ```env
 PORT=<YOUR_PORT_NUMBER>
@@ -87,7 +129,7 @@ cd ../client
 pnpm install
 ```
 
-Create a `.env` file in the `client` directory with:
+Create a `.env` file in the `client` directory with the following variables:
 
 ```env
 VITE_BACKEND_URL=<YOUR_BACKEND_URL>
@@ -100,7 +142,7 @@ VITE_FIREBASE_APP_ID=<YOUR_FIREBASE_APP_ID>
 VITE_GEOAPI_KEY=<YOUR_GEOAPI_KEY>
 ```
 
-### 4. Run the Application 🚀
+### 4. Run the Application
 
 - **Backend (Terminal 1)**:
 
