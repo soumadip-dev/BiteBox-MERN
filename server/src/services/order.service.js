@@ -369,7 +369,7 @@ const getOrderByIdService = async orderId => {
     const order = await Order.findById(orderId)
       .populate('user')
       .populate({
-        path: 'shopOrders.shop', // Correct: populate shop inside shopOrders
+        path: 'shopOrders.shop',
         select: 'name image address',
       })
       .populate({

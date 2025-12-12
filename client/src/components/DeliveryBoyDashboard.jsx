@@ -67,7 +67,7 @@ const DeliveryBoyDashboard = () => {
                   Welcome, {userData?.fullName}
                 </h1>
                 <p className="text-gray-600 text-xs xs:text-sm sm:text-base mt-0.5">
-                  Ready to deliver happiness! 🚀
+                  Ready to deliver happiness! 
                 </p>
               </div>
             </div>
