@@ -6,7 +6,10 @@ import {
   acceptOrderService,
   getCurrentOrderService,
   getOrderByIdService,
+  sendDeliveryBoyOtpService,
 } from '../services/order.service.js';
+import generateMailOptions from '../utils/mailTemplates.utils.js';
+import transporter from '../config/nodemailer.config.js';
 
 //* Controller for placing Order
 const placeOrder = async (req, res) => {
@@ -161,6 +164,49 @@ const getOrderById = async (req, res) => {
   }
 };
 
+//* Controller for sending delivery boy otp
+const sendDeliveryBoyOtp = async (req, res) => {
+  try {
+    const { orderId, shopOrderId } = req.body;
+
+    const userId = req.userId;
+
+    const { customerName, customerEmail, generatedOTP } = await sendDeliveryBoyOtpService(
+      orderId,
+      shopOrderId,
+      userId
+    );
+
+    const mailOptions = generateMailOptions({
+      user: {
+        fullName: customerName,
+        email: customerEmail,
+      },
+      otp: generatedOTP,
+      type: 'deliveryOTP',
+      companyName: ENV.COMPANY_NAME,
+    });
+
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      return res
+        .status(500)
+        .json({ message: emailError.message || 'Email sending failed', success: false });
+    }
+
+    res.status(200).json({
+      message: 'Otp sent successfully.',
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
 export {
   placeOrder,
@@ -170,4 +216,5 @@ export {
   acceptOrder,
   getCurrentOrder,
   getOrderById,
+  sendDeliveryBoyOtp,
 };

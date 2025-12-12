@@ -392,6 +392,28 @@ const getOrderByIdService = async orderId => {
   }
 };
 
+//* Service for sending OTP to user
+const sendDeliveryBoyOtpService = async (orderId, shopOrderId, userId) => {
+  const order = await Order.findById(orderId).populate('user');
+
+  const shopOrder = order.shopOrders.id(shopOrderId);
+
+  if (!order || !shopOrder) {
+    throw new Error('Order not found');
+  }
+  // Generate OTP
+  const generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+  const customerName = order.user.fullName;
+  const customerEmail = order.user.email;
+
+  shopOrder.deliveryPasswordOtp = otp;
+  shopOrder.deliveryPasswordOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+
+  await order.save();
+
+  return { customerName, customerEmail, generatedOTP };
+};
+
 //* Export services
 export {
   placeOrderService,
@@ -401,4 +423,5 @@ export {
   acceptOrderService,
   getCurrentOrderService,
   getOrderByIdService,
+  sendDeliveryBoyOtpService,
 };

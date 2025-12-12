@@ -64,10 +64,6 @@ const shopOrderSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    isDeliveryOtpVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
   { timestamps: true }
 );
