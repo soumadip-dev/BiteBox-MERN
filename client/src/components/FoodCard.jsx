@@ -81,7 +81,7 @@ const FoodCard = ({ data }) => {
             {/* Combined Quantity Controls and Add to Cart */}
             <div className="flex items-center border border-orange-200 rounded-lg overflow-hidden bg-orange-50">
               <button
-                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 hover:text-orange-600"
+                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 hover:text-orange-600 cursor-pointer"
                 onClick={handleQuantityDecrement}
               >
                 <FaMinus size={12} />
@@ -90,7 +90,7 @@ const FoodCard = ({ data }) => {
                 {quantity}
               </span>
               <button
-                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 border-r border-orange-200 hover:text-orange-600"
+                className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 border-r border-orange-200 hover:text-orange-600 cursor-pointer"
                 onClick={handleQuantityIncrement}
               >
                 <FaPlus size={12} />
@@ -100,7 +100,7 @@ const FoodCard = ({ data }) => {
                   cartItems.some(item => item.id == data._id)
                     ? 'bg-gray-800'
                     : 'bg-gradient-to-r from-[#ff4d2d] to-orange-500'
-                }`}
+                } cursor-pointer`}
                 onClick={() => {
                   quantity > 0 &&
                     dispatch(

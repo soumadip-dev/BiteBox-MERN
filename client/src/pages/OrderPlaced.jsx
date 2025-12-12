@@ -60,7 +60,7 @@ const OrderPlaced = () => {
             "My Orders" section.
           </p>
           <button
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 w-full sm:w-auto"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 w-full sm:w-auto cursor-pointer"
             onClick={() => navigate('/my-orders')}
           >
             Back to my orders

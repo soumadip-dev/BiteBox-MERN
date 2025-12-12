@@ -65,14 +65,14 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => navigate(-1)}
-            className="flex-1 max-w-xs mx-auto bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-orange-200"
+            className="flex-1 max-w-xs mx-auto bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-orange-200 cursor-pointer"
           >
             <IoIosArrowRoundBack size={24} />
             <span>Go Back</span>
           </button>
           <button
             onClick={() => navigate('/')}
-            className="flex-1 max-w-xs mx-auto bg-white text-orange-600 py-4 px-8 rounded-xl font-semibold text-lg border border-orange-200 hover:bg-orange-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-orange-100"
+            className="flex-1 max-w-xs mx-auto bg-white text-orange-600 py-4 px-8 rounded-xl font-semibold text-lg border border-orange-200 hover:bg-orange-50 hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-3 shadow-md hover:shadow-orange-100 cursor-pointer"
           >
             <span className="text-xl">🏠</span>
             <span>Go Home</span>

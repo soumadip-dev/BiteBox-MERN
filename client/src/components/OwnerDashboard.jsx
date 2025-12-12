@@ -25,7 +25,7 @@ const OwnerDashboard = () => {
                 </p>
               </div>
               <button
-                className="w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3.5 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 active:scale-95 shadow-md"
+                className="w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3.5 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 active:scale-95 shadow-md cursor-pointer"
                 onClick={() => navigate('/create-edit-shop')}
               >
                 Get Started
@@ -50,7 +50,7 @@ const OwnerDashboard = () => {
             <div className="relative group">
               <div className="absolute top-4 right-4 z-20">
                 <button
-                  className="bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-2.5 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 border border-orange-200"
+                  className="bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-2.5 rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 border border-orange-200 cursor-pointer"
                   onClick={() => navigate('/create-edit-shop')}
                 >
                   <FaPen size={14} />
@@ -115,7 +115,7 @@ const OwnerDashboard = () => {
                   </p>
                 </div>
                 <button
-                  className="w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 shadow-md"
+                  className="w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 shadow-md cursor-pointer"
                   onClick={() => navigate('/add-food')}
                 >
                   <FaPlus className="w-4 h-4" />

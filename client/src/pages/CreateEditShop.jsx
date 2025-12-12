@@ -175,7 +175,7 @@ const CreateEditShop = () => {
             disabled={isSubmitting}
             className={`w-full bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform transition-all duration-200 cursor-pointer active:scale-95 ${
               isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'
-            }`}
+            } cursor-pointer`}
           >
             {isSubmitting ? 'Saving...' : 'Save Shop Details'}
           </button>

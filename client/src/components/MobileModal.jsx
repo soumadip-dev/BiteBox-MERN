@@ -74,13 +74,13 @@ const MobileModal = function ({ isOpen, onClose, onSubmit, initialRole }) {
 
         <div className="flex justify-end gap-3">
           <button
-            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 cursor-pointer"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 cursor-pointer"
             onClick={handleSubmit}
           >
             Submit

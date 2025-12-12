@@ -201,7 +201,7 @@ const OwnerOrderCard = ({ order }) => {
                           </p>
                         </div>
                       </div>
-                      <button className="px-3 py-1.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200">
+                      <button className="px-3 py-1.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200 cursor-pointer">
                         Assign
                       </button>
                     </div>

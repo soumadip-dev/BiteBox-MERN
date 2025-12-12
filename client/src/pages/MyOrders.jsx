@@ -43,7 +43,7 @@ const MyOrders = () => {
           </div>
           <button
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105 shadow-md"
+            className="bg-gradient-to-r from-[#ff4d2d] to-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105 shadow-md cursor-pointer"
           >
             {userData?.role === 'user' ? 'Explore Menu' : 'Go to Dashboard'}
           </button>

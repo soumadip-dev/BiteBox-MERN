@@ -382,7 +382,7 @@ const CheckOut = () => {
             className={`w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 transform ${
               isLoading
                 ? 'opacity-70 cursor-not-allowed'
-                : 'hover:-translate-y-0.5 hover:shadow-lg hover:from-orange-600 hover:to-red-600'
+                : 'hover:-translate-y-0.5 hover:shadow-lg hover:from-orange-600 hover:to-red-600 cursor-pointer'
             }`}
             onClick={handlePlaceOrder}
             disabled={isLoading}

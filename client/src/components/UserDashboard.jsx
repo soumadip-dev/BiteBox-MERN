@@ -82,7 +82,7 @@ const UserDashboard = () => {
         <div className="w-full relative group">
           {showLeftButton && (
             <button
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
               onClick={() => scrollHandler(categoriScrollRef, 'left')}
               aria-label="Scroll left"
             >
@@ -102,7 +102,7 @@ const UserDashboard = () => {
 
           {showRightButton && (
             <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
               onClick={() => scrollHandler(categoriScrollRef, 'right')}
               aria-label="Scroll right"
             >
@@ -125,7 +125,7 @@ const UserDashboard = () => {
           <div className="w-full relative group">
             {showShopsLeftButton && (
               <button
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
                 onClick={() => scrollHandler(shopsScrollRef, 'left')}
                 aria-label="Scroll shops left"
               >
@@ -153,7 +153,7 @@ const UserDashboard = () => {
 
             {showShopsRightButton && (
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur-sm text-[#ff4d2d] p-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border border-orange-200 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
                 onClick={() => scrollHandler(shopsScrollRef, 'right')}
                 aria-label="Scroll shops right"
               >
