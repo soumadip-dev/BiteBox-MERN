@@ -56,6 +56,18 @@ const shopOrderSchema = new mongoose.Schema(
       ref: 'User',
       default: null,
     },
+    deliveryPasswordOtp: {
+      type: String,
+      default: '',
+    },
+    deliveryPasswordOtpExpiry: {
+      type: Number,
+      default: 0,
+    },
+    isDeliveryOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
