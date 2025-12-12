@@ -311,7 +311,13 @@ const getCurrentOrderService = async (userId, userRole) => {
     .populate('shop', 'name')
     .populate({
       path: 'order',
-      populate: [{ path: 'user', select: 'fullName email mobile location' }],
+      populate: [
+        { path: 'user', select: 'fullName email mobile location' },
+        {
+          path: 'shopOrders.shop',
+          select: 'name address',
+        },
+      ],
     });
 
   if (!assignment) {
@@ -357,13 +363,14 @@ const getCurrentOrderService = async (userId, userRole) => {
   };
 };
 
+//* Service for getting order by id
 const getOrderByIdService = async orderId => {
   try {
     const order = await Order.findById(orderId)
       .populate('user')
       .populate({
-        path: 'shopOrders',
-        model: 'Shop',
+        path: 'shopOrders.shop', // Correct: populate shop inside shopOrders
+        select: 'name image address',
       })
       .populate({
         path: 'shopOrders.assignedDeliveryBoy',
