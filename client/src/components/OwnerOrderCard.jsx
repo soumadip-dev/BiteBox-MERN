@@ -122,29 +122,33 @@ const OwnerOrderCard = ({ order }) => {
                 )}
               </div>
 
-              {/* Enhanced Select */}
-              <div className="relative w-full sm:w-auto">
-                <select
-                  value={shopOrder?.status}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 font-medium bg-white hover:bg-gray-50 transition-all duration-200 shadow-sm appearance-none pr-10 cursor-pointer"
-                  onChange={e => handleUpdateStatus(order._id, shopOrder.shop._id, e.target.value)}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="preparing">Preparing</option>
-                  <option value="out for delivery">Out for delivery</option>
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+              {/* Enhanced Select - Only show if status is not "delivered" */}
+              {shopOrder?.status !== 'delivered' && (
+                <div className="relative w-full sm:w-auto">
+                  <select
+                    value={shopOrder?.status}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 font-medium bg-white hover:bg-gray-50 transition-all duration-200 shadow-sm appearance-none pr-10 cursor-pointer"
+                    onChange={e =>
+                      handleUpdateStatus(order._id, shopOrder.shop._id, e.target.value)
+                    }
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="out for delivery">Out for delivery</option>
+                  </select>
+                  {/* Custom dropdown arrow */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         ))}

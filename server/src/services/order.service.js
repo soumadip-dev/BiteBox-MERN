@@ -392,6 +392,60 @@ const getOrderByIdService = async orderId => {
   }
 };
 
+//* Service for sending OTP to user
+const sendDeliveryBoyOtpService = async (orderId, shopOrderId, userId) => {
+  const order = await Order.findById(orderId).populate('user');
+
+  const shopOrder = order.shopOrders.id(shopOrderId);
+
+  if (!order || !shopOrder) {
+    throw new Error('Order not found');
+  }
+  // Generate OTP
+  const generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+  const customerName = order.user.fullName;
+  const customerEmail = order.user.email;
+
+  shopOrder.deliveryPasswordOtp = generatedOTP;
+  shopOrder.deliveryPasswordOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+
+  await order.save();
+
+  return { customerName, customerEmail, generatedOTP };
+};
+
+//* Service for verifying OTP
+const verifyDeliveryBoyOtpService = async (orderId, shopOrderId, otp) => {
+  const order = await Order.findById(orderId).populate('user');
+
+  const shopOrder = order.shopOrders.id(shopOrderId);
+
+  if (!order || !shopOrder) {
+    throw new Error('Order not found');
+  }
+
+  if (
+    shopOrder.deliveryPasswordOtp !== otp ||
+    !shopOrder.deliveryPasswordOtpExpiry ||
+    shopOrder.deliveryPasswordOtpExpiry < Date.now()
+  ) {
+    throw new Error('Invalid or Expired OTP');
+  }
+
+  shopOrder.status = 'delivered';
+  shopOrder.deliveredAt = Date.now();
+  shopOrder.deliveryPasswordOtp = '';
+  shopOrder.deliveryPasswordOtpExpiry = 0;
+
+  await order.save();
+
+  await DeliveryAssignment.deleteOne({
+    shopOrderId: shopOrder._id,
+    order: order._id,
+    assignedTo: shopOrder.assignedDeliveryBoy,
+  });
+};
+
 //* Export services
 export {
   placeOrderService,
@@ -401,4 +455,6 @@ export {
   acceptOrderService,
   getCurrentOrderService,
   getOrderByIdService,
+  sendDeliveryBoyOtpService,
+  verifyDeliveryBoyOtpService,
 };

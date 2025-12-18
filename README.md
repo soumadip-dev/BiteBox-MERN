@@ -6,21 +6,19 @@
   A full-stack MERN food delivery application with real-time order tracking, Razorpay payments, Firebase OAuth, Brevo mail service, and a modern UI for customers and admins.
 </p>
 
-## User Role
-
 <table align="center">
   <tr>
     <td align="center">
-      <img src="./client/public/01_user_home_page.png" alt="User Home Page">
+      <img src="./client/public/01_user_home_page.png" alt="User Home Page" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_user_cart.png" alt="User Cart">
+      <img src="./client/public/02_user_cart.png" alt="User Cart" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/03_user_checkout.png" alt="User Checkout">
+      <img src="./client/public/03_user_checkout.png" alt="User Checkout" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/04_user_order_tracking.png" alt="User Order Tracking">
+      <img src="./client/public/04_user_order_tracking.png" alt="User Order Tracking" height="300">
     </td>
   </tr>
 </table>
@@ -30,16 +28,16 @@
 <table align="center">
   <tr>
     <td align="center">
-      <img src="./client/public/01_owner_home_page.png" alt="Owner HomePage">
+      <img src="./client/public/01_owner_home_page.png" alt="Owner HomePage" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_owner_add_item.png" alt="Owner Add Item">
+      <img src="./client/public/02_owner_add_item.png" alt="Owner Add Item" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_owner_edit_item.png" alt="Owner Edit Item">
+      <img src="./client/public/02_owner_edit_item.png" alt="Owner Edit Item" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_owner_my_order.png" alt="Owner My Order">
+      <img src="./client/public/02_owner_my_order.png" alt="Owner My Order" height="300">
     </td>
   </tr>
 </table>
@@ -49,10 +47,10 @@
 <table align="center">
   <tr>
     <td align="center">
-      <img src="./client/public/01_Delivery_boy_HomePage.png" alt="Delivery Boy HomePage">
+      <img src="./client/public/01_Delivery_boy_HomePage.png" alt="Delivery Boy HomePage" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_DeliveryBoy_track_Order.png" alt="Delivery Boy Track Order">
+      <img src="./client/public/02_DeliveryBoy_track_Order.png" alt="Delivery Boy Track Order" height="300">
     </td>
   </tr>
 </table>

@@ -4,14 +4,14 @@ import { ENV } from '../config/env.config.js';
 export default function generateMailOptions({ user, otp, type, companyName }) {
   // Food delivery themed color palette
   const colors = {
-    primary: '#FF6B35', // Orange - appetizing and energetic
-    secondary: '#4ECDC4', // Teal - fresh and clean
-    accent: '#FFE66D', // Yellow - cheerful and warm
-    background: '#F8F9FA', // Light gray background
-    dark: '#2F4858', // Dark blue-gray for text
-    success: '#38B44A', // Green for success messages
-    warning: '#FF9500', // Orange for warnings
-    muted: '#6C757D', // Gray for secondary text
+    primary: '#FF6B35',
+    secondary: '#4ECDC4',
+    accent: '#FFE66D',
+    background: '#F8F9FA',
+    dark: '#2F4858',
+    success: '#38B44A',
+    warning: '#FF9500',
+    muted: '#6C757D',
   };
 
   // Base container styles
@@ -83,7 +83,7 @@ export default function generateMailOptions({ user, otp, type, companyName }) {
   `;
 
   // Food icon decoration
-  const foodIcon = `🍔🍕🥗`; // Can be customized per email type
+  const foodIcon = `🍔🍕🥗`;
 
   // Greeting component
   const greeting = `<p style="margin-bottom: 1.5rem; font-size: 1.1rem;">Hello <strong style="color: ${colors.primary};">${user.fullName}</strong>,</p>`;
@@ -193,29 +193,90 @@ export default function generateMailOptions({ user, otp, type, companyName }) {
       `;
       break;
 
-    case 'orderConfirmation':
-      subject = `✅ Order Confirmed! Your ${companyName} Feast is Being Prepared!`;
+    case 'deliveryOTP':
+      subject = `🚚 ${companyName} Delivery OTP - Your Food Has Arrived!`;
+      textMessage = `Delivery OTP: ${otp}. Please provide this OTP to the delivery person to receive your order.`;
       htmlMessage = `
         <div style="${containerStyles}">
           <div style="text-align: center; margin-bottom: 1.5rem;">
-            <span style="font-size: 2rem;">👨‍🍳🚚</span>
+            <span style="font-size: 2rem;">🚚📱</span>
           </div>
-          <h1 style="${headerStyles}">Order Confirmed!</h1>
+          <h1 style="${headerStyles}">Your Delivery Has Arrived!</h1>
           ${greeting}
-          <p style="margin-bottom: 1rem;">Great news! Your order has been confirmed and our chefs are already preparing your delicious meal.</p>
+          <p style="margin-bottom: 1rem;">Great news! Your <strong>${companyName}</strong> delivery person has arrived at your location with your delicious order.</p>
           
-          <div style="background: ${colors.success}15; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border: 2px dashed ${colors.success};">
-            <p style="text-align: center; margin: 0; font-weight: 700; color: ${colors.success}; font-size: 1.1rem;">
-              Estimated delivery time: 30-45 minutes
+          <div style="background: ${
+            colors.success
+          }15; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border: 2px dashed ${
+        colors.success
+      };">
+            <p style="text-align: center; margin: 0; font-weight: 700; color: ${
+              colors.success
+            }; font-size: 1.1rem;">
+              🎉 Your food is waiting! Please share this OTP with the delivery person
             </p>
           </div>
           
-          <p style="text-align: center;">
-            <a href="${ENV.APP_URL}/track-order" style="${buttonStyles} onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Track Your Order</a>
+          <p style="text-align: center; font-weight: 600; color: ${
+            colors.dark
+          }; margin-bottom: 0.5rem;">
+            Delivery Verification OTP:
           </p>
           
+          <div style="text-align: center;">
+            <div style="${otpStyles}">${otp}</div>
+          </div>
+          
+          <p style="text-align: center; margin-bottom: 1.5rem; font-size: 0.95rem; color: ${
+            colors.muted
+          };">
+            ⏰ This OTP expires in 10 minutes
+          </p>
+          
+          <div style="background: ${
+            colors.background
+          }; padding: 1.25rem; border-radius: 8px; margin: 2rem 0;">
+            <p style="margin: 0; font-size: 0.95rem; color: ${colors.dark};">
+              <strong>📝 Important:</strong> 
+              <ul style="margin: 0.5rem 0 0 1rem; padding-left: 0.5rem;">
+                <li>Share this OTP only with the verified ${companyName} delivery person</li>
+                <li>Verify the delivery person's ID and uniform before sharing OTP</li>
+                <li>Check your order items before confirming delivery</li>
+              </ul>
+            </p>
+          </div>
+          
+          <p style="text-align: center; font-size: 0.9rem; color: ${
+            colors.warning
+          }; margin: 1.5rem 0;">
+            🔐 For your security, never share this OTP with anyone else
+          </p>
+          
+          <div style="text-align: center; margin: 2rem 0;">
+            <a href="tel:${
+              ENV.SUPPORT_PHONE || '+1-800-123-4567'
+            }" style="display: inline-block; padding: 0.75rem 1.5rem; background: ${
+        colors.primary
+      }; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin-right: 1rem;">
+              📞 Call Support
+            </a>
+            <a href="${
+              ENV.APP_URL || ENV.FRONTEND_URL
+            }/help" style="display: inline-block; padding: 0.75rem 1.5rem; background: ${
+        colors.secondary
+      }; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+              ❓ Help Center
+            </a>
+          </div>
+          
           <div style="${footerStyles}">
-            <p style="margin: 0.5rem 0;">Bon appétit! 🍽️</p>
+            <p style="margin: 0.5rem 0;">Enjoy your meal! 🍽️</p>
+            <p style="margin: 0.5rem 0; font-size: 0.8rem; color: ${colors.muted};">
+              Delivery ID: ${Date.now().toString().slice(-8)} • ${new Date().toLocaleTimeString(
+        [],
+        { hour: '2-digit', minute: '2-digit' }
+      )}
+            </p>
           </div>
         </div>
       `;

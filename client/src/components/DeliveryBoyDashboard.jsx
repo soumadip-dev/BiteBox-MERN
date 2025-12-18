@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
-import { acceptTheOrder, getDeliveryBoyAssignment, getTheCurrentOrder } from '../api/orderApi';
+import {
+  acceptTheOrder,
+  getDeliveryBoyAssignment,
+  getTheCurrentOrder,
+  sendDeliveryBoyOtp,
+  verifyDeliveryBoyOtp,
+} from '../api/orderApi';
 import { FaMapMarkerAlt, FaBoxOpen, FaMotorcycle, FaCheckCircle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import DeliveryBoyTracking from './DeliveryBoyTracking';
@@ -10,6 +16,7 @@ const DeliveryBoyDashboard = () => {
   const [availableOrders, setAvailableOrders] = useState([]);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showOtpBox, setShowOtpBox] = useState(false);
+  const [otp, setOtp] = useState('');
 
   const { userData } = useSelector(state => state.user);
 
@@ -42,8 +49,33 @@ const DeliveryBoyDashboard = () => {
     }
   };
 
-  const handleSendOtp = async () => {
-    setShowOtpBox(true);
+  const sendOtp = async (orderId, shopOrderId) => {
+    try {
+      const response = await sendDeliveryBoyOtp(orderId, shopOrderId);
+      setShowOtpBox(true);
+      console.log('OTP SENT API: ', response);
+      if (response?.success === true) {
+        toast.success(response?.message || 'OTP sent successfully!');
+      } else {
+        toast.error(response?.message || 'Failed to send OTP');
+      }
+    } catch (error) {
+      toast.error(error?.message || 'An error occurred');
+    }
+  };
+
+  const verifyOtp = async (orderId, shopOrderId, otp) => {
+    try {
+      const response = await verifyDeliveryBoyOtp(orderId, shopOrderId, otp);
+      console.log('OTP VERIFIED API: ', response);
+      if (response?.success === true) {
+        toast.success(response?.message || 'OTP verified successfully!');
+      } else {
+        toast.error(response?.message || 'Failed to verify OTP');
+      }
+    } catch (error) {
+      toast.error(error?.message || 'An error occurred');
+    }
   };
 
   useEffect(() => {
@@ -67,7 +99,7 @@ const DeliveryBoyDashboard = () => {
                   Welcome, {userData?.fullName}
                 </h1>
                 <p className="text-gray-600 text-xs xs:text-sm sm:text-base mt-0.5">
-                  Ready to deliver happiness! 
+                  Ready to deliver happiness!
                 </p>
               </div>
             </div>
@@ -328,7 +360,7 @@ const DeliveryBoyDashboard = () => {
                   <div className="mt-4 xs:mt-5 sm:mt-6 md:mt-8 flex justify-end">
                     <button
                       className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2 xs:py-2.5 sm:py-3 px-4 xs:px-5 sm:px-6 md:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-xs xs:text-sm sm:text-base md:text-lg w-full xs:w-auto cursor-pointer"
-                      onClick={handleSendOtp}
+                      onClick={() => sendOtp(currentOrder?._id, currentOrder?.shopOrder?._id)}
                     >
                       Mark as Delivered
                     </button>
@@ -354,6 +386,8 @@ const DeliveryBoyDashboard = () => {
                           OTP Code
                         </label>
                         <input
+                          value={otp}
+                          onChange={e => setOtp(e.target.value)}
                           type="number"
                           placeholder="Enter 6-digit OTP"
                           className="w-full border border-gray-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 px-3 xs:px-4 sm:px-5 py-2.5 xs:py-3 sm:py-3.5 rounded-lg xs:rounded-xl text-sm xs:text-base sm:text-lg transition-all duration-200 outline-none"
@@ -364,7 +398,12 @@ const DeliveryBoyDashboard = () => {
                       </div>
 
                       <div className="flex flex-col xs:flex-row gap-2 xs:gap-3 sm:gap-4">
-                        <button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg flex-1 cursor-pointer">
+                        <button
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2.5 xs:py-3 sm:py-3.5 px-4 xs:px-6 sm:px-8 rounded-lg xs:rounded-xl shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 text-sm xs:text-base sm:text-lg flex-1 cursor-pointer"
+                          onClick={() =>
+                            verifyOtp(currentOrder?._id, currentOrder?.shopOrder?._id, otp)
+                          }
+                        >
                           Submit OTP & Complete Delivery
                         </button>
                         <button

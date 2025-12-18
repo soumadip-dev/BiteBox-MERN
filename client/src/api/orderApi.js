@@ -93,3 +93,33 @@ export const getOrderById = async function (orderId) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Send delivery boy OTP
+export const sendDeliveryBoyOtp = async function (orderId, shopOrderId) {
+  try {
+    const response = await axiosInstance.post('/api/v1/order/send-otp', { orderId, shopOrderId });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
+//* Verify delivery boy OTP
+export const verifyDeliveryBoyOtp = async function (orderId, shopOrderId, otp) {
+  try {
+    const response = await axiosInstance.post('/api/v1/order/verify-otp', {
+      orderId,
+      shopOrderId,
+      otp,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
