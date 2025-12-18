@@ -7,6 +7,7 @@ import {
   acceptOrder,
   getCurrentOrder,
   getOrderById,
+  sendDeliveryBoyOtp,
 } from '../controller/order.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 
