@@ -406,7 +406,7 @@ const sendDeliveryBoyOtpService = async (orderId, shopOrderId, userId) => {
   const customerName = order.user.fullName;
   const customerEmail = order.user.email;
 
-  shopOrder.deliveryPasswordOtp = otp;
+  shopOrder.deliveryPasswordOtp = generatedOTP;
   shopOrder.deliveryPasswordOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
 
   await order.save();
@@ -440,7 +440,7 @@ const verifyDeliveryBoyOtpService = async (orderId, shopOrderId, otp) => {
   await order.save();
 
   await DeliveryAssignment.deleteOne({
-    shopOrderId: shopOrderId._id,
+    shopOrderId: shopOrder._id,
     order: order._id,
     assignedTo: shopOrder.assignedDeliveryBoy,
   });

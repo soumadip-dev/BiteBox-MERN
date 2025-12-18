@@ -11,6 +11,7 @@ import {
 } from '../services/order.service.js';
 import generateMailOptions from '../utils/mailTemplates.utils.js';
 import transporter from '../config/nodemailer.config.js';
+import { ENV } from '../config/env.config.js';
 
 //* Controller for placing Order
 const placeOrder = async (req, res) => {
