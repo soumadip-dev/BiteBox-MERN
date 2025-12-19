@@ -1,8 +1,12 @@
 import React from 'react';
 
-const CategoryCard = ({ data }) => {
+const CategoryCard = ({ data, isSelected = false }) => {
   return (
-    <div className="min-w-[160px] bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-orange-200 group cursor-pointer">
+    <div
+      className={`min-w-[160px] bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-300 hover:shadow-md hover:border-orange-200 group cursor-pointer ${
+        isSelected ? 'border-[#ff4d2d]' : 'border-orange-100'
+      }`}
+    >
       <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100">
         <img
           src={data.image}
