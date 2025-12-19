@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { FaUtensils } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
-import { editFoodItem, getFoodItemById, getMyShop } from '../api/shopApi';
+import { editFoodItem, getFoodItemById } from '../api/shopApi';
 import toast from 'react-hot-toast';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
 
 const EditItem = () => {
@@ -19,7 +19,6 @@ const EditItem = () => {
   const [backendImage, setBackendImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { itemId } = useParams();
-  const { myShopData } = useSelector(state => state.owner);
 
   const handleImageChange = e => {
     const file = e.target.files[0];

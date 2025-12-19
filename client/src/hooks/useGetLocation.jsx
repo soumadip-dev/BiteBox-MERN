@@ -1,12 +1,13 @@
 import { useDispatch } from 'react-redux';
 import { setAddress, setCity, setState } from '../redux/userSlice.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { setAddressForDelivery, setLocation } from '../redux/mapSlice.js';
 
 //* Custom hook to get and store user's current city
 const useGetLocation = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCity = async (latitude, longitude) => {
@@ -28,8 +29,10 @@ const useGetLocation = () => {
         dispatch(setState(state));
         dispatch(setAddress(address));
         dispatch(setAddressForDelivery(address));
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching city:', error);
+        setLoading(false);
       }
     };
 
@@ -41,12 +44,16 @@ const useGetLocation = () => {
         },
         error => {
           console.error('Geolocation error:', error);
+          setLoading(false);
         }
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
+      setLoading(false);
     }
   }, [dispatch]);
+
+  return { loading };
 };
 
 export default useGetLocation;

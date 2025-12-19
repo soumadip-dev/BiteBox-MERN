@@ -5,6 +5,7 @@ import {
   getItemByIdService,
   deleteItemService,
   getItemsByCityService,
+  getItemByRestaurantService,
 } from '../services/item.service.js';
 import Shop from '../model/shop.model.js';
 
@@ -125,5 +126,23 @@ const getItemsByCity = async (req, res) => {
   }
 };
 
+//* Controller for getting all items by restaurant
+const getItemByRestaurant = async (req, res) => {
+  try {
+    // Get the restaurant ID from the request params
+    const { restaurantId } = req.params;
+
+    // Call the service to get items by restaurant
+    const { restaurant, items } = await getItemByRestaurantService(restaurantId);
+
+    // Send success response
+    res
+      .status(200)
+      .json({ message: 'Shop fetched successfully', success: true, restaurant, items });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controllers
-export { addItem, editItem, getItemById, deleteItem, getItemsByCity };
+export { addItem, editItem, getItemById, deleteItem, getItemsByCity, getItemByRestaurant };

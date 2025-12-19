@@ -96,6 +96,18 @@ const getItemsByCityService = async city => {
   return items;
 };
 
+//* Service for getting items by restaurant
+const getItemByRestaurantService = async restaurantId => {
+  const restaurant = await Shop.findById(restaurantId).populate('items');
+
+  if (!restaurant) throw new Error('No restaurant found');
+
+  return {
+    restaurant,
+    items: restaurant.items,
+  };
+};
+
 //* Export service
 export {
   createItemService,
@@ -103,4 +115,5 @@ export {
   getItemByIdService,
   deleteItemService,
   getItemsByCityService,
+  getItemByRestaurantService,
 };

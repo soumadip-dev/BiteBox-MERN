@@ -5,15 +5,20 @@ import Navbar from './Navbar';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import FoodCard from './FoodCard';
+import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
   const { city, shopsInMyCity, ItemsInMyCity } = useSelector(state => state.user);
   const categoriScrollRef = useRef(null);
   const shopsScrollRef = useRef(null);
+  const navigate = useNavigate();
+
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
   const [showShopsLeftButton, setShowShopsLeftButton] = useState(false);
   const [showShopsRightButton, setShowShopsRightButton] = useState(false);
+  const [updatedItemList, setUpdatedItemList] = useState(ItemsInMyCity);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const scrollHandler = (ref, direction) => {
     if (ref.current) {
@@ -68,6 +73,23 @@ const UserDashboard = () => {
     };
   }, [shopsInMyCity]);
 
+  // Initialize with all items
+  useEffect(() => {
+    if (ItemsInMyCity) {
+      setUpdatedItemList(ItemsInMyCity);
+    }
+  }, [ItemsInMyCity]);
+
+  const handleFilterByCategory = category => {
+    setSelectedCategory(category);
+    if (category === 'All') {
+      setUpdatedItemList(ItemsInMyCity);
+    } else {
+      const filteredItems = ItemsInMyCity.filter(item => item.category === category);
+      setUpdatedItemList(filteredItems);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -95,8 +117,25 @@ const UserDashboard = () => {
             ref={categoriScrollRef}
             onScroll={checkCategoryScrollButtons}
           >
+            {/* Add "All" category card */}
+            <CategoryCard
+              data={{
+                image:
+                  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+                category: 'All',
+              }}
+              isSelected={selectedCategory === 'All'}
+              onClick={() => handleFilterByCategory('All')}
+            />
+
+            {/* Map through categories */}
             {categories.map((category, index) => (
-              <CategoryCard data={category} key={index} />
+              <CategoryCard
+                key={index}
+                data={category}
+                isSelected={selectedCategory === category.category}
+                onClick={() => handleFilterByCategory(category.category)}
+              />
             ))}
           </div>
 
@@ -147,6 +186,7 @@ const UserDashboard = () => {
                     category: shop.name || 'Restaurant',
                   }}
                   key={index}
+                  onClick={() => navigate(`/restaurant/${shop._id}`)}
                 />
               ))}
             </div>
@@ -183,13 +223,37 @@ const UserDashboard = () => {
       <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
         <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
           <span className="text-[#ff4d2d] text-xl">🍕</span>
-          <h1 className="text-gray-900 text-2xl font-bold">Suggested Food Items</h1>
+          <h1 className="text-gray-900 text-2xl font-bold">
+            {selectedCategory === 'All' ? 'Suggested Food Items' : `${selectedCategory} Items`}
+          </h1>
         </div>
 
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {ItemsInMyCity &&
-            ItemsInMyCity.map((item, index) => <FoodCard data={item} key={index} />)}
-        </div>
+        {updatedItemList && updatedItemList.length > 0 ? (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {updatedItemList.map((item, index) => (
+              <FoodCard data={item} key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="w-full max-w-md mx-auto bg-white rounded-2xl p-8 border border-orange-100 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="flex flex-col items-center text-center space-y-6">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-2xl border border-orange-200 shadow-sm">
+                <span className="text-[#ff4d2d] text-3xl">🍕</span>
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  No {selectedCategory === 'All' ? 'food items' : selectedCategory.toLowerCase()}{' '}
+                  available
+                </h2>
+                <p className="text-gray-600 leading-relaxed">
+                  {selectedCategory === 'All'
+                    ? 'No food items available in your city. Check back soon!'
+                    : `No ${selectedCategory.toLowerCase()} items available in your city. Try selecting another category.`}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
