@@ -131,3 +131,16 @@ export const getItemByCity = async function (city) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Get items by restaurant
+export const getItemByRestaurant = async function (restaurantId) {
+  try {
+    const response = await axiosInstance.get(`/api/v1/item/get-by-restaurant/${restaurantId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
