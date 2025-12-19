@@ -8,7 +8,7 @@ import { RxCross2 } from 'react-icons/rx';
 import toast from 'react-hot-toast';
 import { logoutUser } from '../api/authApi';
 import { useDispatch } from 'react-redux';
-import { setUserData } from '../redux/userSlice';
+import { setSearchItems, setUserData } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { searchItems } from '../api/shopApi';
 
@@ -54,11 +54,14 @@ const Navbar = () => {
     try {
       const response = await searchItems(query, city);
       console.log('Search Results:', response);
+
+      dispatch(setSearchItems(response.items));
     } catch (error) {
       console.error('Error searching items:', error);
     }
   };
 
+  // Debounce effect
   useEffect(() => {
     // Clear previous timeout
     if (timeoutRef.current) {
@@ -86,7 +89,10 @@ const Navbar = () => {
 
   // API call effect
   useEffect(() => {
-    if (!debouncedQuery || !city) return;
+    if (!debouncedQuery || !city) {
+      dispatch(setSearchItems(null));
+      return;
+    }
 
     handleSearchItems(debouncedQuery, city);
   }, [debouncedQuery, city]);

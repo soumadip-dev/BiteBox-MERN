@@ -8,7 +8,7 @@ import FoodCard from './FoodCard';
 import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
-  const { city, shopsInMyCity, ItemsInMyCity } = useSelector(state => state.user);
+  const { city, shopsInMyCity, ItemsInMyCity, searchItems } = useSelector(state => state.user);
   const categoriScrollRef = useRef(null);
   const shopsScrollRef = useRef(null);
   const navigate = useNavigate();
@@ -93,7 +93,19 @@ const UserDashboard = () => {
   return (
     <>
       <Navbar />
-
+      {searchItems && searchItems.length > 0 && (
+        <div className="w-full max-w-6xl mx-auto flex flex-col gap-5 items-start p-5 sm:p-6 bg-white shadow-lg rounded-2xl mt-4 border border-orange-100">
+          <div className="inline-flex items-center gap-3 rounded-xl px-6 py-3 shadow-sm">
+            <span className="text-[#ff4d2d] text-xl">🔍</span>
+            <h1 className="text-gray-900 text-2xl sm:text-3xl font-bold">Search Results</h1>
+          </div>
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+            {searchItems.map(item => (
+              <FoodCard key={item._id} data={item} />
+            ))}
+          </div>
+        </div>
+      )}
       {/* Categories Section */}
       <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
         <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
