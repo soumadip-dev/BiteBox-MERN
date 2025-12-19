@@ -138,7 +138,7 @@ const getItemByRestaurant = async (req, res) => {
     // Send success response
     res
       .status(200)
-      .json({ message: 'Items fetched successfully', success: true, restaurant, items });
+      .json({ message: 'Shop fetched successfully', success: true, restaurant, items });
   } catch (error) {
     res.status(400).json({ message: error.message || 'Something went wrong', success: false });
   }

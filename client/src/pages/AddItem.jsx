@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FaUtensils } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import { addFoodItem, getMyShop } from '../api/shopApi';
+import { addFoodItem } from '../api/shopApi';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
@@ -33,8 +33,6 @@ const AddItem = () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-
-    console.log('Backend Image:', backendImage);
 
     const formData = new FormData();
     formData.append('name', name);
