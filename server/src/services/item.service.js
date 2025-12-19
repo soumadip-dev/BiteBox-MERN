@@ -108,6 +108,41 @@ const getItemByRestaurantService = async restaurantId => {
   };
 };
 
+//* Service for searching items
+const searchItemsService = async (query, city) => {
+  if (!query || !city) {
+    return [];
+  }
+
+  // Create case-insensitive regex for partial matching
+  const cityRegex = new RegExp(city, 'i');
+  const queryRegex = new RegExp(query, 'i');
+
+  // Find all shops in the city
+  const shops = await Shop.find({
+    city: cityRegex,
+  }).select('_id');
+
+  if (!shops.length) {
+    return [];
+  }
+
+  const shopIds = shops.map(shop => shop._id);
+
+  // Search items by name OR category in the found shops
+  const items = await Item.find({
+    shop: { $in: shopIds },
+    $or: [{ name: queryRegex }, { category: queryRegex }],
+  })
+    .populate({
+      path: 'shop',
+      select: 'name image city',
+    })
+    .sort({ createdAt: -1 });
+
+  return items;
+};
+
 //* Export service
 export {
   createItemService,
@@ -116,4 +151,5 @@ export {
   deleteItemService,
   getItemsByCityService,
   getItemByRestaurantService,
+  searchItemsService,
 };

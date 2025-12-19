@@ -144,3 +144,18 @@ export const getItemByRestaurant = async function (restaurantId) {
     return { success: false, message: 'Network error occurred' };
   }
 };
+
+//* Search items
+export const searchItems = async function (query, city) {
+  try {
+    const response = await axiosInstance.get(
+      `/api/v1/item/search-items?query=${query}&city=${city}`
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};

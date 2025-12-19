@@ -3,13 +3,14 @@ import { TbReceipt2 } from 'react-icons/tb';
 import { IoIosSearch } from 'react-icons/io';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import toast from 'react-hot-toast';
 import { logoutUser } from '../api/authApi';
 import { useDispatch } from 'react-redux';
-import { setUserData } from '../redux/userSlice';
+import { setSearchItems, setUserData } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { searchItems } from '../api/shopApi';
 
 function getProfileImage(fullName) {
   if (!fullName) return '';
@@ -30,6 +31,9 @@ const Navbar = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const timeoutRef = useRef(null);
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -45,6 +49,53 @@ const Navbar = () => {
       setIsLoading(false);
     }
   };
+
+  const handleSearchItems = async (query, city) => {
+    try {
+      const response = await searchItems(query, city);
+      console.log('Search Results:', response);
+
+      dispatch(setSearchItems(response.items));
+    } catch (error) {
+      console.error('Error searching items:', error);
+    }
+  };
+
+  // Debounce effect
+  useEffect(() => {
+    // Clear previous timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Only search if query has at least 2 characters
+    if (searchQuery.trim().length >= 2) {
+      // Set new timeout (300ms delay)
+      timeoutRef.current = setTimeout(() => {
+        setDebouncedQuery(searchQuery);
+      }, 300);
+    } else {
+      // Clear search if query is too short
+      setDebouncedQuery('');
+    }
+
+    // Cleanup
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [searchQuery, city]);
+
+  // API call effect
+  useEffect(() => {
+    if (!debouncedQuery || !city) {
+      dispatch(setSearchItems(null));
+      return;
+    }
+
+    handleSearchItems(debouncedQuery, city);
+  }, [debouncedQuery, city]);
 
   // Show location for user, owner, AND delivery boy roles
   const shouldShowLocation =
@@ -77,6 +128,8 @@ const Navbar = () => {
                   type="text"
                   placeholder="Search delicious food"
                   className="px-2 md:px-3 text-gray-800 outline-0 w-full bg-transparent placeholder-gray-500 font-medium text-sm md:text-base"
+                  onChange={e => setSearchQuery(e.target.value)}
+                  value={searchQuery}
                 />
               </div>
             )}
@@ -107,6 +160,8 @@ const Navbar = () => {
                   type="text"
                   placeholder="Search delicious food"
                   className="px-3 text-gray-800 outline-0 w-full bg-transparent placeholder-gray-500 font-medium"
+                  onChange={e => setSearchQuery(e.target.value)}
+                  value={searchQuery}
                 />
               </div>
             )}
