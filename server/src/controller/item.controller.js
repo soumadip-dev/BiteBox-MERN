@@ -151,13 +151,29 @@ const searchItems = async (req, res) => {
     // Get the search query from the request params
     const { query, city } = req.query;
 
+    // Validate input
+    if (!query || !city) {
+      return res.status(400).json({
+        message: 'Both query and city are required',
+        success: false,
+      });
+    }
+
     // Call the service to search items
     const items = await searchItemsService(query, city);
 
     // Send success response
-    res.status(200).json({ message: 'Items fetched successfully', success: true, items });
+    res.status(200).json({
+      message: items.length > 0 ? 'Items fetched successfully' : 'No items found',
+      success: true,
+      items,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+    console.error('Search error:', error);
+    res.status(500).json({
+      message: error.message || 'Internal server error',
+      success: false,
+    });
   }
 };
 
