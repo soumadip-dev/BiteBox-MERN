@@ -108,6 +108,31 @@ const getItemByRestaurantService = async restaurantId => {
   };
 };
 
+//* Service for searching items
+const searchItemsService = async (query, city) => {
+  if (!query || !city) {
+    return null;
+  }
+  const shops = await Shop.find({
+    city: {
+      $regex: new RegExp(`^${city}$`, 'i'),
+    },
+  }).populate('items');
+
+  if (!shops) throw new Error('Shops not found');
+
+  const shopIds = shops.map(shop => shop._id);
+  const items = await Item.find({
+    shop: { $in: shopIds },
+    $or: [
+      { name: { $regex: new RegExp(`^${query}$`, 'i') } },
+      { category: { $regex: new RegExp(`^${query}$`, 'i') } },
+    ],
+  }).populate('shop', 'name image');
+
+  return items;
+};
+
 //* Export service
 export {
   createItemService,
@@ -116,4 +141,5 @@ export {
   deleteItemService,
   getItemsByCityService,
   getItemByRestaurantService,
+  searchItemsService,
 };

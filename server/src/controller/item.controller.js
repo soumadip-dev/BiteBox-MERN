@@ -6,6 +6,7 @@ import {
   deleteItemService,
   getItemsByCityService,
   getItemByRestaurantService,
+  searchItemsService,
 } from '../services/item.service.js';
 import Shop from '../model/shop.model.js';
 
@@ -144,5 +145,29 @@ const getItemByRestaurant = async (req, res) => {
   }
 };
 
+//* Contreoller to search items
+const searchItems = async (req, res) => {
+  try {
+    // Get the search query from the request params
+    const { query, city } = req.query;
+
+    // Call the service to search items
+    const items = await searchItemsService(query, city);
+
+    // Send success response
+    res.status(200).json({ message: 'Items fetched successfully', success: true, items });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controllers
-export { addItem, editItem, getItemById, deleteItem, getItemsByCity, getItemByRestaurant };
+export {
+  addItem,
+  editItem,
+  getItemById,
+  deleteItem,
+  getItemsByCity,
+  getItemByRestaurant,
+  searchItems,
+};
