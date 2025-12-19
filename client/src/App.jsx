@@ -21,6 +21,7 @@ import MyOrders from './pages/MyOrders';
 import useGetMyOrders from './hooks/useGetMyOrders';
 import useUpdateLocation from './hooks/useUpdateLocation';
 import TrackOrderPage from './pages/TrackOrderPage';
+import RestaurantPage from './pages/RestaurantPage';
 
 const App = () => {
   useGetCurrentUser();
@@ -50,6 +51,10 @@ const App = () => {
         <Route path="/order-placed" element={userData ? <OrderPlaced /> : <SignIn />} />
         <Route path="/my-orders" element={userData ? <MyOrders /> : <SignIn />} />
         <Route path="/track-order/:orderId" element={userData ? <TrackOrderPage /> : <SignIn />} />
+        <Route
+          path="/restaurant/:restaurantId"
+          element={userData ? <RestaurantPage /> : <SignIn />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

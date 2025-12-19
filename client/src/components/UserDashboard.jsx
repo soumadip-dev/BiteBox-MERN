@@ -5,11 +5,13 @@ import Navbar from './Navbar';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import FoodCard from './FoodCard';
+import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
   const { city, shopsInMyCity, ItemsInMyCity } = useSelector(state => state.user);
   const categoriScrollRef = useRef(null);
   const shopsScrollRef = useRef(null);
+  const navigate = useNavigate();
 
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
@@ -116,34 +118,24 @@ const UserDashboard = () => {
             onScroll={checkCategoryScrollButtons}
           >
             {/* Add "All" category card */}
-            <div
-              className={`min-w-[160px] bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-300 hover:shadow-md hover:border-orange-200 group cursor-pointer ${
-                selectedCategory === 'All' ? 'border-[#ff4d2d]' : 'border-orange-100'
-              }`}
+            <CategoryCard
+              data={{
+                image:
+                  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+                category: 'All',
+              }}
+              isSelected={selectedCategory === 'All'}
               onClick={() => handleFilterByCategory('All')}
-            >
-              <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100">
-                <div className="w-40 h-32 flex items-center justify-center">
-                  <span className="text-4xl">🍽️</span>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-              </div>
-              <div className="p-4 text-center">
-                <span className="text-sm font-semibold text-gray-900 tracking-tight truncate block">
-                  All
-                </span>
-              </div>
-            </div>
+            />
 
             {/* Map through categories */}
             {categories.map((category, index) => (
-              <div
+              <CategoryCard
                 key={index}
+                data={category}
+                isSelected={selectedCategory === category.category}
                 onClick={() => handleFilterByCategory(category.category)}
-                className="cursor-pointer"
-              >
-                <CategoryCard data={category} isSelected={selectedCategory === category.category} />
-              </div>
+              />
             ))}
           </div>
 
@@ -194,6 +186,7 @@ const UserDashboard = () => {
                     category: shop.name || 'Restaurant',
                   }}
                   key={index}
+                  onClick={() => navigate(`/restaurant/${shop._id}`)}
                 />
               ))}
             </div>
