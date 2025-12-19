@@ -24,14 +24,35 @@ import TrackOrderPage from './pages/TrackOrderPage';
 import RestaurantPage from './pages/RestaurantPage';
 
 const App = () => {
-  useGetCurrentUser();
-  useGetLocation();
-  useGetMyShop();
+  const { loading: userLoading } = useGetCurrentUser();
+  const { loading: locationLoading } = useGetLocation();
+  const { loading: shopLoading } = useGetMyShop(); // Get shop loading state
   useGetShopByCity();
   useGetItemByCity();
   useGetMyOrders();
   useUpdateLocation();
-  const { userData } = useSelector(state => state.user);
+
+  const { userData, city } = useSelector(state => state.user);
+
+  // Show loading while fetching user data, location, or shop data
+  const isLoading =
+    userLoading ||
+    locationLoading ||
+    (userData?.role === 'owner' && shopLoading) ||
+    (userData && !city);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#fff9f6]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff4d2d] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+        <Toaster position="bottom-right" />
+      </div>
+    );
+  }
+
   return (
     <>
       <Toaster position="bottom-right" />
