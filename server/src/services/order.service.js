@@ -110,6 +110,11 @@ const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
   order.payment = true;
   order.razorpayPaymentId = razorpayPaymentId;
   await order.save();
+
+  await order.populate('shopOrders.shop', 'name');
+  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+
+  return order;
 };
 
 //* Service for getting user orders
