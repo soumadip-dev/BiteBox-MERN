@@ -72,7 +72,8 @@ export const userSlice = createSlice({
     },
 
     addMyOrder: (state, action) => {
-      state.myOrders = [action.payload, ...state.myOrders];
+      const currentOrders = Array.isArray(state.myOrders) ? state.myOrders : [];
+      state.myOrders = [action.payload, ...currentOrders];
     },
 
     updateShopOrderStatus: (state, action) => {

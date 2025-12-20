@@ -53,8 +53,6 @@ const Navbar = () => {
   const handleSearchItems = async (query, city) => {
     try {
       const response = await searchItems(query, city);
-      console.log('Search Results:', response);
-
       dispatch(setSearchItems(response.items));
     } catch (error) {
       console.error('Error searching items:', error);

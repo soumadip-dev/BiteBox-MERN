@@ -2,6 +2,8 @@ import DeliveryAssignment from '../model/deliveryAssignment.model.js';
 import Order from '../model/order.model.js';
 import Shop from '../model/shop.model.js';
 import User from '../model/user.model.js';
+import razorpayInstance from '../config/razorpay.config.js';
+import { ENV } from '../config/env.config.js';
 
 //* Service for placing Order
 const placeOrderService = async (
@@ -55,6 +57,31 @@ const placeOrderService = async (
     })
   );
 
+  if (paymentMethod === 'online') {
+    const razorpayOrder = await razorpayInstance.orders.create({
+      amount: Math.round(totalAmount * 100),
+      currency: 'INR',
+      receipt: `order_rcptid_${Date.now()}`,
+    });
+    const newOrder = await Order.create({
+      user: userId,
+      paymentMethod,
+      deliveryAddress,
+      totalAmount,
+      shopOrders,
+      razorpayOrderId: razorpayOrder.id,
+      payment: false,
+    });
+
+    const returnResponse = {
+      razorpayOrder,
+      orderId: newOrder._id,
+      key_id: ENV.RAZORPAY_KEY_ID,
+    };
+
+    return returnResponse;
+  }
+
   const order = await Order.create({
     user: userId,
     paymentMethod,
@@ -62,6 +89,27 @@ const placeOrderService = async (
     totalAmount,
     shopOrders,
   });
+
+  await order.populate('shopOrders.shop', 'name');
+  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+
+  return order;
+};
+
+//* Service for verifying payment
+const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
+  const payment = await razorpayInstance.payments.fetch(razorpayPaymentId);
+  if (!payment || payment.status !== 'captured') {
+    throw new Error('Payment Failed');
+  }
+  const order = await Order.findById(OrderId);
+  if (!order) {
+    throw new Error('Order not found');
+  }
+
+  order.payment = true;
+  order.razorpayPaymentId = razorpayPaymentId;
+  await order.save();
 
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.shopOrderItems.item', 'name image price');
@@ -457,4 +505,5 @@ export {
   getOrderByIdService,
   sendDeliveryBoyOtpService,
   verifyDeliveryBoyOtpService,
+  verifyPaymentService,
 };

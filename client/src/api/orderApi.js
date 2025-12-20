@@ -13,6 +13,22 @@ export const placeOrder = async function (orderData) {
   }
 };
 
+//* Verify payment
+export const verifyPayment = async function (orderId, razorpayPaymentId) {
+  try {
+    const response = await axiosInstance.post('/api/v1/order/verify-payment', {
+      orderId,
+      razorpayPaymentId,
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
 //* Get orders
 export const getOrders = async function () {
   try {

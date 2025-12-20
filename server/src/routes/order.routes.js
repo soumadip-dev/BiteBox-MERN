@@ -9,6 +9,7 @@ import {
   getOrderById,
   sendDeliveryBoyOtp,
   verifyDeliveryBoyOtp,
+  verifyPayment,
 } from '../controller/order.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 
@@ -23,6 +24,7 @@ router.get('/get-order-by-id/:orderId', isAuth, getOrderById);
 router.put('/update-order-status/:orderId/:shopId', isAuth, updateOrderStatus);
 router.put('/accept-order/:assignmentId', isAuth, acceptOrder);
 router.post('/place-order', isAuth, placeOrder);
+router.post('/verify-payment', isAuth, verifyPayment);
 router.post('/send-otp', isAuth, sendDeliveryBoyOtp);
 router.post('/verify-otp', isAuth, verifyDeliveryBoyOtp);
 

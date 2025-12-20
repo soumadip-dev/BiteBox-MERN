@@ -135,8 +135,8 @@ const TrackOrderPage = () => {
                             key={idx}
                             className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-200 hover:border-orange-300 transition-all duration-300 hover:shadow-md"
                           >
-                            <div className="flex justify-between items-start">
-                              <div className="pr-2">
+                            <div className="flex justify-between items-start gap-3">
+                              <div className="flex-1 min-w-0">
                                 <p className="font-medium text-gray-900 truncate text-sm sm:text-base">
                                   {item?.name || `Item ${idx + 1}`}
                                 </p>
@@ -144,7 +144,7 @@ const TrackOrderPage = () => {
                                   Quantity: {item?.quantity || 1}
                                 </p>
                               </div>
-                              <span className="font-bold text-gray-900 text-sm sm:text-base whitespace-nowrap">
+                              <span className="font-bold text-gray-900 text-sm sm:text-base whitespace-nowrap shrink-0">
                                 ₹{item?.price?.toLocaleString() || '0'}
                               </span>
                             </div>
@@ -357,14 +357,38 @@ const TrackOrderPage = () => {
                       Payment Status
                     </h4>
                   </div>
-                  <div className="px-3 py-2 sm:px-4 sm:py-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg sm:rounded-xl border border-emerald-200">
-                    <p className="text-sm sm:text-base text-center font-semibold text-emerald-700">
-                      PAID
+                  <div
+                    className={`px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl border ${
+                      (currentOrder?.paymentMethod === 'cod' &&
+                        currentOrder?.shopOrders?.some(
+                          shopOrder => shopOrder?.status === 'delivered'
+                        )) ||
+                      currentOrder?.paymentMethod !== 'cod'
+                        ? 'bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200'
+                        : 'bg-gradient-to-r from-orange-50 to-red-50 border-orange-200'
+                    }`}
+                  >
+                    <p
+                      className={`text-sm sm:text-base text-center font-semibold ${
+                        (currentOrder?.paymentMethod === 'cod' &&
+                          currentOrder?.shopOrders?.some(
+                            shopOrder => shopOrder?.status === 'delivered'
+                          )) ||
+                        currentOrder?.paymentMethod !== 'cod'
+                          ? 'text-emerald-700'
+                          : 'text-orange-700'
+                      }`}
+                    >
+                      {currentOrder?.paymentMethod === 'cod'
+                        ? currentOrder?.shopOrders?.some(
+                            shopOrder => shopOrder?.status === 'delivered'
+                          )
+                          ? 'PAID'
+                          : 'UNPAID'
+                        : 'PAID'}
                     </p>
                   </div>
                 </div>
-
-                {/* Need Help Section - Only show if not delivered */}
                 {currentOrder?.shopOrders?.some(order => order?.status !== 'delivered') && (
                   <div className="mt-6 sm:mt-8">
                     <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg sm:rounded-xl border border-orange-200 p-3 sm:p-4">
