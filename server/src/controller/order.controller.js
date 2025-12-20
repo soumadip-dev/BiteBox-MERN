@@ -20,7 +20,7 @@ const placeOrder = async (req, res) => {
     const { cartItems, paymentMethod, deliveryAddress, totalAmount } = req.body;
     const userId = req.userId;
 
-    const order = await placeOrderService(
+    const result = await placeOrderService(
       cartItems,
       paymentMethod,
       deliveryAddress,
@@ -31,7 +31,7 @@ const placeOrder = async (req, res) => {
     res.status(201).json({
       message: 'Order placed successfully',
       success: true,
-      order,
+      data: result,
     });
   } catch (error) {
     res.status(400).json({

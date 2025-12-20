@@ -6,6 +6,7 @@ import CartItemCard from '../components/CartItemCard';
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, cartTotal } = useSelector(state => state.user);
+  const deliveryCharge = cartTotal > 500 ? 0 : 50;
 
   return (
     <div className="flex justify-center flex-col items-center p-4 sm:p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen">
@@ -54,7 +55,7 @@ const CartPage = () => {
                   Total: ₹
                   {cartItems
                     ?.reduce((total, item) => total + item.price * item.quantity, 0)
-                    .toFixed(2)}
+                    .toFixed(2) + deliveryCharge}
                 </span>
               </div>
 
@@ -73,12 +74,14 @@ const CartPage = () => {
               </div>
               <div className="flex justify-between items-center mb-3 sm:mb-4">
                 <span className="text-gray-700 font-medium text-sm sm:text-base">Shipping</span>
-                <span className="text-base sm:text-lg font-semibold text-green-600">Free</span>
+                <span className="text-base sm:text-lg font-semibold text-green-600">
+                  {deliveryCharge}
+                </span>
               </div>
               <div className="flex justify-between items-center mb-4 sm:mb-6 pt-3 sm:pt-4 border-t border-orange-200/50">
                 <span className="text-lg sm:text-xl font-bold text-gray-900">Total</span>
                 <span className="text-lg sm:text-xl font-bold text-orange-600">
-                  ₹{cartTotal.toFixed(2)}
+                  ₹{ Number(cartTotal.toFixed(2)) + Number(deliveryCharge)}
                 </span>
               </div>
               <button

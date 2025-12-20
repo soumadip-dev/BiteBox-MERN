@@ -357,14 +357,38 @@ const TrackOrderPage = () => {
                       Payment Status
                     </h4>
                   </div>
-                  <div className="px-3 py-2 sm:px-4 sm:py-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg sm:rounded-xl border border-emerald-200">
-                    <p className="text-sm sm:text-base text-center font-semibold text-emerald-700">
-                      PAID
+                  <div
+                    className={`px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl border ${
+                      (currentOrder?.paymentMethod === 'cod' &&
+                        currentOrder?.shopOrders?.some(
+                          shopOrder => shopOrder?.status === 'delivered'
+                        )) ||
+                      currentOrder?.paymentMethod !== 'cod'
+                        ? 'bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200'
+                        : 'bg-gradient-to-r from-orange-50 to-red-50 border-orange-200'
+                    }`}
+                  >
+                    <p
+                      className={`text-sm sm:text-base text-center font-semibold ${
+                        (currentOrder?.paymentMethod === 'cod' &&
+                          currentOrder?.shopOrders?.some(
+                            shopOrder => shopOrder?.status === 'delivered'
+                          )) ||
+                        currentOrder?.paymentMethod !== 'cod'
+                          ? 'text-emerald-700'
+                          : 'text-orange-700'
+                      }`}
+                    >
+                      {currentOrder?.paymentMethod === 'cod'
+                        ? currentOrder?.shopOrders?.some(
+                            shopOrder => shopOrder?.status === 'delivered'
+                          )
+                          ? 'PAID'
+                          : 'UNPAID'
+                        : 'PAID'}
                     </p>
                   </div>
                 </div>
-
-                {/* Need Help Section - Only show if not delivered */}
                 {currentOrder?.shopOrders?.some(order => order?.status !== 'delivered') && (
                   <div className="mt-6 sm:mt-8">
                     <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg sm:rounded-xl border border-orange-200 p-3 sm:p-4">

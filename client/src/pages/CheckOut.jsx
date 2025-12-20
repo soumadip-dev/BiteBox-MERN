@@ -13,7 +13,7 @@ import 'leaflet/dist/leaflet.css';
 import { setAddressForDelivery, setLocation } from '../redux/mapSlice';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { placeOrder } from '../api/orderApi';
+import { placeOrder, verifyPayment } from '../api/orderApi';
 import { addMyOrder } from '../redux/userSlice';
 
 //* Recenter map on drag end
@@ -36,6 +36,7 @@ const CheckOut = () => {
 
   const subTotal = cartTotal;
   const deliveryCharge = subTotal > 500 ? 0 : 50;
+
   const total = subTotal + deliveryCharge;
 
   // Change location on drag end
@@ -116,6 +117,34 @@ const CheckOut = () => {
     }
   };
 
+  const openRazorpay = (orderId, razorpayOrder, key_id) => {
+    const options = {
+      key: key_id,
+      amount: razorpayOrder.amount,
+      currency: razorpayOrder.currency,
+      order_id: razorpayOrder.id,
+      name: 'BiteBox',
+      description: 'Food Delivery',
+      handler: async function (response) {
+        try {
+          const result = verifyPayment(orderId, response.razorpay_payment_id);
+          console.log(result);
+          dispatch(addMyOrder(result.data));
+          toast.success(result.message);
+          navigate('/order-placed');
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message);
+        }
+      },
+      theme: {
+        color: '#FF4D2D',
+      },
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
   const handlePlaceOrder = async () => {
     setIsLoading(true); // Start loading
     try {
@@ -130,9 +159,21 @@ const CheckOut = () => {
         totalAmount: subTotal,
       };
       const response = await placeOrder(orderData);
-      dispatch(addMyOrder(response.order));
-      toast.success(response.message);
-      navigate('/order-placed');
+
+      if (paymentMethod === 'cod') {
+        dispatch(addMyOrder(response.data));
+        toast.success(response.message);
+        navigate('/order-placed');
+      } else {
+        const orderId = response.data.orderId;
+        const razorpayOrder = response.data.razorpayOrder;
+        const key_id = response.data.key_id;
+        console.log('ORDERID:', orderId);
+        console.log('RAZORPAYORDER:', razorpayOrder);
+        console.log('KEY_ID:', key_id);
+
+        openRazorpay(orderId, razorpayOrder, key_id);
+      }
     } catch (error) {
       toast.error(error.message);
     } finally {
