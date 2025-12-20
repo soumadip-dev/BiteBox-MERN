@@ -8,6 +8,7 @@ import {
   getOrderByIdService,
   sendDeliveryBoyOtpService,
   verifyDeliveryBoyOtpService,
+  verifyPaymentService,
 } from '../services/order.service.js';
 import generateMailOptions from '../utils/mailTemplates.utils.js';
 import transporter from '../config/nodemailer.config.js';
@@ -31,6 +32,25 @@ const placeOrder = async (req, res) => {
       message: 'Order placed successfully',
       success: true,
       order,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
+//* Controller for verifying payment
+const verifyPayment = async (req, res) => {
+  try {
+    const { OrderId, razorpayPaymentId } = req.body;
+
+    await verifyPaymentService(OrderId, razorpayPaymentId);
+
+    res.status(200).json({
+      message: 'Payment verified successfully',
+      success: true,
     });
   } catch (error) {
     res.status(400).json({
@@ -239,4 +259,5 @@ export {
   getOrderById,
   sendDeliveryBoyOtp,
   verifyDeliveryBoyOtp,
+  verifyPayment,
 };

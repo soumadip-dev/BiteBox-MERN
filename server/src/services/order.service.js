@@ -96,6 +96,22 @@ const placeOrderService = async (
   return order;
 };
 
+//* Service for verifying payment
+const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
+  const payment = await razorpayInstance.payments.fetch(razorpayPaymentId);
+  if (!payment || payment.status !== 'captured') {
+    throw new Error('Payment Failed');
+  }
+  const order = await Order.findById(OrderId);
+  if (!order) {
+    throw new Error('Order not found');
+  }
+
+  order.payment = true;
+  order.razorpayPaymentId = razorpayPaymentId;
+  await order.save();
+};
+
 //* Service for getting user orders
 const getUserOrdersService = async userId => {
   try {
@@ -484,4 +500,5 @@ export {
   getOrderByIdService,
   sendDeliveryBoyOtpService,
   verifyDeliveryBoyOtpService,
+  verifyPaymentService,
 };
