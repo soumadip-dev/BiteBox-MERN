@@ -16,7 +16,6 @@ import { useEffect, useState } from 'react';
 import { placeOrder, verifyPayment } from '../api/orderApi';
 import { addMyOrder } from '../redux/userSlice';
 
-//* Recenter map on drag end
 function RecenterMap({ location }) {
   if (location.lat && location.lon) {
     const map = useMap();
@@ -24,7 +23,6 @@ function RecenterMap({ location }) {
   }
 }
 
-//* Checkout component
 const CheckOut = () => {
   const { location, address } = useSelector(state => state.map);
   const { cartItems, cartTotal } = useSelector(state => state.user);
@@ -285,7 +283,6 @@ const CheckOut = () => {
                 </div>
               </div>
 
-              {/* UPI/Card Option */}
               <div
                 className={`flex items-center gap-3 sm:gap-4 rounded-xl border-2 p-3 sm:p-4 text-left transition-all duration-200 cursor-pointer ${
                   paymentMethod === 'online'
@@ -325,7 +322,6 @@ const CheckOut = () => {
             </div>
 
             <div className="rounded-xl sm:rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-white p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm">
-              {/* Cart Items */}
               <div className="space-y-2 sm:space-y-3 max-h-32 sm:max-h-48 overflow-y-auto pr-2">
                 {cartItems.map(item => (
                   <div key={item.id} className="flex justify-between items-center">

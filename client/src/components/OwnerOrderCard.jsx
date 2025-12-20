@@ -8,6 +8,13 @@ const OwnerOrderCard = ({ order }) => {
   const dispatch = useDispatch();
   const [availableBoys, setAvailableBoys] = useState([]);
 
+  const paymentStatus =
+    order?.paymentMethod === 'cod'
+      ? order?.shopOrders?.some(shopOrder => shopOrder?.status === 'delivered')
+        ? 'PAID'
+        : 'UNPAID'
+      : 'PAID';
+
   const handleUpdateStatus = async (orderId, shopId, status) => {
     try {
       const response = await updateOrderStatus(orderId, shopId, status);
@@ -23,7 +30,6 @@ const OwnerOrderCard = ({ order }) => {
     }
   };
 
-  // Status color mapping
   const getStatusColor = status => {
     switch (status) {
       case 'pending':
@@ -39,19 +45,30 @@ const OwnerOrderCard = ({ order }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-4 sm:space-y-6 border border-gray-100 hover:shadow-md transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 mx-2 sm:mx-0">
-      {/* Customer Info */}
       <div className="border-b border-gray-200 pb-4 sm:pb-5">
-        <h2 className="text-lg font-bold text-gray-900 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent break-words">
-          {order?.user?.fullName}
-        </h2>
-        <p className="text-sm text-gray-500 font-medium mt-1 break-words">{order?.user?.email}</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4">
+          <div className="space-y-1 mb-3 sm:mb-0">
+            <h2 className="text-lg font-bold text-gray-900 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent break-words">
+              {order?.user?.fullName}
+            </h2>
+            <p className="text-sm text-gray-500 font-medium break-words">{order?.user?.email}</p>
+          </div>
+          <div className="flex flex-col sm:items-end space-y-1">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium capitalize">
+              Payment: {paymentStatus}
+            </p>
+            <p className="font-semibold text-blue-600 text-sm sm:text-base tracking-wide capitalize">
+              {order?.shopOrders[0]?.status}
+            </p>
+          </div>
+        </div>
+
         <p className="text-sm text-gray-600 mt-2 flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg w-full sm:w-fit">
           <MdPhone className="text-blue-500 flex-shrink-0" />
           <span className="font-medium truncate">{order?.user?.mobile}</span>
         </p>
       </div>
 
-      {/* Delivery Address */}
       <div className="flex items-start gap-2 flex-col text-gray-600 text-sm bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg px-3 sm:px-4 py-3 border border-gray-200">
         <p className="font-medium text-gray-900">Delivery Address</p>
         <p className="break-words w-full">{order?.deliveryAddress?.text}</p>
@@ -60,7 +77,6 @@ const OwnerOrderCard = ({ order }) => {
         </p>
       </div>
 
-      {/* Order Items Grid */}
       <div className="space-y-4 sm:space-y-6">
         {order?.shopOrders?.map((shopOrder, shopIndex) => (
           <div key={shopOrder._id || shopIndex} className="space-y-3 sm:space-y-4">
@@ -122,7 +138,6 @@ const OwnerOrderCard = ({ order }) => {
                 )}
               </div>
 
-              {/* Enhanced Select - Only show if status is not "delivered" */}
               {shopOrder?.status !== 'delivered' && (
                 <div className="relative w-full sm:w-auto">
                   <select
@@ -154,10 +169,6 @@ const OwnerOrderCard = ({ order }) => {
         ))}
       </div>
 
-      {/* Available Delivery Boys Section - Only show when:
-          1. Status is 'out for delivery' AND
-          2. No delivery boy is assigned yet AND
-          3. We have available boys data */}
       {order?.shopOrders[0]?.status === 'out for delivery' &&
         !order?.shopOrders[0]?.assignedDeliveryBoy && (
           <div className="mt-4 sm:mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200 shadow-sm">
@@ -232,7 +243,6 @@ const OwnerOrderCard = ({ order }) => {
           </div>
         )}
 
-      {/* Order Summary */}
       <div className="border-t border-gray-200 pt-4 sm:pt-5 space-y-2 sm:space-y-3">
         <div className="flex justify-between items-center flex-wrap gap-2">
           <span className="text-gray-600 font-medium text-sm sm:text-base">Total Amount:</span>
