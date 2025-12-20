@@ -6,7 +6,6 @@ import CartItemCard from '../components/CartItemCard';
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, cartTotal } = useSelector(state => state.user);
-  const deliveryCharge = cartTotal > 500 ? 0 : 50;
 
   return (
     <div className="flex justify-center flex-col items-center p-4 sm:p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen">
@@ -55,7 +54,7 @@ const CartPage = () => {
                   Total: ₹
                   {cartItems
                     ?.reduce((total, item) => total + item.price * item.quantity, 0)
-                    .toFixed(2) + deliveryCharge}
+                    .toFixed(2)}
                 </span>
               </div>
 
@@ -65,23 +64,11 @@ const CartPage = () => {
                 ))}
               </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-4 sm:p-6 shadow-lg border border-orange-200/50">
-              <div className="flex justify-between items-center mb-3 sm:mb-4">
-                <span className="text-gray-700 font-medium text-sm sm:text-base">Subtotal</span>
-                <span className="text-base sm:text-lg font-semibold text-gray-900">
-                  ₹{cartTotal.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center mb-3 sm:mb-4">
-                <span className="text-gray-700 font-medium text-sm sm:text-base">Shipping</span>
-                <span className="text-base sm:text-lg font-semibold text-green-600">
-                  {deliveryCharge}
-                </span>
-              </div>
-              <div className="flex justify-between items-center mb-4 sm:mb-6 pt-3 sm:pt-4 border-t border-orange-200/50">
+            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-4 sm:p-6 shadow-lg">
+              <div className="flex justify-between items-center mb-4 sm:mb-6 pt-3 sm:pt-4  border-orange-200/50">
                 <span className="text-lg sm:text-xl font-bold text-gray-900">Total</span>
                 <span className="text-lg sm:text-xl font-bold text-orange-600">
-                  ₹{ Number(cartTotal.toFixed(2)) + Number(deliveryCharge)}
+                  ₹{Number(cartTotal.toFixed(2))}
                 </span>
               </div>
               <button

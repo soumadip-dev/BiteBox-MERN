@@ -30,16 +30,12 @@ const CheckOut = () => {
   const { cartItems, cartTotal } = useSelector(state => state.user);
   const [addressInput, setAddressInput] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const subTotal = cartTotal;
-  const deliveryCharge = subTotal > 500 ? 0 : 50;
+  const total = cartTotal;
 
-  const total = subTotal + deliveryCharge;
-
-  // Change location on drag end
   const onDragEnd = e => {
     let _lat = e.target._latlng.lat;
     let _lng = e.target._latlng.lng;
@@ -47,7 +43,6 @@ const CheckOut = () => {
     getAddressByLatLng(_lat, _lng);
   };
 
-  // Change address on pointer change
   const getAddressByLatLng = async (lat, lng) => {
     try {
       const response = await axios.get(
@@ -68,7 +63,6 @@ const CheckOut = () => {
     }
   };
 
-  // Get lat lng by address provided in input field
   const getLatLngByAddress = async addressInput => {
     if (!addressInput.trim()) {
       toast.error('Please enter an address');
@@ -88,7 +82,6 @@ const CheckOut = () => {
         return;
       }
 
-      // GeoJSON format: [longitude, latitude]
       const [longitude, latitude] = feature.geometry.coordinates;
 
       dispatch(setLocation({ lat: latitude, lon: longitude }));
@@ -99,7 +92,6 @@ const CheckOut = () => {
     }
   };
 
-  // Get currect address on click
   const getCurrentAddress = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -146,7 +138,7 @@ const CheckOut = () => {
   };
 
   const handlePlaceOrder = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       const orderData = {
         cartItems,
@@ -156,7 +148,7 @@ const CheckOut = () => {
           latitude: location.lat,
           longitude: location.lon,
         },
-        totalAmount: subTotal,
+        totalAmount: total,
       };
       const response = await placeOrder(orderData);
 
@@ -187,7 +179,6 @@ const CheckOut = () => {
 
   return (
     <div className="flex justify-center flex-col items-center p-4 sm:p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen">
-      {/* Back Button */}
       <button
         className="absolute top-4 left-4 sm:top-6 sm:left-6 p-2 rounded-full hover:bg-orange-50 transition-all duration-200 cursor-pointer group z-10"
         onClick={() => navigate(-1)}
@@ -198,14 +189,10 @@ const CheckOut = () => {
         />
       </button>
 
-      {/* Main Content Container */}
       <div className="w-full max-w-4xl mt-2 sm:mt-0">
-        {/* Checkout Card */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6 border border-orange-100/50">
-          {/* Page Title Inside Card */}
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center">Checkout</h1>
 
-          {/* Location Section */}
           <section className="space-y-3 sm:space-y-4">
             <div className="flex items-center gap-3 mb-1 sm:mb-2">
               <div className="bg-gradient-to-br from-orange-100 to-orange-50 p-2 rounded-xl">
@@ -216,7 +203,6 @@ const CheckOut = () => {
               </h2>
             </div>
 
-            {/* Address Input Row */}
             <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
@@ -243,7 +229,6 @@ const CheckOut = () => {
               </div>
             </div>
 
-            {/* Map Container */}
             <div className="rounded-xl border border-gray-200 overflow-hidden shadow-inner">
               <div className="h-48 sm:h-64 w-full">
                 <MapContainer
@@ -265,7 +250,6 @@ const CheckOut = () => {
             </div>
           </section>
 
-          {/* Payment Method Section */}
           <section className="space-y-3 sm:space-y-4">
             <div className="flex items-center gap-3 mb-1 sm:mb-2">
               <div className="bg-gradient-to-br from-orange-100 to-orange-50 p-2 rounded-xl">
@@ -275,7 +259,6 @@ const CheckOut = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {/* Cash on Delivery Option */}
               <div
                 className={`flex items-center gap-3 sm:gap-4 rounded-xl border-2 p-3 sm:p-4 text-left transition-all duration-200 cursor-pointer ${
                   paymentMethod === 'cod'
@@ -333,7 +316,6 @@ const CheckOut = () => {
             </div>
           </section>
 
-          {/* Order Summary Section */}
           <section className="space-y-3 sm:space-y-4">
             <div className="flex items-center gap-3 mb-1 sm:mb-2">
               <div className="bg-gradient-to-br from-orange-100 to-orange-50 p-2 rounded-xl">
@@ -362,37 +344,7 @@ const CheckOut = () => {
                 ))}
               </div>
 
-              {/* Divider */}
-              <div className="relative py-1 sm:py-2">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-orange-200/50"></div>
-                </div>
-              </div>
-
-              {/* Pricing Breakdown */}
               <div className="space-y-2 sm:space-y-3">
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-gray-600 font-medium text-sm sm:text-base">Subtotal</span>
-
-                  <span className="font-semibold text-gray-800 text-sm sm:text-base whitespace-nowrap min-w-[80px] text-right">
-                    ₹{subTotal}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-gray-600 font-medium text-sm sm:text-base">
-                    Delivery Charge
-                  </span>
-                  <span
-                    className={`font-semibold text-sm sm:text-base whitespace-nowrap min-w-[80px] text-right ${
-                      deliveryCharge === 0 ? 'text-green-600' : 'text-gray-800'
-                    }`}
-                  >
-                    {deliveryCharge === 0 ? 'FREE' : `₹${deliveryCharge}`}
-                  </span>
-                </div>
-
-                {/* Total Amount */}
                 <div className="flex justify-between items-center pt-3 sm:pt-4 mt-1 sm:mt-2 border-t-2 border-orange-200/70">
                   <div>
                     <span className="text-base sm:text-lg font-bold text-gray-900">
@@ -404,21 +356,10 @@ const CheckOut = () => {
                     ₹{total}
                   </span>
                 </div>
-
-                {/* Free Delivery Message */}
-                {subTotal < 500 && (
-                  <div className="text-center pt-1 sm:pt-2">
-                    <p className="text-xs sm:text-sm text-gray-600">
-                      Add ₹{500 - subTotal} more for{' '}
-                      <span className="text-green-600 font-semibold">FREE delivery</span>
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
           </section>
 
-          {/* Place Order Button */}
           <button
             className={`w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 transform ${
               isLoading
