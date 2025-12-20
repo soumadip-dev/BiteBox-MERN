@@ -135,8 +135,8 @@ const TrackOrderPage = () => {
                             key={idx}
                             className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-200 hover:border-orange-300 transition-all duration-300 hover:shadow-md"
                           >
-                            <div className="flex justify-between items-start">
-                              <div className="pr-2">
+                            <div className="flex justify-between items-start gap-3">
+                              <div className="flex-1 min-w-0">
                                 <p className="font-medium text-gray-900 truncate text-sm sm:text-base">
                                   {item?.name || `Item ${idx + 1}`}
                                 </p>
@@ -144,7 +144,7 @@ const TrackOrderPage = () => {
                                   Quantity: {item?.quantity || 1}
                                 </p>
                               </div>
-                              <span className="font-bold text-gray-900 text-sm sm:text-base whitespace-nowrap">
+                              <span className="font-bold text-gray-900 text-sm sm:text-base whitespace-nowrap shrink-0">
                                 ₹{item?.price?.toLocaleString() || '0'}
                               </span>
                             </div>

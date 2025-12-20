@@ -2,6 +2,8 @@ import DeliveryAssignment from '../model/deliveryAssignment.model.js';
 import Order from '../model/order.model.js';
 import Shop from '../model/shop.model.js';
 import User from '../model/user.model.js';
+import razorpayInstance from '../config/razorpay.config.js';
+import { ENV } from '../config/env.config.js';
 
 //* Service for placing Order
 const placeOrderService = async (
@@ -54,6 +56,31 @@ const placeOrderService = async (
       };
     })
   );
+
+  if (paymentMethod === 'online') {
+    const razorpayOrder = await razorpayInstance.orders.create({
+      amount: Math.round(totalAmount * 100),
+      currency: 'INR',
+      receipt: `order_rcptid_${Date.now()}`,
+    });
+    const newOrder = await Order.create({
+      user: userId,
+      paymentMethod,
+      deliveryAddress,
+      totalAmount,
+      shopOrders,
+      razorpayOrderId: razorpayOrder.id,
+      payment: false,
+    });
+
+    const returnResponse = {
+      razorpayOrder,
+      orderId: newOrder._id,
+      key_id: ENV.RAZORPAY_KEY_ID,
+    };
+
+    return returnResponse;
+  }
 
   const order = await Order.create({
     user: userId,

@@ -78,12 +78,12 @@ const orderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'User is required'],
     },
     paymentMethod: {
       type: String,
       enum: ['cod', 'online'],
-      required: true,
+      required: [true, 'Payment method is required'],
     },
     deliveryAddress: {
       text: String,
@@ -92,9 +92,21 @@ const orderSchema = new mongoose.Schema(
     },
     totalAmount: {
       type: Number,
-      required: true,
+      required: [true, 'Total amount is required'],
     },
     shopOrders: [shopOrderSchema],
+    payment: {
+      type: Boolean,
+      default: false,
+    },
+    razorpayOrderId: {
+      type: String,
+      default: '',
+    },
+    razorpayPaymentId: {
+      type: String,
+      default: '',
+    },
   },
   { timestamps: true }
 );
