@@ -1,14 +1,20 @@
-import app from './app.js';
+import { server, io } from './app.js';
+
 import { ENV } from './config/env.config.js';
 import { connectDB } from './config/db.config.js';
+import { socketHandler } from './socket.js';
 
 const PORT = ENV.PORT || 8080;
 
+// Initialize socket handler
+socketHandler(io);
+
+// Start the server
 const startServer = async () => {
   try {
     await connectDB();
 
-    const server = app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.info(`✔️ Server listening at http://localhost:${PORT}`);
     });
 

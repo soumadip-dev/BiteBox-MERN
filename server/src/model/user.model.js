@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
       enum: ['owner', 'user', 'deliveryBoy'],
       required: true,
     },
+    socketId: {
+      type: String,
+      default: '',
+    },
     resetPasswordOtp: {
       type: String,
       default: '',
