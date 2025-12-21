@@ -10,4 +10,5 @@ export const store = configureStore({
     owner: ownerReducer,
     map: mapReducer,
   },
+  
 });

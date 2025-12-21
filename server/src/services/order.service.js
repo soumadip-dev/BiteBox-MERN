@@ -5,13 +5,36 @@ import User from '../model/user.model.js';
 import razorpayInstance from '../config/razorpay.config.js';
 import { ENV } from '../config/env.config.js';
 
+//* Helper function to emit order to owner
+const emitOrderToOwner = (io, order, eventName = 'newOrder') => {
+  if (!io) return;
+
+  order.shopOrders.forEach(shopOrder => {
+    const ownerSocketId = shopOrder.owner?.socketId;
+    if (ownerSocketId) {
+      io.to(ownerSocketId).emit(eventName, {
+        _id: order._id,
+        user: order.user,
+        paymentMethod: order.paymentMethod,
+        createdAt: order.createdAt,
+        deliveryAddress: order.deliveryAddress,
+        totalAmount: order.totalAmount,
+        updatedAt: order.updatedAt,
+        payment: order.payment, // Include payment status
+        shopOrders: shopOrder, // Single shopOrder for this owner
+      });
+    }
+  });
+};
+
 //* Service for placing Order
 const placeOrderService = async (
   cartItems,
   paymentMethod,
   deliveryAddress,
   totalAmount,
-  userId
+  userId,
+  req
 ) => {
   if (cartItems.length === 0 || !cartItems) {
     throw new Error('Cart is empty');
@@ -82,7 +105,7 @@ const placeOrderService = async (
     return returnResponse;
   }
 
-  const order = await Order.create({
+  const newOrder = await Order.create({
     user: userId,
     paymentMethod,
     deliveryAddress,
@@ -90,14 +113,22 @@ const placeOrderService = async (
     shopOrders,
   });
 
-  await order.populate('shopOrders.shop', 'name');
-  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+  await newOrder.populate('shopOrders.shop', 'name');
+  await newOrder.populate('shopOrders.owner', 'name socketId');
+  await newOrder.populate('user', 'name email mobile');
+  await newOrder.populate('shopOrders.shopOrderItems.item', 'name image price');
 
-  return order;
+  const io = req.app.get('io');
+
+  // Emit new order to all shop owners
+  if (io) {
+    emitOrderToOwner(io, newOrder, 'newOrder');
+  }
+  return newOrder;
 };
 
 //* Service for verifying payment
-const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
+const verifyPaymentService = async (OrderId, razorpayPaymentId, req) => {
   const payment = await razorpayInstance.payments.fetch(razorpayPaymentId);
   if (!payment || payment.status !== 'captured') {
     throw new Error('Payment Failed');
@@ -113,6 +144,15 @@ const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
 
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+  await order.populate('user', 'name email mobile');
+  await order.populate('shopOrders.owner', 'name socketId');
+
+  const io = req.app.get('io');
+
+  // Emit new order to all shop owners after payment verification
+  if (io) {
+    emitOrderToOwner(io, order, 'newOrder');
+  }
 
   return order;
 };
@@ -152,6 +192,7 @@ const getOwnerOrdersService = async ownerId => {
       deliveryAddress: order.deliveryAddress,
       totalAmount: order.totalAmount,
       updatedAt: order.updatedAt,
+      payment: order.payment,
       shopOrders: order.shopOrders.filter(
         shopOrder => shopOrder.owner._id.toString() === ownerId.toString()
       ),
@@ -181,7 +222,7 @@ const getOrdersService = async (userId, userRole) => {
 };
 
 //* Service for updating order status
-const updateOrderStatusService = async (orderId, shopId, status) => {
+const updateOrderStatusService = async (orderId, shopId, status, req) => {
   const order = await Order.findById(orderId);
 
   if (!order) {
@@ -206,13 +247,14 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
     // Get the delivery boys who are near by 5 km
     const nearByDeliveryBoys = await User.find({
       role: 'deliveryBoy',
+      isOnline: true,
       location: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: [Number(longitude), Number(latitude)],
           },
-          $maxDistance: 5000, // 5 km
+          $maxDistance: 5000,
         },
       },
     });
@@ -250,6 +292,9 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
       status: 'broadcasted',
     });
 
+    await deliveryAssignment.populate('order');
+    await deliveryAssignment.populate('shop');
+
     shopOrder.assignment = deliveryAssignment._id;
 
     shopOrder.assignedDeliveryBoy = deliveryAssignment.assignedTo;
@@ -264,6 +309,29 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
       mobile: deliveryBoy.mobile,
       email: deliveryBoy.email,
     }));
+
+    const io = req.app.get('io');
+    if (io) {
+      availableDeliveryBoys.forEach(deliveryBoy => {
+        const deliveryBoySocketId = deliveryBoy.socketId;
+        if (deliveryBoySocketId) {
+          io.to(deliveryBoySocketId).emit('newOrderAssignment', {
+            assignmentId: deliveryAssignment._id,
+            sentTo: deliveryBoy._id,
+            orderId: deliveryAssignment.order?._id,
+            shopName: deliveryAssignment.shop.name,
+            deliveryAddress: deliveryAssignment.order?.deliveryAddress,
+            items:
+              deliveryAssignment.order?.shopOrders.find(
+                shop => shop._id.toString() === deliveryAssignment.shopOrderId.toString()
+              )?.shopOrderItems || [],
+            subtotal: deliveryAssignment.order?.shopOrders.find(
+              shop => shop._id.toString() === deliveryAssignment.shopOrderId.toString()
+            )?.subtotal,
+          });
+        }
+      });
+    }
   }
 
   await order.save();
@@ -272,7 +340,18 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
 
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.assignedDeliveryBoy', 'fullName email mobile');
+  await order.populate('user', 'socketId');
 
+  const io = req.app.get('io');
+
+  if (io) {
+    io.to(order.user.socketId).emit('updateOrderStatus', {
+      orderId: order._id,
+      shopId: updatedShopOrder.shop._id,
+      status: updatedShopOrder.status,
+      userId: order.user._id,
+    });
+  }
   return { updatedShopOrder, deliveryBoysPayload };
 };
 

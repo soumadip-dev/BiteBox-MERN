@@ -1,61 +1,127 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import UserOrderCard from '../components/UserOrderCard';
 import OwnerOrderCard from '../components/OwnerOrderCard';
 import { useSelector, useDispatch } from 'react-redux';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { FaReceipt } from 'react-icons/fa6';
-import { setMyOrders } from '../redux/userSlice.js';
-import { getOrders } from '../api/orderApi.js';
+import { setMyOrders, addMyOrder, updateShopOrderStatusRealTime } from '../redux/userSlice.js';
+import { getOrders } from '../api/orderApi';
 
 const MyOrders = () => {
-  const { userData, myOrders } = useSelector(state => state.user);
+  const { userData, myOrders, socket } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFreshOrders = async () => {
+    const fetchOrders = async () => {
       setIsLoading(true);
       try {
         const response = await getOrders();
-        if (response.success) {
-          dispatch(setMyOrders(response.orders || []));
-        } else {
-          console.error('Failed to fetch orders:', response.message);
-          dispatch(setMyOrders([]));
+        if (response.success && Array.isArray(response.orders)) {
+          dispatch(setMyOrders(response.orders));
         }
       } catch (error) {
         console.error('Error fetching orders:', error);
-        dispatch(setMyOrders([]));
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchFreshOrders();
+    fetchOrders();
   }, [dispatch]);
 
-  const validOrders = React.useMemo(() => {
-    if (!Array.isArray(myOrders)) {
-      console.error('myOrders is not an array:', myOrders);
+  useEffect(() => {
+    if (socket && userData?._id) {
+      const handleIncomingOrder = orderData => {
+        if (!orderData || !orderData._id) {
+          return;
+        }
+
+        const normalizedOrder = {
+          ...orderData,
+
+          shopOrders: Array.isArray(orderData.shopOrders)
+            ? orderData.shopOrders
+            : orderData.shopOrders
+            ? [orderData.shopOrders]
+            : [],
+        };
+
+        const isForCurrentUser = () => {
+          if (userData.role === 'user') {
+            return normalizedOrder.user?._id === userData._id;
+          } else if (userData.role === 'owner') {
+            return normalizedOrder.shopOrders.some(
+              shopOrder => shopOrder?.owner?._id === userData._id
+            );
+          }
+          return false;
+        };
+
+        if (isForCurrentUser()) {
+          dispatch(addMyOrder(normalizedOrder));
+        }
+      };
+
+      const handleUpdateOrderStatus = ({ orderId, shopId, status, userId }) => {
+        if (userId.toString() === userData._id.toString()) {
+          dispatch(updateShopOrderStatusRealTime({ orderId, shopId, status }));
+        }
+      };
+
+      socket?.on('newOrder', handleIncomingOrder);
+      socket?.on('orderUpdated', handleIncomingOrder);
+      socket?.on('updateOrderStatus', handleUpdateOrderStatus);
+
+      return () => {
+        socket?.off('newOrder', handleIncomingOrder);
+        socket?.off('orderUpdated', handleIncomingOrder);
+        socket?.off('updateOrderStatus', handleUpdateOrderStatus);
+      };
+    }
+  }, [socket, userData, dispatch]);
+
+  const validOrders = useMemo(() => {
+    if (!myOrders || !Array.isArray(myOrders)) {
       return [];
     }
 
     return myOrders
       .filter(order => {
-        const isValid = order && typeof order === 'object' && order._id;
-        if (!isValid) {
-          console.warn('Invalid order found:', order);
-        }
+        const isValid =
+          order &&
+          typeof order === 'object' &&
+          order._id &&
+          (order.user || (order.shopOrders && Array.isArray(order.shopOrders))) &&
+          !order._destroyed;
+
         return isValid;
       })
+      .map(order => ({
+        ...order,
+        shopOrders: Array.isArray(order.shopOrders)
+          ? order.shopOrders
+          : order.shopOrders
+          ? [order.shopOrders]
+          : [],
+      }))
       .sort((a, b) => {
-        const dateA = a.createdAt || a.orderDate || a.date || new Date(0);
-        const dateB = b.createdAt || b.orderDate || b.date || new Date(0);
-        return new Date(dateB) - new Date(dateA);
+        const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+        const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+        return dateB - dateA;
       });
   }, [myOrders]);
+
+  useEffect(() => {
+    if (myOrders && Array.isArray(myOrders) && myOrders.some(order => !order || !order._id)) {
+      const cleanedOrders = myOrders.filter(order => order && order._id);
+      if (cleanedOrders.length !== myOrders.length) {
+        dispatch(setMyOrders(cleanedOrders));
+      }
+    }
+  }, [myOrders, dispatch]);
 
   const getNoOrdersMessage = () => {
     if (userData?.role === 'user') {
@@ -137,11 +203,6 @@ const MyOrders = () => {
       ) : (
         <div className="space-y-6 w-full max-w-4xl">
           {validOrders.map(order => {
-            if (!order || !order._id) {
-              console.error('Invalid order in validOrders:', order);
-              return null;
-            }
-
             try {
               return userData?.role === 'user' ? (
                 <UserOrderCard key={order._id} order={order} />

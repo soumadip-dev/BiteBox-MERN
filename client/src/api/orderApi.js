@@ -17,7 +17,7 @@ export const placeOrder = async function (orderData) {
 export const verifyPayment = async function (orderId, razorpayPaymentId) {
   try {
     const response = await axiosInstance.post('/api/v1/order/verify-payment', {
-      orderId,
+      OrderId: orderId,
       razorpayPaymentId,
     });
     return response.data;
