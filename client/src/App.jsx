@@ -3,7 +3,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/signUp';
 import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/useGetCurrentUser';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Home from './pages/Home';
 import { Toaster } from 'react-hot-toast';
 import useGetMyShop from './hooks/useGetMyShop';
@@ -22,11 +22,14 @@ import useGetMyOrders from './hooks/useGetMyOrders';
 import useUpdateLocation from './hooks/useUpdateLocation';
 import TrackOrderPage from './pages/TrackOrderPage';
 import RestaurantPage from './pages/RestaurantPage';
+import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+import { setSocket } from './redux/userSlice';
 
 const App = () => {
   const { loading: userLoading } = useGetCurrentUser();
   const { loading: locationLoading } = useGetLocation();
-  const { loading: shopLoading } = useGetMyShop(); // Get shop loading state
+  const { loading: shopLoading } = useGetMyShop();
   useGetShopByCity();
   useGetItemByCity();
   useGetMyOrders();
@@ -34,7 +37,30 @@ const App = () => {
 
   const { userData, city } = useSelector(state => state.user);
 
-  // Show loading while fetching user data, location, or shop data
+  const serverUrl = import.meta.env.VITE_BACKEND_URL;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const socketInstance = io(serverUrl, { withCredentials: true });
+
+    dispatch(setSocket(socketInstance));
+
+    socketInstance.on('connect', () => {
+      console.log('Socket connected:', socketInstance.id);
+      if (userData) {
+        socketInstance.emit('identity', { userId: userData._id });
+      }
+    });
+
+    if (userData && socketInstance.connected) {
+      socketInstance.emit('identity', { userId: userData._id });
+    }
+
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [userData?._id]);
+
   const isLoading =
     userLoading ||
     locationLoading ||
