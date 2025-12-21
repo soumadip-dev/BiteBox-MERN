@@ -247,13 +247,14 @@ const updateOrderStatusService = async (orderId, shopId, status, req) => {
     // Get the delivery boys who are near by 5 km
     const nearByDeliveryBoys = await User.find({
       role: 'deliveryBoy',
+      isOnline: true,
       location: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: [Number(longitude), Number(latitude)],
           },
-          $maxDistance: 5000, // 5 km
+          $maxDistance: 5000,
         },
       },
     });
@@ -291,6 +292,9 @@ const updateOrderStatusService = async (orderId, shopId, status, req) => {
       status: 'broadcasted',
     });
 
+    await deliveryAssignment.populate('order');
+    await deliveryAssignment.populate('shop');
+
     shopOrder.assignment = deliveryAssignment._id;
 
     shopOrder.assignedDeliveryBoy = deliveryAssignment.assignedTo;
@@ -305,6 +309,29 @@ const updateOrderStatusService = async (orderId, shopId, status, req) => {
       mobile: deliveryBoy.mobile,
       email: deliveryBoy.email,
     }));
+
+    const io = req.app.get('io');
+    if (io) {
+      availableDeliveryBoys.forEach(deliveryBoy => {
+        const deliveryBoySocketId = deliveryBoy.socketId;
+        if (deliveryBoySocketId) {
+          io.to(deliveryBoySocketId).emit('newOrderAssignment', {
+            assignmentId: deliveryAssignment._id,
+            sentTo: deliveryBoy._id,
+            orderId: deliveryAssignment.order?._id,
+            shopName: deliveryAssignment.shop.name,
+            deliveryAddress: deliveryAssignment.order?.deliveryAddress,
+            items:
+              deliveryAssignment.order?.shopOrders.find(
+                shop => shop._id.toString() === deliveryAssignment.shopOrderId.toString()
+              )?.shopOrderItems || [],
+            subtotal: deliveryAssignment.order?.shopOrders.find(
+              shop => shop._id.toString() === deliveryAssignment.shopOrderId.toString()
+            )?.subtotal,
+          });
+        }
+      });
+    }
   }
 
   await order.save();

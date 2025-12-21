@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { useSelector } from 'react-redux';
 import {
@@ -18,7 +18,7 @@ const DeliveryBoyDashboard = () => {
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
 
-  const { userData } = useSelector(state => state.user);
+  const { userData, socket } = useSelector(state => state.user);
 
   const getAssignment = async () => {
     const response = await getDeliveryBoyAssignment();
@@ -77,6 +77,18 @@ const DeliveryBoyDashboard = () => {
       toast.error(error?.message || 'An error occurred');
     }
   };
+
+  useEffect(() => {
+    socket.on('newOrderAssignment', data => {
+      if (data.sentTo === userData._id) {
+        setAvailableOrders(prev => [...prev, data]);
+      }
+    });
+
+    return () => {
+      socket.off('newOrderAssignment');
+    };
+  }, [socket]);
 
   useEffect(() => {
     getAssignment();

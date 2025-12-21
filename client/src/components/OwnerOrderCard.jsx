@@ -8,7 +8,6 @@ const OwnerOrderCard = ({ order }) => {
   const dispatch = useDispatch();
   const [availableBoys, setAvailableBoys] = useState([]);
 
-  // FIX: Handle both array and single object cases
   const getShopOrders = () => {
     if (!order?.shopOrders) return [];
     return Array.isArray(order.shopOrders) ? order.shopOrders : [order.shopOrders];
@@ -16,7 +15,6 @@ const OwnerOrderCard = ({ order }) => {
 
   const shopOrdersArray = getShopOrders();
 
-  // FIX: Update paymentStatus logic to handle array
   const paymentStatus =
     order?.paymentMethod === 'cod'
       ? shopOrdersArray.some(shopOrder => shopOrder?.status === 'delivered')
@@ -197,7 +195,7 @@ const OwnerOrderCard = ({ order }) => {
                 View available delivery boys for this order
               </p>
             </div>
-
+            {console.log('availableBoys😘😘😘😘😘', availableBoys)}
             {availableBoys.length > 0 ? (
               <div className="space-y-3">
                 {availableBoys.map((boy, index) => (
