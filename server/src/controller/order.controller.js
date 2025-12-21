@@ -47,7 +47,7 @@ const verifyPayment = async (req, res) => {
   try {
     const { OrderId, razorpayPaymentId } = req.body;
 
-    const order = await verifyPaymentService(OrderId, razorpayPaymentId);
+    const order = await verifyPaymentService(OrderId, razorpayPaymentId, req);
 
     res.status(200).json({
       message: 'Payment verified successfully',
@@ -91,7 +91,8 @@ const updateOrderStatus = async (req, res) => {
     const { updatedShopOrder, deliveryBoysPayload } = await updateOrderStatusService(
       orderId,
       shopId,
-      status
+      status,
+      req
     );
 
     res.status(200).json({

@@ -107,6 +107,23 @@ export const userSlice = createSlice({
       }
     },
 
+    updateShopOrderStatusRealTime: (state, action) => {
+      const { orderId, shopId, status } = action.payload;
+
+      // Find the order
+      const order = state.myOrders.find(order => order._id.toString() === orderId.toString());
+
+      if (order) {
+        const shopOrder = order.shopOrders.find(
+          so => so.shop?._id?.toString() === shopId.toString()
+        );
+
+        if (shopOrder) {
+          shopOrder.status = status;
+        }
+      }
+    },
+
     setSearchItems: (state, action) => {
       state.searchItems = action.payload;
     },
@@ -128,5 +145,6 @@ export const {
   updateShopOrderStatus,
   setSearchItems,
   setSocket,
+  updateShopOrderStatusRealTime,
 } = userSlice.actions;
 export default userSlice.reducer;

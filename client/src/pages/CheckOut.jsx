@@ -117,14 +117,19 @@ const CheckOut = () => {
       description: 'Food Delivery',
       handler: async function (response) {
         try {
-          const result = verifyPayment(orderId, response.razorpay_payment_id);
-          console.log(result);
-          dispatch(addMyOrder(result.data));
-          toast.success(result.message);
-          navigate('/order-placed');
+          const result = await verifyPayment(orderId, response.razorpay_payment_id); // Add await
+          console.log('Payment verification result:', result);
+
+          if (result.success && result.order) {
+            dispatch(addMyOrder(result.order)); // Use result.order
+            toast.success(result.message);
+            navigate('/order-placed');
+          } else {
+            toast.error(result.message || 'Payment verification failed');
+          }
         } catch (error) {
-          console.log(error);
-          toast.error(error.message);
+          console.log('Payment error:', error);
+          toast.error(error.message || 'Payment processing failed');
         }
       },
       theme: {

@@ -5,6 +5,28 @@ import User from '../model/user.model.js';
 import razorpayInstance from '../config/razorpay.config.js';
 import { ENV } from '../config/env.config.js';
 
+//* Helper function to emit order to owner
+const emitOrderToOwner = (io, order, eventName = 'newOrder') => {
+  if (!io) return;
+
+  order.shopOrders.forEach(shopOrder => {
+    const ownerSocketId = shopOrder.owner?.socketId;
+    if (ownerSocketId) {
+      io.to(ownerSocketId).emit(eventName, {
+        _id: order._id,
+        user: order.user,
+        paymentMethod: order.paymentMethod,
+        createdAt: order.createdAt,
+        deliveryAddress: order.deliveryAddress,
+        totalAmount: order.totalAmount,
+        updatedAt: order.updatedAt,
+        payment: order.payment, // Include payment status
+        shopOrders: shopOrder, // Single shopOrder for this owner
+      });
+    }
+  });
+};
+
 //* Service for placing Order
 const placeOrderService = async (
   cartItems,
@@ -98,28 +120,15 @@ const placeOrderService = async (
 
   const io = req.app.get('io');
 
+  // Emit new order to all shop owners
   if (io) {
-    newOrder.shopOrders.forEach(shopOrder => {
-      const ownerSocketId = shopOrder.owner.socketId;
-      if (ownerSocketId) {
-        io.to(ownerSocketId).emit('newOrder', {
-          _id: newOrder._id,
-          user: newOrder.user,
-          paymentMethod: newOrder.paymentMethod,
-          createdAt: newOrder.createdAt,
-          deliveryAddress: newOrder.deliveryAddress,
-          totalAmount: newOrder.totalAmount,
-          updatedAt: newOrder.updatedAt,
-          shopOrders: shopOrder,
-        });
-      }
-    });
+    emitOrderToOwner(io, newOrder, 'newOrder');
   }
   return newOrder;
 };
 
 //* Service for verifying payment
-const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
+const verifyPaymentService = async (OrderId, razorpayPaymentId, req) => {
   const payment = await razorpayInstance.payments.fetch(razorpayPaymentId);
   if (!payment || payment.status !== 'captured') {
     throw new Error('Payment Failed');
@@ -135,6 +144,15 @@ const verifyPaymentService = async (OrderId, razorpayPaymentId) => {
 
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+  await order.populate('user', 'name email mobile');
+  await order.populate('shopOrders.owner', 'name socketId');
+
+  const io = req.app.get('io');
+
+  // Emit new order to all shop owners after payment verification
+  if (io) {
+    emitOrderToOwner(io, order, 'newOrder');
+  }
 
   return order;
 };
@@ -174,6 +192,7 @@ const getOwnerOrdersService = async ownerId => {
       deliveryAddress: order.deliveryAddress,
       totalAmount: order.totalAmount,
       updatedAt: order.updatedAt,
+      payment: order.payment,
       shopOrders: order.shopOrders.filter(
         shopOrder => shopOrder.owner._id.toString() === ownerId.toString()
       ),
@@ -203,7 +222,7 @@ const getOrdersService = async (userId, userRole) => {
 };
 
 //* Service for updating order status
-const updateOrderStatusService = async (orderId, shopId, status) => {
+const updateOrderStatusService = async (orderId, shopId, status, req) => {
   const order = await Order.findById(orderId);
 
   if (!order) {
@@ -294,7 +313,18 @@ const updateOrderStatusService = async (orderId, shopId, status) => {
 
   await order.populate('shopOrders.shop', 'name');
   await order.populate('shopOrders.assignedDeliveryBoy', 'fullName email mobile');
+  await order.populate('user', 'socketId');
 
+  const io = req.app.get('io');
+
+  if (io) {
+    io.to(order.user.socketId).emit('updateOrderStatus', {
+      orderId: order._id,
+      shopId: updatedShopOrder.shop._id,
+      status: updatedShopOrder.status,
+      userId: order.user._id,
+    });
+  }
   return { updatedShopOrder, deliveryBoysPayload };
 };
 
