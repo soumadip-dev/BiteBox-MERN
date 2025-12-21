@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import UserOrderCard from '../components/UserOrderCard';
 import OwnerOrderCard from '../components/OwnerOrderCard';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,37 +6,29 @@ import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { FaReceipt } from 'react-icons/fa6';
 import { setMyOrders } from '../redux/userSlice.js';
-import { getOrders } from '../api/orderApi.js';
 
 const MyOrders = () => {
-  const { userData, myOrders } = useSelector(state => state.user);
+  const { userData, myOrders, socket } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
-    const fetchFreshOrders = async () => {
-      setIsLoading(true);
-      try {
-        const response = await getOrders();
-        if (response.success) {
-          dispatch(setMyOrders(response.orders || []));
-        } else {
-          console.error('Failed to fetch orders:', response.message);
-          dispatch(setMyOrders([]));
+    if (socket) {
+      socket.on('newOrder', order => {
+        if (order.shopOrders.owner._id === userData._id) {
+          dispatch(setMyOrders([...myOrders, order]));
         }
-      } catch (error) {
-        console.error('Error fetching orders:', error);
-        dispatch(setMyOrders([]));
-      } finally {
-        setIsLoading(false);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off('newOrder');
       }
     };
+  }, [socket, myOrders, userData, dispatch]);
 
-    fetchFreshOrders();
-  }, [dispatch]);
-
-  const validOrders = React.useMemo(() => {
+  const validOrders = useMemo(() => {
     if (!Array.isArray(myOrders)) {
       console.error('myOrders is not an array:', myOrders);
       return [];

@@ -11,7 +11,8 @@ const placeOrderService = async (
   paymentMethod,
   deliveryAddress,
   totalAmount,
-  userId
+  userId,
+  req
 ) => {
   if (cartItems.length === 0 || !cartItems) {
     throw new Error('Cart is empty');
@@ -82,7 +83,7 @@ const placeOrderService = async (
     return returnResponse;
   }
 
-  const order = await Order.create({
+  const newOrder = await Order.create({
     user: userId,
     paymentMethod,
     deliveryAddress,
@@ -90,10 +91,31 @@ const placeOrderService = async (
     shopOrders,
   });
 
-  await order.populate('shopOrders.shop', 'name');
-  await order.populate('shopOrders.shopOrderItems.item', 'name image price');
+  await newOrder.populate('shopOrders.shop', 'name');
+  await newOrder.populate('shopOrders.owner', 'name socketId');
+  await newOrder.populate('user', 'name email mobile');
+  await newOrder.populate('shopOrders.shopOrderItems.item', 'name image price');
 
-  return order;
+  const io = req.app.get('io');
+
+  if (io) {
+    newOrder.shopOrders.forEach(shopOrder => {
+      const ownerSocketId = shopOrder.owner.socketId;
+      if (ownerSocketId) {
+        io.to(ownerSocketId).emit('newOrder', {
+          _id: newOrder._id,
+          user: newOrder.user,
+          paymentMethod: newOrder.paymentMethod,
+          createdAt: newOrder.createdAt,
+          deliveryAddress: newOrder.deliveryAddress,
+          totalAmount: newOrder.totalAmount,
+          updatedAt: newOrder.updatedAt,
+          shopOrders: shopOrder,
+        });
+      }
+    });
+  }
+  return newOrder;
 };
 
 //* Service for verifying payment

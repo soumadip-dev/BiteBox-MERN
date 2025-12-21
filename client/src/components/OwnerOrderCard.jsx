@@ -8,9 +8,18 @@ const OwnerOrderCard = ({ order }) => {
   const dispatch = useDispatch();
   const [availableBoys, setAvailableBoys] = useState([]);
 
+  // FIX: Handle both array and single object cases
+  const getShopOrders = () => {
+    if (!order?.shopOrders) return [];
+    return Array.isArray(order.shopOrders) ? order.shopOrders : [order.shopOrders];
+  };
+
+  const shopOrdersArray = getShopOrders();
+
+  // FIX: Update paymentStatus logic to handle array
   const paymentStatus =
     order?.paymentMethod === 'cod'
-      ? order?.shopOrders?.some(shopOrder => shopOrder?.status === 'delivered')
+      ? shopOrdersArray.some(shopOrder => shopOrder?.status === 'delivered')
         ? 'PAID'
         : 'UNPAID'
       : 'PAID';
@@ -58,7 +67,7 @@ const OwnerOrderCard = ({ order }) => {
               Payment: {paymentStatus}
             </p>
             <p className="font-semibold text-blue-600 text-sm sm:text-base tracking-wide capitalize">
-              {order?.shopOrders[0]?.status}
+              {shopOrdersArray[0]?.status}
             </p>
           </div>
         </div>
@@ -78,7 +87,7 @@ const OwnerOrderCard = ({ order }) => {
       </div>
 
       <div className="space-y-4 sm:space-y-6">
-        {order?.shopOrders?.map((shopOrder, shopIndex) => (
+        {shopOrdersArray.map((shopOrder, shopIndex) => (
           <div key={shopOrder._id || shopIndex} className="space-y-3 sm:space-y-4">
             <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3">
               {shopOrder.shopOrderItems?.map((item, idx) => (
@@ -151,7 +160,6 @@ const OwnerOrderCard = ({ order }) => {
                     <option value="preparing">Preparing</option>
                     <option value="out for delivery">Out for delivery</option>
                   </select>
-                  {/* Custom dropdown arrow */}
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -169,8 +177,8 @@ const OwnerOrderCard = ({ order }) => {
         ))}
       </div>
 
-      {order?.shopOrders[0]?.status === 'out for delivery' &&
-        !order?.shopOrders[0]?.assignedDeliveryBoy && (
+      {shopOrdersArray[0]?.status === 'out for delivery' &&
+        !shopOrdersArray[0]?.assignedDeliveryBoy && (
           <div className="mt-4 sm:mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200 shadow-sm">
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -247,7 +255,7 @@ const OwnerOrderCard = ({ order }) => {
         <div className="flex justify-between items-center flex-wrap gap-2">
           <span className="text-gray-600 font-medium text-sm sm:text-base">Total Amount:</span>
           <span className="font-bold text-lg text-gray-900 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-            ₹{order?.shopOrders[0]?.subtotal}
+            ₹{shopOrdersArray[0]?.subtotal}
           </span>
         </div>
         <div className="flex justify-between items-center flex-wrap gap-2">

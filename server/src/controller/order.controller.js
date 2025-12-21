@@ -25,7 +25,8 @@ const placeOrder = async (req, res) => {
       paymentMethod,
       deliveryAddress,
       totalAmount,
-      userId
+      userId,
+      req
     );
 
     res.status(201).json({
