@@ -153,6 +153,19 @@ const submitRating = async function (itemId, rating) {
   }
 };
 
+//* Get today's deliveries
+const getTodayDeliveries = async function () {
+  try {
+    const response = await axiosInstance.get('/api/v1/order/get-today-deliveries');
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
 export {
   placeOrder,
   verifyPayment,
@@ -165,4 +178,5 @@ export {
   sendDeliveryBoyOtp,
   verifyDeliveryBoyOtp,
   submitRating,
+  getTodayDeliveries,
 };

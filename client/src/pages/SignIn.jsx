@@ -11,8 +11,8 @@ import toast from 'react-hot-toast';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    email: 'soumadipmajila@gmail.com',
-    password: '8Uh9M96cZq$',
+    email: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
