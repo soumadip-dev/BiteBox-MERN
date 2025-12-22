@@ -13,12 +13,15 @@ import {
 } from 'react-icons/fa';
 import { MdRestaurant, MdLocalShipping, MdPayments } from 'react-icons/md';
 import DeliveryBoyTracking from '../components/DeliveryBoyTracking';
+import { useSelector } from 'react-redux';
 
 const TrackOrderPage = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [currentOrder, setCurrentOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [liveLocation, setLiveLocation] = useState({});
+  const { userData, socket } = useSelector(state => state.user);
 
   const handleGetOrder = async orderId => {
     setIsLoading(true);
@@ -45,9 +48,14 @@ const TrackOrderPage = () => {
     }
   }, [orderId]);
 
+  useEffect(() => {
+    socket.on('updateDeliveryBoyLocation', ({ deliveryBoyId, latitude, longitude }) => {
+      setLiveLocation(prev => ({ ...prev, [deliveryBoyId]: { lat: latitude, lon: longitude } }));
+    });
+  }, [socket]);
+
   return (
     <div className="flex justify-center flex-col items-center p-3 sm:p-4 md:p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen w-full">
-      {/* Updated Upper Part to match MyOrders page */}
       <button
         className="absolute top-4 sm:top-5 md:top-6 left-3 sm:left-4 md:left-6 p-1.5 sm:p-2 rounded-full hover:bg-orange-50 transition-all duration-200 cursor-pointer group z-10"
         onClick={() => navigate('/my-orders')}
@@ -90,11 +98,9 @@ const TrackOrderPage = () => {
         </div>
       ) : currentOrder ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8 w-full max-w-6xl px-3 sm:px-4 md:px-0">
-          {/* Order Details Cards */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-5 md:space-y-6">
             {currentOrder?.shopOrders?.map((shopOrder, index) => (
               <div key={index} className="group">
-                {/* Restaurant Card */}
                 <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/70 overflow-hidden hover:shadow-xl transition-all duration-500 hover:border-orange-300/50">
                   <div className="p-4 sm:p-5 md:p-6 lg:p-8">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
@@ -121,7 +127,6 @@ const TrackOrderPage = () => {
                       </div>
                     </div>
 
-                    {/* Items List */}
                     <div className="mb-4 sm:mb-5 md:mb-6">
                       <div className="flex items-center gap-2 mb-3 sm:mb-4">
                         <FaShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
@@ -161,7 +166,6 @@ const TrackOrderPage = () => {
                       </div>
                     </div>
 
-                    {/* Delivery Address - Only show if not delivered */}
                     {shopOrder?.status !== 'delivered' && (
                       <div className="mb-4 sm:mb-5 md:mb-6">
                         <div className="flex items-start gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl border border-blue-200">
@@ -180,7 +184,6 @@ const TrackOrderPage = () => {
                       </div>
                     )}
 
-                    {/* Delivery Boy Info - Only show if not delivered */}
                     {shopOrder?.assignedDeliveryBoy && shopOrder?.status !== 'delivered' && (
                       <div className="mb-4 sm:mb-5 md:mb-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-5 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg sm:rounded-xl border border-orange-200">
@@ -213,7 +216,6 @@ const TrackOrderPage = () => {
                       </div>
                     )}
 
-                    {/* Waiting for delivery boy assignment - Only show if not delivered and no delivery boy assigned */}
                     {!shopOrder?.assignedDeliveryBoy && shopOrder?.status !== 'delivered' && (
                       <div className="p-4 sm:p-5 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl border border-gray-300 text-center">
                         <p className="text-gray-600 font-medium text-sm sm:text-base">
@@ -222,7 +224,6 @@ const TrackOrderPage = () => {
                       </div>
                     )}
 
-                    {/* Tracking Map - Only show if not delivered */}
                     {shopOrder?.assignedDeliveryBoy && shopOrder?.status !== 'delivered' && (
                       <div className="mt-4 sm:mt-5 md:mt-6">
                         <div className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -234,7 +235,9 @@ const TrackOrderPage = () => {
                         <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-gray-300 shadow-lg h-[250px] sm:h-[300px] md:h-[350px]">
                           <DeliveryBoyTracking
                             data={{
-                              deliveryBoyLocation: {
+                              deliveryBoyLocation: liveLocation[
+                                shopOrder.assignedDeliveryBoy._id
+                              ] || {
                                 lat: shopOrder?.assignedDeliveryBoy?.location?.coordinates[1],
                                 lon: shopOrder?.assignedDeliveryBoy?.location?.coordinates[0],
                               },
@@ -248,7 +251,6 @@ const TrackOrderPage = () => {
                       </div>
                     )}
 
-                    {/* Delivered Status Message */}
                     {shopOrder?.status === 'delivered' && (
                       <div className="mt-4 sm:mt-6 md:mt-7">
                         <div className="flex items-center gap-2 mb-3 sm:mb-4">
@@ -291,7 +293,6 @@ const TrackOrderPage = () => {
             ))}
           </div>
 
-          {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-4 sm:top-6 md:top-8">
               <div className="bg-gradient-to-b from-white to-gray-50 rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/70 p-4 sm:p-5 md:p-6">

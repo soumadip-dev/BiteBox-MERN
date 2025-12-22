@@ -17,8 +17,30 @@ const DeliveryBoyDashboard = () => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
+  const [deliveryLocation, setDeliveryLocation] = useState(null);
 
   const { userData, socket } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (!socket || userData.role !== 'deliveryBoy') return;
+    let watchId;
+    if (navigator.geolocation) {
+      (watchId = navigator.geolocation.watchPosition(position => {
+        const { latitude, longitude } = position.coords;
+        setDeliveryLocation({ lat: latitude, lon: longitude });
+        socket.emit('updateLocation', { latitude, longitude, userId: userData._id });
+      })),
+        error => {
+          toast.error(error?.message || 'GeoLocation is not supported');
+        },
+        {
+          enableHighAccuracy: true,
+        };
+    }
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [socket, userData]);
 
   const getAssignment = async () => {
     const response = await getDeliveryBoyAssignment();
@@ -122,7 +144,9 @@ const DeliveryBoyDashboard = () => {
                 <div className="min-w-0">
                   <p className="text-xs xs:text-sm text-gray-600 font-medium truncate">Latitude</p>
                   <p className="text-gray-900 font-mono text-xs xs:text-sm sm:text-base font-semibold truncate">
-                    {userData?.location?.coordinates[1]?.toFixed(6) || 'N/A'}
+                    {deliveryLocation?.lat.toFixed(6) ||
+                      userData?.location?.coordinates[1]?.toFixed(6) ||
+                      'N/A'}
                   </p>
                 </div>
               </div>
@@ -132,7 +156,9 @@ const DeliveryBoyDashboard = () => {
                 <div className="min-w-0">
                   <p className="text-xs xs:text-sm text-gray-600 font-medium truncate">Longitude</p>
                   <p className="text-gray-900 font-mono text-xs xs:text-sm sm:text-base font-semibold truncate">
-                    {userData?.location?.coordinates[0]?.toFixed(6) || 'N/A'}
+                    {deliveryLocation?.lon.toFixed(6) ||
+                      userData?.location?.coordinates[0]?.toFixed(6) ||
+                      'N/A'}
                   </p>
                 </div>
               </div>
@@ -364,7 +390,18 @@ const DeliveryBoyDashboard = () => {
                   </div>
 
                   <div className="lg:col-span-2">
-                    <DeliveryBoyTracking data={currentOrder} />
+                    <DeliveryBoyTracking
+                      data={{
+                        deliveryBoyLocation: deliveryLocation || {
+                          lat: userData?.location?.coordinates[1],
+                          lon: userData?.location?.coordinates[0],
+                        },
+                        customerLocation: {
+                          lat: currentOrder?.deliveryAddress?.latitude,
+                          lon: currentOrder?.deliveryAddress?.longitude,
+                        },
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -399,11 +436,17 @@ const DeliveryBoyDashboard = () => {
                         </label>
                         <input
                           value={otp}
-                          onChange={e => setOtp(e.target.value)}
-                          type="number"
+                          onChange={e => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            if (value.length <= 6) setOtp(value);
+                          }}
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           placeholder="Enter 6-digit OTP"
                           className="w-full border border-gray-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 px-3 xs:px-4 sm:px-5 py-2.5 xs:py-3 sm:py-3.5 rounded-lg xs:rounded-xl text-sm xs:text-base sm:text-lg transition-all duration-200 outline-none"
                         />
+
                         <p className="text-xs xs:text-sm text-gray-500 mt-1.5 xs:mt-2 sm:mt-3">
                           Check customer's phone for the verification code
                         </p>
