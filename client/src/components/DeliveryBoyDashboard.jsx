@@ -18,6 +18,26 @@ const DeliveryBoyDashboard = () => {
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
 
+  useEffect(() => {
+    if (!socket || userData.role !== 'deliveryBoy') return;
+    let watchId;
+    if (navigator.geolocation) {
+      (watchId = navigator.geolocation.watchPosition(position => {
+        const { latitude, longitude } = position.coords;
+        socket.emit('updateLocation', { latitude, longitude, userId: userData._id });
+      })),
+        error => {
+          toast.error(error?.message || 'GeoLocation is not supported');
+        },
+        {
+          enableHighAccuracy: true,
+        };
+    }
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [socket, userData]);
+
   const { userData, socket } = useSelector(state => state.user);
 
   const getAssignment = async () => {
