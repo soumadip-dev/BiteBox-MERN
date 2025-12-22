@@ -251,6 +251,28 @@ const verifyDeliveryBoyOtp = async (req, res) => {
   }
 };
 
+//* Controller for getting today's deliveries
+const getTodayDeliveries = async (req, res) => {
+  try {
+    const deliveryBoyId = req.userId;
+    const startsOfDay = new Date();
+    startsOfDay.setHours(0, 0, 0, 0);
+
+    const stats = await getTodayDeliveriesService(deliveryBoyId, startsOfDay);
+
+    return res.status(200).json({
+      message: 'Deliveries fetched successfully',
+      success: true,
+      stats,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message || 'Something went wrong',
+      success: false,
+    });
+  }
+};
+
 //* Export controllers
 export {
   placeOrder,
@@ -263,4 +285,5 @@ export {
   sendDeliveryBoyOtp,
   verifyDeliveryBoyOtp,
   verifyPayment,
+  getTodayDeliveries,
 };
