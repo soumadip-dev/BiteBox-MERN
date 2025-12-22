@@ -6,6 +6,8 @@
   A full-stack MERN food delivery application with real-time order tracking, Razorpay payments, Firebase OAuth, Brevo mail service, and a modern UI for customers and admins.
 </p>
 
+## User Role
+
 <table align="center">
   <tr>
     <td align="center">
@@ -15,7 +17,7 @@
       <img src="./client/public/02_user_cart.png" alt="User Cart" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/03_user_checkout.png" alt="User Checkout" height="300">
+      <img src="./client/public/03_user_check-out.png" alt="User Checkout" height="300">
     </td>
     <td align="center">
       <img src="./client/public/04_user_order_tracking.png" alt="User Order Tracking" height="300">

@@ -207,9 +207,6 @@ const Navbar = () => {
               >
                 <TbReceipt2 size={20} className="lg:size-5 flex-shrink-0" />
                 <span className="text-sm lg:text-base">My Orders</span>
-                <span className="absolute -right-2 -top-2 text-xs font-black text-white bg-[#ff4d2d] rounded-full w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center shadow-lg">
-                  0
-                </span>
               </button>
               <div
                 className="md:hidden flex items-center justify-center w-10 h-10 cursor-pointer relative rounded-2xl bg-[#ff4d2d]/10 text-[#ff4d2d] font-semibold hover:bg-[#ff4d2d]/20 transition-all duration-300 shadow-lg hover:shadow-xl"
