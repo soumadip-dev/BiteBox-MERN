@@ -11,7 +11,6 @@ export const socketHandler = async io => {
           { socketId: socket.id, isOnline: true },
           { new: true }
         );
-        console.log('User online status updated ✅:', data.userId);
       } catch (error) {
         console.error('Identity event error ❌:', error);
       }
@@ -20,9 +19,24 @@ export const socketHandler = async io => {
     socket.on('disconnect', async () => {
       try {
         await User.findOneAndUpdate({ socketId: socket.id }, { socketId: null, isOnline: false });
-        console.log('User offline ✅:', socket.id);
       } catch (error) {
         console.error('Disconnect event error ❌:', error);
+      }
+    });
+
+    socket.on('updateLocation', async data => {
+      try {
+        const { latitude, longitude, userId } = data;
+        const user = await User.findByIdAndUpdate(userId, {
+          location: { type: 'Point', coordinates: [longitude, latitude] },
+          socketId: socket.id,
+          isOnline: true,
+        });
+        if (user) {
+          io.emit('updateDeliveryBoyLocation', { deliveryBoyId: userId, latitude, longitude });
+        }
+      } catch (error) {
+        console.error('Update location error ❌:', error);
       }
     });
   });
