@@ -573,6 +573,50 @@ const verifyDeliveryBoyOtpService = async (orderId, shopOrderId, otp) => {
   });
 };
 
+//* Service for getting today's deliveries
+const getTodayDeliveriesService = async (deliveryBoyId, startsOfDay) => {
+  const orders = await Order.find({
+    shopOrders: {
+      $elemMatch: {
+        assignedDeliveryBoy: deliveryBoyId,
+        status: 'delivered',
+        deliveredAt: { $gte: startsOfDay },
+      },
+    },
+  }).lean();
+
+  let todaysDeliveries = [];
+  orders.forEach(order => {
+    order.shopOrders.forEach(shopOrder => {
+      if (
+        shopOrder.assignedDeliveryBoy &&
+        shopOrder.assignedDeliveryBoy.toString() === deliveryBoyId &&
+        shopOrder.status === 'delivered' &&
+        shopOrder.deliveredAt &&
+        shopOrder.deliveredAt >= startsOfDay
+      ) {
+        todaysDeliveries.push(shopOrder);
+      }
+    });
+  });
+
+  let stats = {};
+
+  todaysDeliveries.forEach(shopOrder => {
+    const hour = new Date(shopOrder.deliveredAt).getHours();
+    stats[hour] = (stats[hour] || 0) + 1;
+  });
+
+  let formatedStats = Object.keys(stats).map(hour => ({
+    hour: parseInt(hour),
+    count: stats[hour],
+  }));
+
+  formatedStats.sort((a, b) => a.hour - b.hour);
+
+  return formatedStats;
+};
+
 //* Export services
 export {
   placeOrderService,
@@ -585,4 +629,5 @@ export {
   sendDeliveryBoyOtpService,
   verifyDeliveryBoyOtpService,
   verifyPaymentService,
+  getTodayDeliveriesService,
 };
