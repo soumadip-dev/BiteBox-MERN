@@ -21,7 +21,7 @@ const TrackOrderPage = () => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [liveLocation, setLiveLocation] = useState({});
-  const { userData, socket } = useSelector(state => state.user);
+  const { socket } = useSelector(state => state.user);
 
   const handleGetOrder = async orderId => {
     setIsLoading(true);
@@ -319,21 +319,6 @@ const TrackOrderPage = () => {
                         0
                       )}
                     </span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-100">
-                    <span className="text-gray-600 text-sm sm:text-base">Subtotal</span>
-                    <span className="font-bold text-gray-900 text-sm sm:text-base">
-                      ₹
-                      {currentOrder?.shopOrders
-                        ?.reduce((acc, order) => acc + (order?.subtotal || 0), 0)
-                        ?.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-100">
-                    <span className="text-gray-600 text-sm sm:text-base">Delivery Fee</span>
-                    <span className="font-bold text-green-600 text-sm sm:text-base">FREE</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-2 sm:pt-3">

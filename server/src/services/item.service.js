@@ -163,6 +163,8 @@ const giveRatingService = async (itemId, rating) => {
   item.rating.average = newAverage;
   item.rating.count = newCount;
 
+  // console.log("UPDATED ITEM",item);
+
   await item.save();
 
   const returnedRating = item.rating;

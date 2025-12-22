@@ -1,7 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 
 //* Register user
-export const placeOrder = async function (orderData) {
+const placeOrder = async function (orderData) {
   try {
     const response = await axiosInstance.post('/api/v1/order/place-order', orderData);
     return response.data;
@@ -14,7 +14,7 @@ export const placeOrder = async function (orderData) {
 };
 
 //* Verify payment
-export const verifyPayment = async function (orderId, razorpayPaymentId) {
+const verifyPayment = async function (orderId, razorpayPaymentId) {
   try {
     const response = await axiosInstance.post('/api/v1/order/verify-payment', {
       OrderId: orderId,
@@ -30,7 +30,7 @@ export const verifyPayment = async function (orderId, razorpayPaymentId) {
 };
 
 //* Get orders
-export const getOrders = async function () {
+const getOrders = async function () {
   try {
     const response = await axiosInstance.get('/api/v1/order/get-orders');
     return response.data;
@@ -43,7 +43,7 @@ export const getOrders = async function () {
 };
 
 //* Update order status
-export const updateOrderStatus = async function (orderId, shopId, status) {
+const updateOrderStatus = async function (orderId, shopId, status) {
   try {
     const response = await axiosInstance.put(
       `/api/v1/order/update-order-status/${orderId}/${shopId}`,
@@ -59,7 +59,7 @@ export const updateOrderStatus = async function (orderId, shopId, status) {
 };
 
 //* Get delivery boy assignment
-export const getDeliveryBoyAssignment = async function () {
+const getDeliveryBoyAssignment = async function () {
   try {
     const response = await axiosInstance.get('/api/v1/order/get-delivery-boy-assignment');
     return response.data;
@@ -72,7 +72,7 @@ export const getDeliveryBoyAssignment = async function () {
 };
 
 //* Accept order
-export const acceptTheOrder = async function (assignmentId) {
+const acceptTheOrder = async function (assignmentId) {
   try {
     const response = await axiosInstance.put(`/api/v1/order/accept-order/${assignmentId}`);
     return response.data;
@@ -85,7 +85,7 @@ export const acceptTheOrder = async function (assignmentId) {
 };
 
 //* Get current order
-export const getTheCurrentOrder = async function () {
+const getTheCurrentOrder = async function () {
   try {
     const response = await axiosInstance.get('/api/v1/order/get-current-order');
     return response.data;
@@ -98,7 +98,7 @@ export const getTheCurrentOrder = async function () {
 };
 
 //* Get order by id
-export const getOrderById = async function (orderId) {
+const getOrderById = async function (orderId) {
   try {
     const response = await axiosInstance.get(`/api/v1/order/get-order-by-id/${orderId}`);
     return response.data;
@@ -111,7 +111,7 @@ export const getOrderById = async function (orderId) {
 };
 
 //* Send delivery boy OTP
-export const sendDeliveryBoyOtp = async function (orderId, shopOrderId) {
+const sendDeliveryBoyOtp = async function (orderId, shopOrderId) {
   try {
     const response = await axiosInstance.post('/api/v1/order/send-otp', { orderId, shopOrderId });
     return response.data;
@@ -124,7 +124,7 @@ export const sendDeliveryBoyOtp = async function (orderId, shopOrderId) {
 };
 
 //* Verify delivery boy OTP
-export const verifyDeliveryBoyOtp = async function (orderId, shopOrderId, otp) {
+const verifyDeliveryBoyOtp = async function (orderId, shopOrderId, otp) {
   try {
     const response = await axiosInstance.post('/api/v1/order/verify-otp', {
       orderId,
@@ -138,4 +138,31 @@ export const verifyDeliveryBoyOtp = async function (orderId, shopOrderId, otp) {
     }
     return { success: false, message: 'Network error occurred' };
   }
+};
+
+//* submit rating
+const submitRating = async function (itemId, rating) {
+  try {
+    const response = await axiosInstance.post('/api/v1/item/rating', { itemId, rating });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { success: false, message: 'Network error occurred' };
+  }
+};
+
+export {
+  placeOrder,
+  verifyPayment,
+  getOrders,
+  updateOrderStatus,
+  getDeliveryBoyAssignment,
+  acceptTheOrder,
+  getTheCurrentOrder,
+  getOrderById,
+  sendDeliveryBoyOtp,
+  verifyDeliveryBoyOtp,
+  submitRating,
 };
