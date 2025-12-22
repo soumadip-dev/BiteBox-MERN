@@ -106,7 +106,6 @@ const UserDashboard = () => {
           </div>
         </div>
       )}
-      {/* Categories Section */}
       <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
         <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
           <span className="text-[#ff4d2d] text-xl">🍽️</span>
@@ -129,7 +128,6 @@ const UserDashboard = () => {
             ref={categoriScrollRef}
             onScroll={checkCategoryScrollButtons}
           >
-            {/* Add "All" category card */}
             <CategoryCard
               data={{
                 image:
@@ -140,7 +138,6 @@ const UserDashboard = () => {
               onClick={() => handleFilterByCategory('All')}
             />
 
-            {/* Map through categories */}
             {categories.map((category, index) => (
               <CategoryCard
                 key={index}
@@ -163,7 +160,6 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      {/* Shops in City Section */}
       <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
         <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
           <span className="text-[#ff4d2d] text-xl">🏪</span>
@@ -231,7 +227,6 @@ const UserDashboard = () => {
         )}
       </div>
 
-      {/* Suggested Food Items */}
       <div className="w-full max-w-6xl flex flex-col gap-6 items-start px-4 py-8 sm:px-6 sm:py-10 mx-auto">
         <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
           <span className="text-[#ff4d2d] text-xl">🍕</span>

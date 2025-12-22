@@ -37,7 +37,6 @@ const OwnerDashboard = () => {
 
       {myShopData && (
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6">
-          {/* Header Section */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 shadow-sm border border-orange-100">
               <FaUtensils className="text-[#ff4d2d] w-6 h-6" />
@@ -45,7 +44,6 @@ const OwnerDashboard = () => {
             </div>
           </div>
 
-          {/* Shop Card */}
           <div className="bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden mb-8 transition-all duration-300 hover:shadow-md">
             <div className="relative group">
               <div className="absolute top-4 right-4 z-20">
@@ -96,12 +94,10 @@ const OwnerDashboard = () => {
             </div>
           </div>
 
-          {/* Food Items Section Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-900">Menu Items</h2>
           </div>
 
-          {/* Food Items List */}
           {myShopData.items.length === 0 ? (
             <div className="max-w-md mx-auto bg-white rounded-xl p-6 border border-orange-100 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col items-center text-center space-y-5">

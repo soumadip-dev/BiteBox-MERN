@@ -107,7 +107,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Fixed Navigation Bar */}
       <nav className="w-full h-16 md:h-20 flex items-center justify-between md:justify-center gap-4 md:gap-8 px-4 md:px-6 fixed top-0 z-[9999] bg-[#fff9f6] backdrop-blur-sm border-b border-gray-100">
         {showSearch && (
           <div className="w-[calc(100%-2rem)] h-16 md:h-[70px] bg-white shadow-2xl rounded-xl items-center gap-4 md:gap-6 flex fixed top-16 md:top-20 left-4 md:left-[5%] z-[10000] px-4 md:px-5 border border-gray-100">
@@ -138,7 +137,6 @@ const Navbar = () => {
           BiteBox
         </h1>
 
-        {/* Main search and location bar - hidden on mobile */}
         {shouldShowLocation && (
           <div
             className={`${
@@ -167,7 +165,6 @@ const Navbar = () => {
         )}
 
         <div className="flex items-center gap-2 md:gap-4 lg:gap-5 flex-shrink-0">
-          {/* Mobile search toggle - only for users */}
           {showSearch && shouldShowSearch ? (
             <RxCross2
               onClick={() => setShowSearch(false)}
@@ -226,7 +223,6 @@ const Navbar = () => {
             </>
           ) : userData?.role === 'delivery' ? (
             <>
-              {/* Delivery Boy - Receipt Icon */}
               {shouldShowReceipt && (
                 <>
                   <button
@@ -253,7 +249,6 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* Show cart only for users */}
               {shouldShowCart && (
                 <div
                   className="relative cursor-pointer p-2 hover:scale-110 transition-transform flex-shrink-0"

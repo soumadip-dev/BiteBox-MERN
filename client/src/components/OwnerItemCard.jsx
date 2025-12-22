@@ -41,7 +41,6 @@ const OwnerItemCard = ({ data }) => {
   return (
     <>
       <div className="flex items-center bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden w-full transition-all duration-300 hover:shadow-md hover:border-orange-200">
-        {/* Image Container */}
         <div className="w-28 h-28 flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 relative m-4 rounded-xl overflow-hidden">
           <img
             src={
@@ -52,7 +51,6 @@ const OwnerItemCard = ({ data }) => {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
-          {/* Enhanced Food Type Badge with Icons */}
           <div className="absolute top-3 left-3">
             <div
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border backdrop-blur-sm ${
@@ -71,9 +69,7 @@ const OwnerItemCard = ({ data }) => {
           </div>
         </div>
 
-        {/* Content Section */}
         <div className="flex flex-1 items-center justify-between pr-6 py-6">
-          {/* Item Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
               <h3 className="text-xl font-bold text-gray-900 truncate pr-2">{data.name}</h3>
@@ -88,7 +84,6 @@ const OwnerItemCard = ({ data }) => {
             </div>
           </div>
 
-          {/* Enhanced Actions */}
           <div className="flex gap-2 ml-6">
             <button
               className="p-3.5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
@@ -111,18 +106,14 @@ const OwnerItemCard = ({ data }) => {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
             onClick={closeDeleteModal}
           />
 
-          {/* Modal */}
           <div className="relative bg-white rounded-2xl border border-orange-100 shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">
-            {/* Header */}
             <div className="p-6 border-b border-orange-100">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-red-50 rounded-xl border border-red-200">
@@ -144,7 +135,6 @@ const OwnerItemCard = ({ data }) => {
               </div>
             </div>
 
-            {/* Body */}
             <div className="p-6">
               <p className="text-gray-600 leading-relaxed">
                 Are you sure you want to delete{' '}
@@ -153,7 +143,6 @@ const OwnerItemCard = ({ data }) => {
               </p>
             </div>
 
-            {/* Footer */}
             <div className="flex gap-3 p-6 border-t border-orange-100">
               <button
                 onClick={closeDeleteModal}

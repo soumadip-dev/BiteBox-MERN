@@ -79,7 +79,6 @@ const SignIn = () => {
       style={{ backgroundColor: themeColors.background }}
     >
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex w-full max-w-5xl">
-        {/* Left Side - Form Card */}
         <div className="w-full md:w-1/2 p-6 md:p-8 lg:p-10">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
@@ -90,7 +89,6 @@ const SignIn = () => {
             <p className="text-gray-600">Welcome back! Sign in to continue your food journey.</p>
           </div>
 
-          {/* Input Fields */}
           {['email', 'password'].map(field => (
             <div className="mb-5 relative" key={field}>
               <label htmlFor={field} className="block text-gray-700 font-medium mb-2 capitalize">
@@ -122,14 +120,7 @@ const SignIn = () => {
             </div>
           ))}
 
-          {/* Forgot Password */}
           <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center">
-              <input type="checkbox" id="remember" className="mr-2" />
-              <label htmlFor="remember" className="text-sm text-gray-600">
-                Remember me
-              </label>
-            </div>
             <Link
               to="/forgot-password"
               className="text-sm font-medium hover:underline"
@@ -139,7 +130,6 @@ const SignIn = () => {
             </Link>
           </div>
 
-          {/* Sign In Button */}
           <button
             className="w-full text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50"
             style={{ backgroundColor: themeColors.primary }}
@@ -158,14 +148,12 @@ const SignIn = () => {
             )}
           </button>
 
-          {/* Divider */}
           <div className="relative flex items-center justify-center my-6">
             <div className="flex-grow border-t" style={{ borderColor: themeColors.border }}></div>
             <span className="mx-4 text-gray-500 text-sm bg-white px-2">or continue with</span>
             <div className="flex-grow border-t" style={{ borderColor: themeColors.border }}></div>
           </div>
 
-          {/* Google Sign In */}
           <button
             className="w-full flex items-center justify-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 border shadow-sm hover:shadow-md cursor-pointer hover:bg-gray-50"
             onClick={handleGoogleSignin}
@@ -174,7 +162,6 @@ const SignIn = () => {
             <span className="font-medium">Sign in with Google</span>
           </button>
 
-          {/* No account yet */}
           <p className="mt-8 text-center text-gray-600">
             Don't have an account?{' '}
             <Link
@@ -187,7 +174,6 @@ const SignIn = () => {
           </p>
         </div>
 
-        {/* Right Side - Image Section */}
         <div className="hidden md:flex md:w-1/2 relative overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -206,7 +192,6 @@ const SignIn = () => {
             ></div>
           </div>
 
-          {/* Overlay Content */}
           <div className="relative z-10 p-8 flex flex-col justify-end h-full text-white">
             <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6">
               <h2 className="text-2xl font-bold mb-3">Delicious Indian Cuisine Awaits</h2>

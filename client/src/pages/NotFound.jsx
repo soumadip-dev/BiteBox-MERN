@@ -8,7 +8,6 @@ const NotFound = () => {
   return (
     <div className="flex justify-center items-center p-6 bg-gradient-to-br from-orange-50 to-white min-h-screen">
       <div className="max-w-lg w-full text-center">
-        {/* 404 Illustration */}
         <div className="relative mb-8">
           <div className="flex items-center justify-center space-x-6 mb-8">
             <div className="text-5xl transform hover:scale-110 transition-transform duration-300">
@@ -22,7 +21,6 @@ const NotFound = () => {
             </div>
           </div>
 
-          {/* Animated Elements */}
           <div className="flex justify-center space-x-4 mb-6">
             <div className="w-4 h-4 bg-orange-400 rounded-full animate-bounce"></div>
             <div
@@ -36,7 +34,6 @@ const NotFound = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Oops! Lost your way?</h1>
           <p className="text-gray-600 text-lg mb-4 leading-relaxed">
@@ -46,7 +43,6 @@ const NotFound = () => {
             Let's get you back to familiar territory where the good stuff is!
           </p>
 
-          {/* Navigation Illustration */}
           <div className="flex justify-center mb-8">
             <div className="relative">
               <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-red-100 rounded-2xl flex items-center justify-center shadow-lg border border-orange-200">
@@ -61,7 +57,6 @@ const NotFound = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => navigate(-1)}
@@ -79,7 +74,6 @@ const NotFound = () => {
           </button>
         </div>
 
-        {/* Footer Note */}
         <div className="mt-12">
           <p className="text-gray-400 text-sm">
             Can't find what you're looking for? Contact support

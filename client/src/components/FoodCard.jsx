@@ -34,7 +34,6 @@ const FoodCard = ({ data }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-orange-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-orange-200 group w-full max-w-sm min-w-[280px]">
-      {/* Image Container - Reduced Height */}
       <div className="relative h-40 w-full overflow-hidden">
         <div className="absolute top-3 left-3 z-10">
           <div
@@ -61,24 +60,19 @@ const FoodCard = ({ data }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
 
-      {/* Content Container - Reduced Padding and Height */}
       <div className="p-3 min-h-[120px] flex flex-col">
         <div className="space-y-2 flex-1">
-          {/* Title - Reduced height */}
           <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2 min-h-[2.5rem] overflow-hidden">
             {data.name}
           </h3>
 
-          {/* Rating - Compact spacing */}
           <div className="flex items-center gap-1 h-4">
             {renderStars(data.rating?.average || 0)}
           </div>
 
-          {/* Price and Actions - Reduced height */}
           <div className="flex items-center justify-between h-10">
             <span className="text-xl font-bold text-gray-900 whitespace-nowrap">₹{data.price}</span>
 
-            {/* Combined Quantity Controls and Add to Cart */}
             <div className="flex items-center border border-orange-200 rounded-lg overflow-hidden bg-orange-50">
               <button
                 className="px-2 py-1.5 transition-colors text-gray-700 flex items-center justify-center w-8 hover:text-orange-600 cursor-pointer"

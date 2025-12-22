@@ -61,7 +61,6 @@ const RestaurantPage = () => {
     <div className="bg-gradient-to-br from-orange-50 to-white min-h-screen">
       {loading ? (
         <div className="flex flex-col items-center justify-center min-h-screen p-6">
-          {/* Skeleton for Header */}
           <div className="w-full max-w-7xl mb-8">
             <div className="relative w-full h-64 md:h-80 lg:h-96 bg-gray-300 rounded-2xl animate-pulse">
               <div className="absolute inset-0 flex flex-col justify-center items-center">
@@ -72,7 +71,6 @@ const RestaurantPage = () => {
             </div>
           </div>
 
-          {/* Skeleton for Menu */}
           <div className="max-w-7xl w-full mx-auto px-6">
             <div className="flex items-center justify-center gap-3 mb-10">
               <div className="w-10 h-10 bg-gray-300 rounded-full"></div>

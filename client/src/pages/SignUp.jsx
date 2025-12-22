@@ -95,7 +95,6 @@ const SignUp = () => {
       style={{ backgroundColor: themeColors.background }}
     >
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex w-full max-w-5xl my-4">
-        {/* Left Side - Image Section */}
         <div className="hidden md:flex md:w-1/2 relative overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -114,7 +113,6 @@ const SignUp = () => {
             ></div>
           </div>
 
-          {/* Overlay Content */}
           <div className="relative z-10 p-8 flex flex-col justify-end h-full text-white">
             <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-6">
               <h2 className="text-2xl font-bold mb-3">Join Our Food Community</h2>
@@ -146,7 +144,6 @@ const SignUp = () => {
           </div>
         </div>
 
-        {/* Right Side - Form Card */}
         <div className="w-full md:w-1/2 p-6 md:p-8">
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-2">
@@ -159,7 +156,6 @@ const SignUp = () => {
             </p>
           </div>
 
-          {/* Input Fields - Compact */}
           {['fullName', 'email', 'mobile', 'password'].map(field => (
             <div className="mb-4 relative" key={field}>
               <label
@@ -204,7 +200,6 @@ const SignUp = () => {
             </div>
           ))}
 
-          {/* Role Selector - Compact */}
           <div className="mb-5">
             <label className="block text-gray-700 font-medium mb-1 text-sm">
               I want to join as a
@@ -236,37 +231,6 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Terms and Conditions */}
-          <div className="mb-5">
-            <div className="flex items-start">
-              <input
-                type="checkbox"
-                id="terms"
-                className="mr-2 mt-0.5"
-                style={{ accentColor: themeColors.primary }}
-              />
-              <label htmlFor="terms" className="text-xs text-gray-600">
-                I agree to the{' '}
-                <Link
-                  to="/terms"
-                  className="font-medium hover:underline"
-                  style={{ color: themeColors.primary }}
-                >
-                  Terms
-                </Link>{' '}
-                and{' '}
-                <Link
-                  to="/privacy"
-                  className="font-medium hover:underline"
-                  style={{ color: themeColors.primary }}
-                >
-                  Privacy Policy
-                </Link>
-              </label>
-            </div>
-          </div>
-
-          {/* Sign Up Button */}
           <button
             className="w-full text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-200 shadow hover:shadow-md cursor-pointer disabled:opacity-50 mb-3 text-sm"
             style={{ backgroundColor: themeColors.primary }}
@@ -285,14 +249,12 @@ const SignUp = () => {
             )}
           </button>
 
-          {/* Divider */}
           <div className="relative flex items-center justify-center my-4">
             <div className="flex-grow border-t" style={{ borderColor: themeColors.border }}></div>
             <span className="mx-3 text-gray-500 text-xs bg-white px-2">or sign up with</span>
             <div className="flex-grow border-t" style={{ borderColor: themeColors.border }}></div>
           </div>
 
-          {/* Google Sign Up */}
           <button
             className="w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 transition-all duration-200 border shadow-sm hover:shadow cursor-pointer hover:bg-gray-50 text-sm"
             onClick={handleGoogleSignup}
@@ -301,7 +263,6 @@ const SignUp = () => {
             <span className="font-medium">Sign up with Google</span>
           </button>
 
-          {/* Already have account */}
           <p className="mt-6 text-center text-gray-600 text-sm">
             Already have an account?{' '}
             <Link
@@ -315,7 +276,6 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* Mobile Modal */}
       <MobileModal
         isOpen={isMobileModalOpen}
         onClose={() => setIsMobileModalOpen(false)}

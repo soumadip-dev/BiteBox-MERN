@@ -119,7 +119,6 @@ const ForgotPassword = () => {
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#FFF9F6]">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8">
-        {/* Header with Back Button */}
         <div className="flex items-center gap-4 mb-4">
           <IoIosArrowRoundBack
             size={30}
@@ -128,7 +127,7 @@ const ForgotPassword = () => {
           />
           <h1 className="text-[#ff4d2d] text-2xl font-bold text-center">Forgot Password</h1>
         </div>
-        {/* Step 1: Enter Email */}
+
         {step === 1 && (
           <div>
             <div className="mb-4">
@@ -155,7 +154,7 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-        {/* Step 2: Verify OTP */}
+
         {step === 2 && (
           <div>
             <div className="mb-6">
@@ -202,11 +201,9 @@ const ForgotPassword = () => {
             </button>
           </div>
         )}
-        {/* Step 3: Reset Password */}
 
         {step === 3 && (
           <div>
-            {/* New Password Input */}
             <div className="mb-6 relative">
               <label htmlFor="newPassword" className="block text-gray-700 font-medium mb-1">
                 New Password
@@ -226,7 +223,6 @@ const ForgotPassword = () => {
               </span>
             </div>
 
-            {/* Confirm Password Input */}
             <div className="mb-6 relative">
               <label htmlFor="confirmPassword" className="block text-gray-700 font-medium mb-1">
                 Confirm Password

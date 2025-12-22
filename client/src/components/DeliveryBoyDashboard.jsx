@@ -122,7 +122,6 @@ const DeliveryBoyDashboard = () => {
       <Navbar />
       <div className="w-full min-h-screen bg-gradient-to-b from-[#fff9f6] to-white px-3 xs:px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8 pt-16 sm:pt-20 md:pt-24">
         <div className="max-w-7xl mx-auto">
-          {/* Welcome Header */}
           <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 xs:gap-4 sm:gap-6 bg-white rounded-xl sm:rounded-2xl px-4 xs:px-5 sm:px-6 md:px-8 py-4 xs:py-5 sm:py-6 shadow-sm border border-orange-100 mb-6 sm:mb-8">
             <div className="flex items-center gap-3 xs:gap-4 sm:gap-5 mb-3 xs:mb-0">
               <div className="bg-gradient-to-br from-orange-100 to-amber-100 p-2.5 xs:p-3 sm:p-3.5 rounded-lg xs:rounded-xl border border-orange-200">
@@ -167,7 +166,6 @@ const DeliveryBoyDashboard = () => {
 
           {!currentOrder && (
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
-              {/* Section Header */}
               <div className="border-b border-orange-100 px-4 xs:px-5 sm:px-6 md:px-8 py-3 xs:py-4 sm:py-5">
                 <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 xs:gap-0">
                   <div className="flex items-center gap-2 xs:gap-3 sm:gap-4">
@@ -191,7 +189,6 @@ const DeliveryBoyDashboard = () => {
                 </div>
               </div>
 
-              {/* Orders List */}
               <div className="p-4 xs:p-5 sm:p-6 md:p-8">
                 {availableOrders.length > 0 ? (
                   <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 xs:gap-4 sm:gap-5 md:gap-6">
@@ -200,7 +197,6 @@ const DeliveryBoyDashboard = () => {
                         key={order?.assignmentId || index}
                         className="group bg-gradient-to-br from-white to-gray-50 rounded-lg sm:rounded-xl border border-gray-200 hover:border-orange-300 p-4 xs:p-5 sm:p-6 transition-all duration-300 hover:shadow-lg"
                       >
-                        {/* Order Header */}
                         <div className="flex justify-between items-start mb-3 xs:mb-4 sm:mb-5">
                           <div className="min-w-0">
                             <div className="flex flex-wrap gap-1.5 xs:gap-2 sm:gap-3 mb-2">
@@ -217,7 +213,6 @@ const DeliveryBoyDashboard = () => {
                           </div>
                         </div>
 
-                        {/* Delivery Address */}
                         <div className="mb-3 xs:mb-4 sm:mb-5">
                           <div className="flex items-start gap-2 sm:gap-3 mb-2">
                             <FaMapMarkerAlt className="text-[#ff4d2d] w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5 mt-0.5 xs:mt-1 flex-shrink-0" />
@@ -232,7 +227,6 @@ const DeliveryBoyDashboard = () => {
                           </div>
                         </div>
 
-                        {/* Items Preview */}
                         <div className="mb-4 xs:mb-5 sm:mb-6">
                           <p className="text-xs xs:text-sm font-semibold text-gray-600 mb-2 sm:mb-3">
                             Items Preview
@@ -261,7 +255,6 @@ const DeliveryBoyDashboard = () => {
                           </div>
                         </div>
 
-                        {/* Action Button */}
                         <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 xs:gap-3 sm:gap-0">
                           <div className="flex items-center gap-2">
                             <FaCheckCircle className="text-green-500 w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
