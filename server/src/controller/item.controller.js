@@ -7,6 +7,7 @@ import {
   getItemsByCityService,
   getItemByRestaurantService,
   searchItemsService,
+  giveRatingService,
 } from '../services/item.service.js';
 import Shop from '../model/shop.model.js';
 
@@ -177,6 +178,21 @@ const searchItems = async (req, res) => {
   }
 };
 
+//* Contreoller to give rating
+const giveRating = async (req, res) => {
+  try {
+    const { itemId, rating } = req.body;
+
+    const returnedRating = await giveRatingService(itemId, rating);
+
+    res
+      .status(200)
+      .json({ message: 'Rating given successfully', success: true, rating: returnedRating });
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Something went wrong', success: false });
+  }
+};
+
 //* Export controllers
 export {
   addItem,
@@ -186,4 +202,5 @@ export {
   getItemsByCity,
   getItemByRestaurant,
   searchItems,
+  giveRating,
 };
