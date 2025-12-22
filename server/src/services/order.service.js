@@ -577,10 +577,10 @@ const verifyDeliveryBoyOtpService = async (orderId, shopOrderId, otp) => {
 const getTodayDeliveriesService = async (deliveryBoyId, startsOfDay) => {
   const orders = await Order.find({
     shopOrders: {
-      assignedDeliveryBoy: deliveryBoyId,
-      status: 'delivered',
-      deliveredAt: {
-        $gte: startsOfDay,
+      $elemMatch: {
+        assignedDeliveryBoy: deliveryBoyId,
+        status: 'delivered',
+        deliveredAt: { $gte: startsOfDay },
       },
     },
   }).lean();
