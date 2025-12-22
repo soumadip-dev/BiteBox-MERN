@@ -589,6 +589,7 @@ const getTodayDeliveriesService = async (deliveryBoyId, startsOfDay) => {
   orders.forEach(order => {
     order.shopOrders.forEach(shopOrder => {
       if (
+        shopOrder.assignedDeliveryBoy &&
         shopOrder.assignedDeliveryBoy.toString() === deliveryBoyId &&
         shopOrder.status === 'delivered' &&
         shopOrder.deliveredAt &&

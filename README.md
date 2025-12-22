@@ -47,10 +47,13 @@
 <table align="center">
   <tr>
     <td align="center">
-      <img src="./client/public/01_Delivery_boy_HomePage.png" alt="Delivery Boy HomePage" height="300">
+      <img src="./client/public/01_Delivery_boy_Chart.png" alt="Delivery Boy Chart" height="300">
     </td>
     <td align="center">
-      <img src="./client/public/02_DeliveryBoy_track_Order.png" alt="Delivery Boy Track Order" height="300">
+      <img src="./client/public/02_Delivery_boy_Available_order.png" alt="Delivery Boy Available Order" height="300">
+    </td>
+    <td align="center">
+      <img src="./client/public/03_DeliveryBoy_track_Order.png" alt="Delivery Boy Track Order" height="300">
     </td>
   </tr>
 </table>
