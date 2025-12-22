@@ -7,6 +7,7 @@ import {
   getItemsByCity,
   getItemByRestaurant,
   searchItems,
+  giveRating,
 } from '../controller/item.controller.js';
 import { isAuth } from '../middleware/user.middleware.js';
 import { upload } from '../middleware/multer.middleware.js';
@@ -22,6 +23,7 @@ router.get('/get-by-id/:itemId', isAuth, getItemById);
 router.get('/get-by-city/:city', isAuth, getItemsByCity);
 router.get('/get-by-restaurant/:restaurantId', isAuth, getItemByRestaurant);
 router.get('/search-items', isAuth, searchItems);
+router.post('/rating', isAuth, giveRating);
 
 //* Export the router
 export default router;

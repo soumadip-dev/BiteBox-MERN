@@ -143,6 +143,33 @@ const searchItemsService = async (query, city) => {
   return items;
 };
 
+//* Service for giving rating
+const giveRatingService = async (itemId, rating) => {
+  if (!itemId || !rating) {
+    throw new Error('Item ID and rating are required');
+  }
+
+  if (rating < 1 || rating > 5) {
+    throw new Error('Rating must be between 1 and 5');
+  }
+
+  const item = await Item.findById(itemId);
+
+  if (!item) throw new Error('Item not found');
+
+  const newCount = item.rating.count + 1;
+  const newAverage = (item.rating.average * item.rating.count + rating) / newCount;
+
+  item.rating.average = newAverage;
+  item.rating.count = newCount;
+
+  await item.save();
+
+  const returnedRating = item.rating;
+
+  return returnedRating;
+};
+
 //* Export service
 export {
   createItemService,
@@ -152,4 +179,5 @@ export {
   getItemsByCityService,
   getItemByRestaurantService,
   searchItemsService,
+  giveRatingService,
 };
