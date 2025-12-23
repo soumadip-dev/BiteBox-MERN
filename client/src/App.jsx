@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignIn from './pages/SignIn';
-import SignUp from './pages/signUp';
+import SignUp from './pages/SignUp';
 import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/useGetCurrentUser';
 import { useDispatch, useSelector } from 'react-redux';
